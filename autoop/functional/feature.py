@@ -20,15 +20,17 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     df = dataset.read()
 
     for column in df.columns:
-        if is_numeric_dtype(column):
+        if is_numeric_dtype(df[column]):
             feature_type = "numerical"
-        elif is_object_dtype(column):
+        elif is_object_dtype(df[column]):
             feature_type = "categorical"
         else:
             print(
                 f"Column {column} is of neither " +
                 "`numerical` nor `categorical` type")
-            
+        
         # Creating an instance of Feature
-        feature = Feature(feature_type)
+        feature = Feature(column, feature_type)
         features.append(feature)
+
+    return features
