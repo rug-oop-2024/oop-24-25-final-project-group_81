@@ -195,7 +195,7 @@ class SensitivityMetric(Metric, ClassificationMetric):
         sensitivity = tp / (tp + fn)
         return sensitivity
 
-class F1ScoreMetric(Metric, PrecisionMetric, SensitivityMetric):
+class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
     """
     A F1 Score metric class. The F1 Score is the harmonic mean
     of precision and sensitivity. It balances the two metrics
@@ -338,7 +338,7 @@ class RsquaredMetric(Metric):
         ss_res = np.sum((ground_truths - predictions) ** 2)
         return ss_res
 
-class RMSEMetric(Metric, MSEMetric):
+class RMSEMetric(MSEMetric):
     """
     A Root-Mean-Square Error metric class.
     Measures the average of the absolute differences between
