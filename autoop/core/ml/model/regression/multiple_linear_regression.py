@@ -1,10 +1,9 @@
 from autoop.core.ml.model import Model
-from autoop.core.ml.model.regression import RegressionModel
 
 import numpy as np
 
 
-class MultipleLinearRegression(Model, RegressionModel):
+class MultipleLinearRegression(Model):
     """
     A multiple linear regression model.
     """

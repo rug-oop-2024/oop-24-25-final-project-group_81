@@ -11,8 +11,18 @@ class Model(ABC):
 
     This class serves as a base class.
     """
-    def __init__(self):
+    def __init__(self, type):
+        self._type = type
         self._parameters = {}
+
+    @property
+    def type(self) -> str:
+        """
+        Returns the type of the model.
+
+        :type return: str
+        """
+        return self._type
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:

@@ -1,14 +1,13 @@
 from collections import Counter
 
 from autoop.core.ml.model import Model
-from autoop.core.ml.model.classification import ClassificationModel
 
 import numpy as np
 
 from pydantic import Field
 
 
-class KNearestNeighbors(Model, ClassificationModel):
+class KNearestNeighbors(Model):
     """
     The `KNearestNeighbors` class
     implements a k-nearest neighbors algorithm

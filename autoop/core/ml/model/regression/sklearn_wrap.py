@@ -1,11 +1,10 @@
 import numpy as np
 from autoop.core.ml.model import Model
-from autoop.core.ml.model.regression import RegressionModel
 from pydantic import PrivateAttr
 from sklearn.linear_model import Lasso
 
 
-class Lasso(Model, RegressionModel):
+class Lasso(Model):
     """
     Wrapper around the Lasso model from scikit-learn that follows the same
     structure as the abstract base class from BaseModel.
