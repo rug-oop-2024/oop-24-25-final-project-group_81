@@ -15,17 +15,23 @@ class PolynomialRegression(Model):
 
     @property
     def degree(self):
+        """
+        Getter for the degree of the polynomial.
+        """
         return self._degree
     
     @degree.setter
     def degree(self, degree: int):
+        """
+        Setter for the degree of the polynomial.
+        """
         self._degree = degree
 
     def fit(
             self, observations: np.ndarray, ground_truth: np.ndarray
     ) -> np.ndarray:
         """
-        Fit the model using the Normal Equation.
+        Fit the model.
 
         :param observations: Input data (features).
         :param ground_truth: Actual values (targets) to fit the model to.
@@ -52,7 +58,7 @@ class PolynomialRegression(Model):
         self._validate_num_features(observations)
 
         predictions = self._model.predict(observations)
-        
+
         return predictions
 
     def _validate_fit(self) -> None:
