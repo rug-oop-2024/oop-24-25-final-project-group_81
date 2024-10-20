@@ -4,7 +4,7 @@ import numpy as np
 from autoop.core.ml.dataset import Dataset
 
 class Feature():
-    def __init__(self, name: str, feature_type: str):
+    def __init__(self, name: str, type: str):
         """
         This is the way you instatiate a Feature.
 
@@ -14,7 +14,7 @@ class Feature():
         :type feature_type: str
         """
         self._name = name
-        self._type = feature_type
+        self._type = type
 
     @property
     def name(self) -> str:
