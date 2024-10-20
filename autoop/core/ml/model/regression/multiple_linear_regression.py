@@ -1,13 +1,13 @@
 from autoop.core.ml.model import Model
+from autoop.core.ml.model.regression import RegressionModel
 
 import numpy as np
 
 
-class MultipleLinearRegression(Model):
+class MultipleLinearRegression(Model, RegressionModel):
     """
     A multiple linear regression model.
     """
-
     def fit(
             self, observations: np.ndarray, ground_truth: np.ndarray
     ) -> np.ndarray:

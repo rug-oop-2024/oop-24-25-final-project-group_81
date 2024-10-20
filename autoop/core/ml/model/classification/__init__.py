@@ -1,1 +1,10 @@
-from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
+class ClassificationModel:
+    """
+    Parent class for all classification models.
+    """
+    def type(self) -> str:
+        """
+        Returns the type of model.
+        """
+        return "classification"
+    
