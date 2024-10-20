@@ -68,6 +68,19 @@ class Metric(ABC):
         """
         pass
 
+    def evaluate(self, predictions: Any, ground_truths: Any) -> float:
+        """
+        This method is a way for evaluating a metric.
+
+        :param predictions: the predictions
+        :type predictions: Any
+        :param ground_truths: the ground thruths
+        :type ground_truths: Any
+        :return: the evaluation
+        :rtype: float
+        """
+        return self._result(ground_truths, predictions)
+
 #############################################################################
 #####################     Classification Metrics    #########################
 #############################################################################
@@ -125,7 +138,6 @@ class AccuracyMetric(Metric, ClassificationMetric):
     An Accuracy metric class. Measures the proportion of
     correctly predicted instances out of the total instances.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -150,7 +162,6 @@ class PrecisionMetric(Metric, ClassificationMetric):
     A Precision metric class. Measures the proportion of true positive
     predictions out of all positive predictions.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -175,7 +186,6 @@ class SensitivityMetric(Metric, ClassificationMetric):
     A Sensitivity metric class. Measures the proportion of true
     positive predictions out of all actual positive predicitons.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -201,7 +211,6 @@ class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
     of precision and sensitivity. It balances the two metrics
     which is useful when dealing with an imbalanced dataset.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -231,7 +240,6 @@ class MSEMetric(Metric):
     A Mean-Square Error metric class.
     Measures the average of the squares of the errors.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -256,7 +264,6 @@ class MAEMetric(Metric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -283,7 +290,6 @@ class RsquaredMetric(Metric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
@@ -344,7 +350,6 @@ class RMSEMetric(MSEMetric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    @preprocess_input
     def _result(
             self,
             ground_truths: List[float],
