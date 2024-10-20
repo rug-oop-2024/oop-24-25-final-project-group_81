@@ -22,6 +22,7 @@ class KMeansClustering(Model):
         :param ground_truth: the classification
         :type ground_truth: np.ndarray
         """
+        self._validate_input(observations, ground_truth)
         self._model = LinearSVC()
         self._model.fit(observations, ground_truth)
         params = self._model.get_params()

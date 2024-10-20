@@ -3,6 +3,8 @@ from sklearn.linear_model import LogisticRegression
 
 import numpy as np
 
+# Documentation: https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression.predict
+
 
 class MultinomialLogisticRegression(Model):
     def __init__(self):
@@ -22,6 +24,7 @@ class MultinomialLogisticRegression(Model):
         :param ground_truth: the classification
         :type ground_truth: np.ndarray
         """
+        self._validate_input(observations, ground_truth)
         self._model = LogisticRegression(multi_class="auto")
         self._model.fit(observations, ground_truth)
         params = self._model.get_params()
