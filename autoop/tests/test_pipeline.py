@@ -25,7 +25,7 @@ class TestPipeline(unittest.TestCase):
         self.features = detect_feature_types(self.dataset)
         self.pipeline = Pipeline(
             dataset=self.dataset,
-            model=MultipleLinearRegression(),
+            model=MultipleLinearRegression(type="regression"),
             input_features=list(filter(lambda x: x.name != "age", self.features)),
             target_feature=Feature(name="age", type="numerical"),
             metrics=[MSEMetric()],

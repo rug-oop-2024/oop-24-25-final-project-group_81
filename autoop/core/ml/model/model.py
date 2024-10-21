@@ -16,6 +16,15 @@ class Model(ABC):
         self._parameters = {}
 
     @property
+    def parameters(self) -> dict:
+        """
+        Return the model parameters.
+
+        :return: A dictionary containing the model's parameters.
+        """
+        return deepcopy(self._parameters)
+
+    @property
     def type(self) -> str:
         """
         Returns the type of the model.
@@ -23,6 +32,17 @@ class Model(ABC):
         :type return: str
         """
         return self._type
+    
+    def to_artifact(self, name: str) -> Artifact:
+        model = name + ":" + self._type
+        path = "path/to/model" + name + ".pth"
+        params = self._parameters
+        artifact = Artifact(
+            type_ = model,
+            asset_path = path,
+            parameters = params
+            )
+        return artifact
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -129,12 +149,3 @@ class Model(ABC):
         has been executed as expected.
         """
         pass
-
-    @property
-    def parameters(self) -> dict:
-        """
-        Return the model parameters.
-
-        :return: A dictionary containing the model's parameters.
-        """
-        return deepcopy(self._parameters)

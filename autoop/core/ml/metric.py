@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import Any, List
 import numpy as np
 
-from autoop.core.ml.utils import preprocess_input
 
 METRICS = [
     "mean_squared_error",
