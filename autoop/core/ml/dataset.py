@@ -10,7 +10,7 @@ class Dataset(Artifact):
         Instantiates a dataset by creating an artifact of type
         `dataset`.
         """
-        super().__init__(type_="dataset", *args, **kwargs)
+        super().__init__(type="dataset", *args, **kwargs)
 
     @staticmethod
     def from_dataframe(

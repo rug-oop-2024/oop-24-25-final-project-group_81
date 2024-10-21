@@ -2,31 +2,24 @@ import base64
 
 
 class Artifact:
-    def __init__(self, type_: str, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         The way of instantiating an artifact.
 
         :param type_: the type of the artifact
         :type type_: str
         """
-        self._type = type_
         self._args = args
         self._kwargs = kwargs
-        self._artifact_id = self._generate_id(
-            self._kwargs["asset_path"], self._kwargs["version"]
-            )
-    
-    @property
-    def artifact_id(self) -> str:
-        """
-        Getter for the artrifact ID
 
-        :return: the id of the artifact.
-        :rtype: str
-        """
-        return self._artifact_id
+        # Unpacking the kwargs
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-    def _generate_id(self, asset_path: str, version: str) -> str:
+        # Generating the id
+        self.id = self._generate_id()
+
+    def _generate_id(self) -> str:
         """
         This method generate an id for an artifact.
 
@@ -39,12 +32,14 @@ class Artifact:
         :rtype: str
         """
         # Encode the asset_path
-        encoded_asset_path = base64.b64encode(
-            asset_path.encode('utf-8')
+        encoded_asset_path = base64\
+            .b64encode(
+            self.asset_path\
+                .encode('utf-8')
             ).decode('utf-8')
         
         # Combine the encoded asset_path and version into the id
-        asset_id = f"{encoded_asset_path}:{version}"
+        asset_id = f"{encoded_asset_path}:{self.version}"
 
         return asset_id
 
@@ -55,7 +50,9 @@ class Artifact:
         :return: the artifact's data.
         :rtype: bytes
         """
-        return self._kwargs["data"]
+        if not self.data:
+            raise ValueError("No data available in the artifact.")
+        return self.data
 
     def save(self, bytes: bytes) -> None:
         """
@@ -64,4 +61,4 @@ class Artifact:
         :param bytes: the data in bytes.
         :type bytes: bytes
         """
-        self._kwargs["data"] = bytes
+        self.data = bytes
