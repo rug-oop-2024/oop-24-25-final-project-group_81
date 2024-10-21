@@ -171,12 +171,12 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self) -> None:
+    def _evaluate(self, X_vals, Y_vals) -> None:
         """
         A way to evaluate a model.
         """
-        X = self._compact_vectors(self._test_X)
-        Y = self._test_y
+        X = self._compact_vectors(X_vals)
+        Y = Y_vals
         self._metrics_results = []
         predictions = self._model.predict(X)
         for metric in self._metrics:
@@ -191,7 +191,12 @@ Pipeline(
         self._preprocess_features()
         self._split_data()
         self._train()
-        self._evaluate()
+        
+        # Evaluate on the test data
+        self._evaluate(self._test_X, self._test_y)
+
+        # Evaluate on the train data
+        self._evaluate(self._train_X, self._train_y)
         return {
             "metrics": self._metrics_results,
             "predictions": self._predictions,
