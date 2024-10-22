@@ -11,6 +11,8 @@ class Artifact:
         """
         self._args = args
         self._kwargs = kwargs
+        self.tags = []
+        self.metadata = {}
 
         # Unpacking the kwargs
         for key, value in kwargs.items():
@@ -18,6 +20,9 @@ class Artifact:
 
         # Generating the id
         self.id = self._generate_id()
+
+    def __repr__(self):
+        return f"{self.name} (v{self.version})"
 
     def _generate_id(self) -> str:
         """
