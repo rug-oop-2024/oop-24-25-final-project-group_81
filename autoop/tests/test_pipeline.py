@@ -1,6 +1,7 @@
 from sklearn.datasets import fetch_openml
 import unittest
 import pandas as pd
+import numpy as np
 
 from autoop.core.ml.pipeline import Pipeline
 from autoop.core.ml.dataset import Dataset
@@ -56,7 +57,7 @@ class TestPipeline(unittest.TestCase):
         self.pipeline._preprocess_features()
         self.pipeline._split_data()
         self.pipeline._train()
-        self.pipeline._evaluate()
+        self.pipeline._evaluate(self.pipeline._test_X, self.pipeline._test_y)
         self.assertIsNotNone(self.pipeline._predictions)
         self.assertIsNotNone(self.pipeline._metrics_results)
         self.assertEqual(len(self.pipeline._metrics_results), 1)
