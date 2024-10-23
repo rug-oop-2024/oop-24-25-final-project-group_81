@@ -11,6 +11,10 @@ class Database():
         self._data = {}
         self._load()
 
+    @property
+    def storage(self):
+        return self._storage
+
     def set(self, collection: str, id: str, entry: dict) -> dict:
         """Set a key in the database
         Args:
