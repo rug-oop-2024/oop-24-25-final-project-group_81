@@ -121,22 +121,29 @@ class ControllerDatasets:
             self.ui_manager.display_error("No datasets available.")
             return
         
+        dataset_id_lists = []
         dataset_lists = []
         for dataset in dataset_dict:
             name = dataset.name
             version = dataset.version 
             display_name = name + " " + "(version" + " " + version + ")"
             dataset_lists.append(display_name)
+            dataset_id_lists.append(dataset.id)
 
         selected_dataset = self.ui_manager.display_saved_datasets(dataset_lists)
 
+        # Retrieveing the id of the selevted dataset
+        selected_id_index = dataset_lists.index(selected_dataset)
+        selected_dataset_id = dataset_id_lists[selected_id_index]
+
         if selected_dataset:
-            try:
-                df = dataset.read()
-                self.ui_manager.dataset_loaded_success(name)
-                self.ui_manager.display_dataset(df)
-            except Exception as e:
-                self.ui_manager.display_error(str(e))
+            #try:
+            selected_artifact = automl.registry.get(selected_dataset_id)
+            artifact_attributes = vars(selected_artifact)
+            dataset = Dataset(**artifact_attributes)
+            self.ui_manager.dataset_loaded_success(dataset.name)
+            df = dataset.read()
+            self.ui_manager.display_dataset(df)
 
 if __name__ == "__main__":
     control = ControllerDatasets()

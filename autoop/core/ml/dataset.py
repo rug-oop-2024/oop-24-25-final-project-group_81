@@ -10,7 +10,7 @@ class Dataset(Artifact):
         Instantiates a dataset by creating an artifact of type
         `dataset`.
         """
-        super().__init__(type="dataset", *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def from_dataframe(
@@ -40,6 +40,7 @@ class Dataset(Artifact):
             asset_path=asset_path,
             data=data.to_csv(index=False).encode(),
             version=version,
+            type="dataset"
         )
         
     def read(self) -> pd.DataFrame:
