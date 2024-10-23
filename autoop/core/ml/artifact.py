@@ -44,7 +44,7 @@ class Artifact:
             ).decode('utf-8')
         
         # Combine the encoded asset_path and version into the id
-        asset_id = f"{encoded_asset_path}:{self.version}"
+        asset_id = f"{encoded_asset_path}_{self.version}"
 
         return asset_id
 

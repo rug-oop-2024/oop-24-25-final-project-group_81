@@ -117,26 +117,26 @@ class ControllerDatasets:
         Handle dataset viewing logic.
         """
         dataset_dict = datasets
-        st.write(dataset_dict)
-        # if not dataset_dict:
-        #     self.ui_manager.display_error("No datasets available.")
-        #     return
+        if not dataset_dict:
+            self.ui_manager.display_error("No datasets available.")
+            return
         
-        # dataset_names = []
-        # for dataset in dataset_dict:
-        #     dataset_names.append(dataset.name)
+        dataset_lists = []
+        for dataset in dataset_dict:
+            name = dataset.name
+            version = dataset.version 
+            display_name = name + " " + "(version" + " " + version + ")"
+            dataset_lists.append(display_name)
 
-        # selected_dataset = self.ui_manager.display_saved_datasets(dataset_names)
+        selected_dataset = self.ui_manager.display_saved_datasets(dataset_lists)
 
-        # if selected_dataset:
-        #     name, version = selected_dataset.split(':')
-        #     try:
-        #         dataset = load_dataset(name, version)
-        #         df = dataset.read()
-        #         self.ui_manager.dataset_loaded_success(name)
-        #         self.ui_manager.display_dataset(df)
-        #     except Exception as e:
-        #         self.ui_manager.display_error(str(e))
+        if selected_dataset:
+            try:
+                df = dataset.read()
+                self.ui_manager.dataset_loaded_success(name)
+                self.ui_manager.display_dataset(df)
+            except Exception as e:
+                self.ui_manager.display_error(str(e))
 
 if __name__ == "__main__":
     control = ControllerDatasets()
