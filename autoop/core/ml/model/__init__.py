@@ -5,12 +5,15 @@ from autoop.core.ml.model.regression.sklearn_wrap import Lasso
 
 
 REGRESSION_MODELS = [
-    "MultipleLinearRegression",
-    "Lasso"
+    "Multiple Linear Regression",
+    "Polynomial Regression",
+    "Lasso Regression"
 ] # add your models as str here
 
 CLASSIFICATION_MODELS = [
-    "K_nearest_neighbour"
+    "K Nearest Neighbors",
+    "Linear SVC",
+    "Multinomial Logistic Regression"
 ] # add your models as str here
 
 def get_model(model_name: str) -> Model:
@@ -24,7 +27,7 @@ def get_model(model_name: str) -> Model:
         type_ = "classification"
 
     # Instantiating the model
-    if model_name == "MultipleLinearRegression":
+    if model_name == "Multiple Linear Regression":
         model = MultipleLinearRegression(type=type_)
 
     if model_name == "Lasso":
