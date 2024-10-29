@@ -5,6 +5,8 @@ from typing import Any
 
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
+from app.core.streamlit_utils import GeneralUI
+from app.core.datasets_utils import ControllerWithDatasets
 
 
 automl = AutoMLSystem.get_instance()
@@ -13,7 +15,7 @@ datasets = automl.registry.list(type="dataset")
 
 # your code here
 
-class UserInterfaceDatasets:
+class UserInterfaceDatasets(GeneralUI):
     def __init__(self):
         self.action = None
 
@@ -36,41 +38,7 @@ class UserInterfaceDatasets:
 
         return file, dataset_name, version
 
-    def display_dataset(self, df: pd.DataFrame) -> None:
-        """
-        Display the dataset as a dataframe.
-        """
-        st.write("Preview of Dataset:")
-        st.dataframe(df)
-
-    def display_saved_datasets(self, dataset_list) -> str:
-        """
-        Display the list of saved datasets and allow the user to select one.
-        """
-        st.subheader("View Existing Datasets")
-        selected_dataset = st.selectbox("Choose a Dataset", dataset_list)
-        return selected_dataset
-
-    def dataset_loaded_success(self, dataset_name) -> None:
-        """
-        Success message for loading a dataset.
-        """
-        st.success(f"Dataset '{dataset_name}' loaded successfully!")
-
-    def display_error(self, message) -> None:
-        """
-        Display error message.
-        """
-        st.error(message)
-
-    def display_success(self, message) -> None:
-        """
-        Display success message.
-        """
-        st.success(message)
-
-
-class ControllerDatasets:
+class ControllerDatasets(ControllerWithDatasets):
     def __init__(self):
         self.ui_manager = UserInterfaceDatasets()
 
@@ -83,7 +51,7 @@ class ControllerDatasets:
         if self.ui_manager.action == "Upload Dataset":
             self._handle_upload_dataset()
         elif self.ui_manager.action == "View Datasets":
-            self._handle_view_datasets()
+            self._handle_view_saved_datasets()
 
     def _handle_upload_dataset(self):
         """
@@ -95,7 +63,7 @@ class ControllerDatasets:
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
             df = pd.read_csv(uploaded_file)
-            self.ui_manager.display_dataset(df)
+            self._display_dataset(df)
 
             if st.button("Save Dataset"):
                 # Create and save the dataset
@@ -111,39 +79,6 @@ class ControllerDatasets:
                     display_success(
                         f"Dataset '{dataset_name}' saved successfully!"
                         )
-
-    def _handle_view_datasets(self):
-        """
-        Handle dataset viewing logic.
-        """
-        dataset_dict = datasets
-        if not dataset_dict:
-            self.ui_manager.display_error("No datasets available.")
-            return
-        
-        dataset_id_lists = []
-        dataset_lists = []
-        for dataset in dataset_dict:
-            name = dataset.name
-            version = dataset.version 
-            display_name = name + " " + "(version" + " " + version + ")"
-            dataset_lists.append(display_name)
-            dataset_id_lists.append(dataset.id)
-
-        selected_dataset = self.ui_manager.display_saved_datasets(dataset_lists)
-
-        # Retrieveing the id of the selevted dataset
-        selected_id_index = dataset_lists.index(selected_dataset)
-        selected_dataset_id = dataset_id_lists[selected_id_index]
-
-        if selected_dataset:
-            #try:
-            selected_artifact = automl.registry.get(selected_dataset_id)
-            artifact_attributes = vars(selected_artifact)
-            dataset = Dataset(**artifact_attributes)
-            self.ui_manager.dataset_loaded_success(dataset.name)
-            df = dataset.read()
-            self.ui_manager.display_dataset(df)
 
 if __name__ == "__main__":
     control = ControllerDatasets()

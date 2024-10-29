@@ -3,16 +3,21 @@ from typing import Any, List
 import numpy as np
 
 
-METRICS = [
+REGRESSION_METRICS = [
     "mean_squared_error",
-    "accuracy",
-    "root_mean_square_error",
-    "r_squred",
     "mean_average_error",
+    "root_mean_square_error",
+    "r_squred"
+    ]
+
+CLASSIFICATION_METRICS = [
+    "accuracy",
     "f1_score",
     "sensitivity",
     "precision",
-]
+    ]
+
+METRICS = REGRESSION_METRICS + CLASSIFICATION_METRICS
 
 def get_metric(name: str) -> "Metric":
     """
