@@ -57,6 +57,10 @@ class Metric(ABC):
     """
     def __call__(self, ground_truths: Any, predictions: Any):
         return self._result(ground_truths, predictions)
+    
+    @abstractmethod
+    def __str__(self):
+        pass
 
     @abstractmethod
     def _result(self, ground_truths: Any, predictions: Any) -> float:
@@ -93,6 +97,10 @@ class ClassificationMetric:
     """
     Helper class for classification metrics.
     """
+    @abstractmethod
+    def __str__(self):
+        pass
+
     def _compute_tp_fp_tn_fn(
             self,
             ground_truths: np.ndarray,
@@ -142,6 +150,9 @@ class AccuracyMetric(Metric, ClassificationMetric):
     An Accuracy metric class. Measures the proportion of
     correctly predicted instances out of the total instances.
     """
+    def __str__(self):
+        return "Accuracy"
+
     def _result(
             self,
             ground_truths: List[float],
@@ -166,6 +177,9 @@ class PrecisionMetric(Metric, ClassificationMetric):
     A Precision metric class. Measures the proportion of true positive
     predictions out of all positive predictions.
     """
+    def __str__(self):
+        return "Precision"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -190,6 +204,9 @@ class SensitivityMetric(Metric, ClassificationMetric):
     A Sensitivity metric class. Measures the proportion of true
     positive predictions out of all actual positive predicitons.
     """
+    def __str__(self):
+        return "Sensitivity"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -215,6 +232,9 @@ class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
     of precision and sensitivity. It balances the two metrics
     which is useful when dealing with an imbalanced dataset.
     """
+    def __str__(self):
+        return "F1 Score"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -244,6 +264,9 @@ class MSEMetric(Metric):
     A Mean-Square Error metric class.
     Measures the average of the squares of the errors.
     """
+    def __str__(self):
+        return "Mean-Square Error"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -268,6 +291,9 @@ class MAEMetric(Metric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
+    def __str__(self):
+        return "Mean-Average Error"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -294,6 +320,9 @@ class RsquaredMetric(Metric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
+    def __str__(self):
+        return "R-Squred"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -354,6 +383,9 @@ class RMSEMetric(MSEMetric):
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
+    def __str__(self):
+        return "Root-Mean-Square Error"
+    
     def _result(
             self,
             ground_truths: List[float],
@@ -369,7 +401,7 @@ class RMSEMetric(MSEMetric):
         :return: the result
         :rtype: float
         """
-        mse = MSEMetric._result(ground_truths, predictions)
+        mse = MSEMetric._result(self, ground_truths, predictions)
         rmse = mse ** 0.5
         return rmse
     

@@ -194,11 +194,18 @@ Pipeline(
         
         # Evaluate on the test data
         self._evaluate(self._test_X, self._test_y)
-
-        # Evaluate on the train data
-        self._evaluate(self._train_X, self._train_y)
-        return {
+        
+        test_evaluation = {
             "metrics": self._metrics_results,
             "predictions": self._predictions,
         }
+
+        # Evaluate on the train data
+        self._evaluate(self._train_X, self._train_y)
+
+        train_evaluation = {
+            "metrics": self._metrics_results,
+            "predictions": self._predictions,
+        }
+        return test_evaluation, train_evaluation
        

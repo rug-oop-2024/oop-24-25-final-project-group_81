@@ -36,6 +36,16 @@ class Feature():
         """
         return self._type
     
+    def get_column_type(self) -> tuple[str, str]:
+        """
+        Returns a tuple representing the column
+        and its feature type. (column, feature)
+
+        :return: tuple with column and its feature
+        :rtype: tuple[str, str]
+        """
+        return (self._name, self._type)
+    
     def __str__(self) -> str:
         """
         A way of displaying a Feature object.
@@ -43,5 +53,5 @@ class Feature():
         :return: `Column: name; Feature type: type`
         :rtype: str
         """
-        return f"Column: {self._name}; Feature type: {self._type}"
+        return f"{self._name}"
     
