@@ -93,8 +93,7 @@ Pipeline(
         """
         return self._model
 
-    @property
-    def artifacts(self) -> List[Artifact]:
+    def artifacts(self, pipeline_name: str, pipeline_version: str) -> List[Artifact]:
         """
         Used to get the artifacts generated during
         the pipeline execution to be saved.
@@ -115,16 +114,24 @@ Pipeline(
             "target_feature": self._target_feature,
             "split": self._split,
         }
+        model_artifact = self._model.to_artifact(
+            name=f"{pipeline_name}_model:{self._model.name}",
+            version=pipeline_version
+            )
+        metadata = {
+            "model_id": model_artifact.id,
+            "model_type": model_artifact.type
+        }
         artifacts.append(
             Artifact(
-                name="pipeline_config",
-                data=pickle.dumps(pipeline_data)
+                name=f"{pipeline_name}_config",
+                type="pipeline",
+                version=pipeline_version,
+                data=pickle.dumps(pipeline_data),
+                metadata=metadata
                 )
             )
-        artifacts.append(
-            self._model.to_artifact(
-                name=f"pipeline_model_{self._model.type}")
-                )
+        artifacts.append(model_artifact)
         return artifacts
     
     def _register_artifact(self, name: str, artifact) -> None:
