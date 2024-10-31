@@ -32,6 +32,15 @@ class UserInterfaceModelling(GeneralUI):
     def __init__(self):
         self.action = None
 
+    def render_sidebar(self) -> None:
+        """
+        Render the sidebar for selecting an action.
+        """
+        action_list = ["View Pipeline", "Execute", "Save"]
+        st.sidebar.header("The Pipeline is ready!")
+        self.action = st.sidebar.\
+            selectbox("Choose an Action", action_list)
+
     def display_model_types(self, list_of_model_types: list[str]) -> str:
         """
         Display the model types that can be used in the pipeline.
@@ -175,6 +184,15 @@ class UserInterfaceModelling(GeneralUI):
         st.subheader("Predictions:")
         st.write(predictions_results)
 
+    def get_pipeline_saving_info(self) -> tuple[str, str]:
+        """
+        UI for saving a pipeline.
+        """
+        st.subheader("Save your Pipeline")
+        pipeline_name = st.text_input("Pipeline Name", value="MyVeryNicePipeline")
+        version = st.text_input("Version", value="1.0")
+        return pipeline_name, version
+
     def _get_avaliable_features(self, features: list[Feature], feature_type: str) -> list[Feature]:
         avaliable_columns = []
         for feature in features:
@@ -189,10 +207,27 @@ class ControllerModelling(ControllerWithDatasets):
         self.ui_manager = UserInterfaceModelling()
         self._reboot()
 
+    @property
+    def pipeline(self):
+        return self._pipeline
+
     def run(self):
         """
         Main loop to run the application.
         """
+        self._handle_build_pipeline()
+
+        if self._pipeline is not None:
+            self.ui_manager.render_sidebar()
+
+        if self.ui_manager.action == "View Pipeline":
+            self._handle_view_pipeline()
+        elif self.ui_manager.action == "Execute":
+            self._handle_execute_pipeline()
+        elif self.ui_manager.action == "Save":
+            self._handle_save_pipeline()
+
+    def _handle_build_pipeline(self):
         self._handle_view_saved_datasets()
         if self._dataset is not None:
             self._select_model_type()
@@ -212,22 +247,32 @@ class ControllerModelling(ControllerWithDatasets):
             self._chose_split()
 
         if self._split is not None:
-            # valve = self.ui_manager.button("Create a Pipeline!")
-            # if valve:
             self._build_pipeline()
-        
-        if self._pipeline is not None:
-            st.write(self._pipeline)
-            # train = self.ui_manager.button("Train!")
-            # if train:
-            self._exection = self._pipeline.execute()
 
-        if self._exection is not None:
-            test_evaluation, train_evaluation = self._exection
-            st.header("Test Evaluation")
-            self.ui_manager.show_results(test_evaluation)
-            st.header("Train Evaluation")
-            self.ui_manager.show_results(train_evaluation)
+    def _handle_view_pipeline(self):
+        st.write(self._pipeline)
+
+    def _handle_execute_pipeline(self):
+        self._exection = self._pipeline.execute()
+        test_evaluation, train_evaluation = self._exection
+        st.header("Test Evaluation")
+        self.ui_manager.show_results(test_evaluation)
+        st.header("Train Evaluation")
+        self.ui_manager.show_results(train_evaluation)
+
+    def _handle_save_pipeline(self):
+        pipeline_name, version = self.\
+            ui_manager.get_pipeline_saving_info()
+
+        if pipeline_name and version:
+            pipeline_artifacts = self._pipeline.artifacts(pipeline_name, version)
+            if st.button("Save Pipeline"):
+                for pipeline_artifact in pipeline_artifacts:
+                    automl.registry.register(pipeline_artifact)
+                self.ui_manager.\
+                    display_success(
+                        f"Pipeline '{pipeline_name}' saved successfully!"
+                        )
 
     def _build_pipeline(self):
         self._pipeline = Pipeline(
@@ -387,7 +432,6 @@ class ControllerModelling(ControllerWithDatasets):
         self._split = None
         self._pipeline = None
         self._exection = None
-
 
 if __name__ == "__main__":
     control = ControllerModelling()
