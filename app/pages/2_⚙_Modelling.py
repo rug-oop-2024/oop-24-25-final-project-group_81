@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import os
 
 from app.core.system import AutoMLSystem
@@ -7,7 +6,6 @@ from app.core.streamlit_utils import GeneralUI
 from app.core.datasets_utils import ControllerWithDatasets
 from autoop.core.ml.feature import Feature
 from autoop.core.ml.model import REGRESSION_MODELS, CLASSIFICATION_MODELS
-from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.metric import CLASSIFICATION_METRICS, REGRESSION_METRICS
 from autoop.core.ml.metric import get_metric
 from autoop.functional.feature import detect_feature_types
@@ -15,21 +13,11 @@ from autoop.core.ml.model import get_model
 from autoop.core.ml.pipeline import Pipeline
 
 
-st.set_page_config(page_title="Modelling", page_icon="📈")
-
-def write_helper_text(text: str):
-    st.write(f"<p style=\"color: #888;\">{text}</p>", unsafe_allow_html=True)
-
-st.write("# ⚙ Modelling")
-
-automl = AutoMLSystem.get_instance()
-
-datasets = automl.registry.list(type="dataset")
-
-# your code here
-
 class UserInterfaceModelling(GeneralUI):
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        A way of instantiating the UI.
+        """
         self.action = None
 
     def render_sidebar(self) -> None:
@@ -41,7 +29,10 @@ class UserInterfaceModelling(GeneralUI):
         self.action = st.sidebar.\
             selectbox("Choose an Action", action_list)
 
-    def display_model_types(self, list_of_model_types: list[str]) -> str:
+    def display_model_types(
+            self,
+            list_of_model_types: list[str]
+            ) -> str:
         """
         Display the model types that can be used in the pipeline.
 
@@ -55,7 +46,10 @@ class UserInterfaceModelling(GeneralUI):
             )
         return selected_model
 
-    def display_models(self, models_list: list[str]) -> str:
+    def display_models(
+            self,
+            models_list: list[str]
+            ) -> str:
         """
         Displays the avaliable models to be used in making
         the pipeline.
@@ -69,7 +63,10 @@ class UserInterfaceModelling(GeneralUI):
         selected_model = st.selectbox("Choose a Model", models_list)
         return selected_model
     
-    def display_model_info(self, model_name: str) -> None:
+    def display_model_info(
+            self,
+            model_name: str
+            ) -> None:
         """
         Used to display some general info about the selected model by
         reading it from a file stored in "assets\\model_descriptions\\".
@@ -137,10 +134,16 @@ class UserInterfaceModelling(GeneralUI):
         :return: a list of the chosen features
         :rtype: list[str]
         """
-        avaliable_columns = self._get_avaliable_features(features, feature_type)
+        avaliable_columns = self._get_avaliable_features(
+            features,
+            feature_type
+            )
 
         st.subheader("Chose input feature/s:")
-        features_list = st.multiselect("Avaliable input feature/s:", avaliable_columns)
+        features_list = st.multiselect(
+            "Avaliable input feature/s:",
+            avaliable_columns
+            )
         return features_list
 
     def display_target_features(
@@ -164,17 +167,35 @@ class UserInterfaceModelling(GeneralUI):
         :rtype: str
         """
         avaliable_columns = []
-        input_features_names = [name.get_column_type()[0] for name in input_features]
+        input_features_names = [
+            name.get_column_type()[0] for name in input_features
+            ]
         for feature in features:
+            # Get the name and the type of the feature
             name, type = feature.get_column_type()
+
             if type == feature_type and name not in input_features_names:
+                # Append if it is not already in the input features
                 avaliable_columns.append(feature)
 
         st.subheader("Chose target feature:")
-        target_feature = st.selectbox("Avaliable target feature:", avaliable_columns)
+        target_feature = st.selectbox(
+            "Avaliable target feature:",
+            avaliable_columns
+            )
         return target_feature
     
-    def show_results(self, exection: dict):
+    def show_results(
+            self,
+            exection: dict
+            ) -> None:
+        """
+        Show the result of the metrics.
+
+        :param exection: the return from the execute method
+        of the pipeline.
+        :type exection: dict
+        """
         metrics_result = exection["metrics"]
         predictions_results = exection["predictions"]
         st.subheader("Metrics:")
@@ -186,14 +207,35 @@ class UserInterfaceModelling(GeneralUI):
 
     def get_pipeline_saving_info(self) -> tuple[str, str]:
         """
-        UI for saving a pipeline.
+        UI for saving a pipeline. Prompts the user
+        to give name and a version to the pipleine.
+
+        :return pipeline_name, version: the chosen name and version
+        :type return: tuple[str, str]
         """
         st.subheader("Save your Pipeline")
         pipeline_name = st.text_input("Pipeline Name", value="MyVeryNicePipeline")
         version = st.text_input("Version", value="1.0")
         return pipeline_name, version
 
-    def _get_avaliable_features(self, features: list[Feature], feature_type: str) -> list[Feature]:
+    def _get_avaliable_features(
+            self,
+            features: list[Feature],
+            feature_type: str
+            ) -> list[Feature]:
+        """
+        Gets the avaliable features from a feature list
+        based on a chosen feature type.
+
+        :param features: a list with all the features
+        :type features: list[Feature]
+        :param feature_type: the type of the desired
+        features that need to be taken
+        :type feature_type: str
+        :return: a list of features that correspond to
+        the type specified in feature_type
+        :rtype: list[Feature]
+        """
         avaliable_columns = []
         for feature in features:
             col, type = feature.get_column_type()
@@ -203,18 +245,29 @@ class UserInterfaceModelling(GeneralUI):
 
 
 class ControllerModelling(ControllerWithDatasets):
-    def __init__(self):
+    def __init__(self) -> None:
+        super().__init__()
         self.ui_manager = UserInterfaceModelling()
         self._reboot()
 
     @property
-    def pipeline(self):
+    def pipeline(self) -> Pipeline:
+        """
+        A getter for the pipeline.
+
+        :return: the pipleine
+        :rtype: Pipeline
+        """
         return self._pipeline
 
-    def run(self):
+    def run(self) -> None:
         """
         Main loop to run the application.
         """
+        st.set_page_config(page_title="Modelling", page_icon="📈")
+
+        st.write("# ⚙ Modelling")
+
         self._handle_build_pipeline()
 
         if self._pipeline is not None:
@@ -227,7 +280,11 @@ class ControllerModelling(ControllerWithDatasets):
         elif self.ui_manager.action == "Save":
             self._handle_save_pipeline()
 
-    def _handle_build_pipeline(self):
+    def _handle_build_pipeline(self) -> None:
+        """
+        This method is used to handle the logic of building a Pipeline.
+        It builds a pipeline by collecting the neccessary components.
+        """
         self._handle_view_saved_datasets()
         if self._dataset is not None:
             self._select_model_type()
@@ -249,10 +306,25 @@ class ControllerModelling(ControllerWithDatasets):
         if self._split is not None:
             self._build_pipeline()
 
-    def _handle_view_pipeline(self):
+    def _handle_view_saved_datasets(self) -> None:
+        """
+        This method is responsible for handling the logic of viewing
+        existing datasets. It gets the dataset and its feature.
+        """
+        super()._handle_view_saved_datasets()
+        if self._dataset is not None:
+            self._features = detect_feature_types(self._dataset)
+
+    def _handle_view_pipeline(self) -> None:
+        """
+        A method to view the pipeline.
+        """
         st.write(self._pipeline)
 
-    def _handle_execute_pipeline(self):
+    def _handle_execute_pipeline(self) -> None:
+        """
+        A method to execute the pipeline.
+        """
         self._exection = self._pipeline.execute()
         test_evaluation, train_evaluation = self._exection
         st.header("Test Evaluation")
@@ -260,21 +332,31 @@ class ControllerModelling(ControllerWithDatasets):
         st.header("Train Evaluation")
         self.ui_manager.show_results(train_evaluation)
 
-    def _handle_save_pipeline(self):
+    def _handle_save_pipeline(self) -> None:
+        """
+        A method that handles the saving of a pipeline.
+        """
         pipeline_name, version = self.\
             ui_manager.get_pipeline_saving_info()
 
         if pipeline_name and version:
-            pipeline_artifacts = self._pipeline.artifacts(pipeline_name, version)
+            # Gets a list of artifacts for saving
+            pipeline_artifacts = self._pipeline.\
+                artifacts(pipeline_name, version)
+            
             if st.button("Save Pipeline"):
                 for pipeline_artifact in pipeline_artifacts:
-                    automl.registry.register(pipeline_artifact)
+                    # Saves every element in the list of artifacts
+                    self._automl.registry.register(pipeline_artifact)
                 self.ui_manager.\
                     display_success(
                         f"Pipeline '{pipeline_name}' saved successfully!"
                         )
 
-    def _build_pipeline(self):
+    def _build_pipeline(self) -> None:
+        """
+        This method creates an instance of a Pipeline.
+        """
         self._pipeline = Pipeline(
             self._metrics,
             self._dataset,
@@ -283,35 +365,9 @@ class ControllerModelling(ControllerWithDatasets):
             self._target_features,
             self._split)
 
-    def _get_dataset(
-            self,
-            selected_dataset_id: str
-            ) -> Dataset:
+    def _select_model(self) -> None:
         """
-        Creates an instance of the selected dataset using
-        its id. It overwrites the method in ControllerWithDatasets() class
-        by adding a way of saving the slected dataset in the construcor, this
-        ensures consistency with the logic of the parent class and adds the
-        ability to save the dataset in question.
-        
-        Sets the variable self._dataset to be equal to the chosen dataset.
-        It also gets the feature of the dataset, stores it in the
-        self._feature variable.
-
-        :param selected_dataset_id: the id of the selected dataset
-        :type selected_dataset_id: str
-        :return: an instance of the selected dataset
-        :rtype: Dataset
-        """
-        dataset = ControllerWithDatasets()._get_dataset(selected_dataset_id)
-        if dataset != "Select a set":
-            self._dataset = dataset
-            self._features = detect_feature_types(self._dataset)
-        return dataset
-
-    def _select_model(self):
-        """
-        Handle select model type and specific model logic.
+        Handle select specific model logic.
         """
         if self._model_type == "Regression Model":
             self._chose_model(REGRESSION_MODELS, "regression")
@@ -319,7 +375,10 @@ class ControllerModelling(ControllerWithDatasets):
         elif self._model_type == "Classification Model":
             self._chose_model(CLASSIFICATION_MODELS, "classification")
 
-    def _select_model_type(self):
+    def _select_model_type(self) -> None:
+        """
+        Used to select a model type.
+        """
         # Full list of model types
         list_of_model_types = [
             "Select Model Type", "Regression Model", "Classification Model"
@@ -350,14 +409,20 @@ class ControllerModelling(ControllerWithDatasets):
 
         self._model_type = model_type
 
-    def _select_input_features(self):
+    def _select_input_features(self) -> None:
+        """
+        Used to select input features.
+        """
         self._input_features = self.ui_manager.\
             display_input_features(
                 self._features,
                 self._feature_type
                 )
 
-    def _select_target_features(self):
+    def _select_target_features(self) -> None:
+        """
+        Used to select target features.
+        """
         self._target_features = self.ui_manager.\
             display_target_features(
                 self._features,
@@ -365,7 +430,21 @@ class ControllerModelling(ControllerWithDatasets):
                 self._feature_type
                 )
 
-    def _chose_model(self, list_of_models: list[str], type_of_models: str):
+    def _chose_model(
+            self,
+            list_of_models: list[str],
+            type_of_models: str
+            ) -> None:
+        """
+        Used to instantiate a specific model from a list of models.
+        It utises the `get_model` function from the model package in
+        this app.
+
+        :param list_of_models: the list of avaliable models
+        :type list_of_models: list[str]
+        :param type_of_models: the specific type of models
+        :type type_of_models: str
+        """
         self.ui_manager.progress_bar()
         self.ui_manager.\
             display_success(f"You chose to use a {type_of_models} model.")
@@ -374,7 +453,10 @@ class ControllerModelling(ControllerWithDatasets):
         self.ui_manager.display_model_info(selected_model)
         self._model = get_model(selected_model)
         
-    def _chose_metrics(self):
+    def _chose_metrics(self) -> None:
+        """
+        Used to chose metrics based on the type of model.
+        """
         selected_metrics = None
 
         if self._model_type == "Classification Model":
@@ -388,7 +470,17 @@ class ControllerModelling(ControllerWithDatasets):
         if selected_metrics is not None:
             self._get_metrics(selected_metrics)
 
-    def _get_metrics(self, selected_metrics):
+    def _get_metrics(
+            self,
+            selected_metrics: list[str]
+            ) -> None:
+        """
+        Used to instantiate a metric by utilising the `get_metric`
+        funciton in the metrics.py.
+
+        :param selected_metrics: the selected metrics
+        :type selected_metrics: list[str]
+        """
         metrics_list = []
         for metric in selected_metrics:
             metric_instance = get_metric(metric)
@@ -396,7 +488,13 @@ class ControllerModelling(ControllerWithDatasets):
 
         self._metrics = metrics_list
 
-    def _check_features_type(self):
+    def _check_features_type(self) -> list[str]:
+        """
+        Checks the type of features in the dataset.
+
+        :return list_of_types: a list consting of the types of features
+        :type return: list[str]
+        """
         list_of_types = []
         for feature in self._features:
             list_of_types\
@@ -417,10 +515,16 @@ class ControllerModelling(ControllerWithDatasets):
         
         return list_of_types
     
-    def _chose_split(self):
+    def _chose_split(self) -> None:
+        """
+        Used to chose a split for the pipeline.
+        """
         self._split = st.slider("Select a dataset split", 0.01, 0.99)
     
-    def _reboot(self):
+    def _reboot(self) -> None:
+        """
+        Used to reboot the pipeline creation procedure.
+        """
         self._model_type = None
         self._model = None
         self._dataset = None
