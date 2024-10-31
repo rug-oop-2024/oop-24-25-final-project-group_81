@@ -14,8 +14,13 @@ class ArtifactRegistry():
         self._storage = storage
 
     def register(self, artifact: Artifact):
-        # save the artifact in the storage
-        self._storage.save(artifact.data, artifact.asset_path)
+        try:
+            # save the artifact in the storage
+            self._storage.save(artifact.data, artifact.asset_path)
+        except TypeError:
+            print(
+                f"{artifact.name} has no data to be saved!"
+                "Procceded with saving the metadata...")
         # save the metadata in the database
         entry = {
             "name": artifact.name,
