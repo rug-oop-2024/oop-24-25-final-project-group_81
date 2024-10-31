@@ -9,8 +9,9 @@ class Artifact:
         :param type_: the type of the artifact
         :type type_: str
         """
-        self._args = args
-        self._kwargs = kwargs
+        self.asset_path = "assets\\objects"
+        self.name = "Unknown"
+        self.version = "beta"
         self.tags = []
         self.metadata = {}
 
