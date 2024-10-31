@@ -1,19 +1,11 @@
 import streamlit as st
 import pandas as pd
-import os
 from typing import Any
 
-from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 from app.core.streamlit_utils import GeneralUI
 from app.core.datasets_utils import ControllerWithDatasets
 
-
-automl = AutoMLSystem.get_instance()
-
-datasets = automl.registry.list(type="dataset")
-
-# your code here
 
 class UserInterfaceDatasets(GeneralUI):
     def __init__(self):
@@ -38,8 +30,10 @@ class UserInterfaceDatasets(GeneralUI):
 
         return file, dataset_name, version
 
+
 class ControllerDatasets(ControllerWithDatasets):
     def __init__(self):
+        super().__init__()
         self.ui_manager = UserInterfaceDatasets()
 
     def run(self):
@@ -63,7 +57,7 @@ class ControllerDatasets(ControllerWithDatasets):
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
             df = pd.read_csv(uploaded_file)
-            self._display_dataset(df)
+            self._display_item(df)
 
             if st.button("Save Dataset"):
                 # Create and save the dataset
@@ -74,7 +68,7 @@ class ControllerDatasets(ControllerWithDatasets):
                         asset_path=dataset_name,
                         version=version
                         )
-                automl.registry.register(dataset)
+                self._automl.registry.register(dataset)
                 self.ui_manager.\
                     display_success(
                         f"Dataset '{dataset_name}' saved successfully!"
@@ -83,3 +77,4 @@ class ControllerDatasets(ControllerWithDatasets):
 if __name__ == "__main__":
     control = ControllerDatasets()
     control.run()
+    
