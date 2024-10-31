@@ -4,6 +4,7 @@ from autoop.core.ml.artifact import Artifact
 import numpy as np
 from copy import deepcopy
 from typing import Literal
+import re
 
 class Model(ABC):
     """
@@ -14,6 +15,12 @@ class Model(ABC):
     def __init__(self, type):
         self._type = type
         self._parameters = {}
+
+    @property
+    def name(self) -> str:
+        name = self.__class__.__name__
+        name = re.sub(r"(?<!^)(?=[A-Z])", "_", name)
+        return name
 
     @property
     def parameters(self) -> dict:
@@ -33,14 +40,17 @@ class Model(ABC):
         """
         return self._type
     
-    def to_artifact(self, name: str) -> Artifact:
-        model = name + ":" + self._type
-        path = "path/to/model" + name + ".pth"
+    def to_artifact(self, name: str, version: str) -> Artifact:
+        model = name
+        path = "assets\\objects" + name
         params = self._parameters
         artifact = Artifact(
-            type_ = model,
+            name = model,
+            type = self._type,
+            version = version,
             asset_path = path,
-            parameters = params
+            parameters = params,
+            data = None
             )
         return artifact
 
