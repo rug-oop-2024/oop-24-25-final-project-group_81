@@ -42,5 +42,5 @@ class ControllerWithDatasets(AbstractServer):
         :param df: the dataframe to be dispalyed
         """
         st.write("Preview of Dataset:")
-        st.dataframe(df)
+        st.dataframe(df, hide_index = True)
         
