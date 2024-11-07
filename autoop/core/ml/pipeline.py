@@ -110,6 +110,8 @@ Pipeline(
                 data = pickle.dumps(data)
                 artifacts.append(Artifact(name=name, data=data))
         pipeline_data = {
+            "dataset_id": self._dataset.id,
+            "metrics": self._metrics,
             "input_features": self._input_features,
             "target_feature": self._target_feature,
             "split": self._split,
@@ -215,4 +217,17 @@ Pipeline(
             "predictions": self._predictions,
         }
         return test_evaluation, train_evaluation
+    
+    def train(self):
+        self._preprocess_features()
+        self._split_data()
+        self._train()
+
+    def predict(self, input_features: list[Feature], dataset: Dataset):
+        input_results = preprocess_features(input_features, dataset)
+        input_vectors = [data for (_, data, _) in input_results]
+        observations = [vector for vector in input_vectors]
+        X_vals = self._compact_vectors(observations)
+        predictions = self._model.predict(X_vals)
+        return predictions
        
