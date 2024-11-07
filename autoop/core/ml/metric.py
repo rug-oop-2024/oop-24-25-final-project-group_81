@@ -51,15 +51,22 @@ def get_metric(name: str) -> "Metric":
         
     return metric
 
+
 class Metric(ABC):
     """
     Base class for all metrics.
     """
-    def __call__(self, ground_truths: Any, predictions: Any):
+    def __call__(self, ground_truths: Any, predictions: Any) -> float:
+        """
+        Retrieves the results of the metric upon call
+        """
         return self._result(ground_truths, predictions)
     
     @abstractmethod
-    def __str__(self):
+    def __str__(self) -> None:
+        """
+        Defines the print representation of an instance
+        """
         pass
 
     @abstractmethod
@@ -98,7 +105,7 @@ class ClassificationMetric:
     Helper class for classification metrics.
     """
     @abstractmethod
-    def __str__(self):
+    def __str__(self) -> None:
         pass
 
     def _compute_tp_fp_tn_fn(
@@ -143,14 +150,14 @@ class ClassificationMetric:
                 )
             
         return tp, fp, tn, fn
-
+    
 
 class AccuracyMetric(Metric, ClassificationMetric):
     """
     An Accuracy metric class. Measures the proportion of
     correctly predicted instances out of the total instances.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Accuracy"
 
     def _result(
@@ -172,12 +179,13 @@ class AccuracyMetric(Metric, ClassificationMetric):
         accuracy = (tp + tn) / (tp + tn + fp + fn)
         return accuracy
     
+
 class PrecisionMetric(Metric, ClassificationMetric):
     """
     A Precision metric class. Measures the proportion of true positive
     predictions out of all positive predictions.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Precision"
     
     def _result(
@@ -199,12 +207,13 @@ class PrecisionMetric(Metric, ClassificationMetric):
         precision = tp / (tp + fp)
         return precision
 
+
 class SensitivityMetric(Metric, ClassificationMetric):
     """
     A Sensitivity metric class. Measures the proportion of true
     positive predictions out of all actual positive predicitons.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Sensitivity"
     
     def _result(
@@ -226,13 +235,14 @@ class SensitivityMetric(Metric, ClassificationMetric):
         sensitivity = tp / (tp + fn)
         return sensitivity
 
+
 class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
     """
     A F1 Score metric class. The F1 Score is the harmonic mean
     of precision and sensitivity. It balances the two metrics
     which is useful when dealing with an imbalanced dataset.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "F1 Score"
     
     def _result(
@@ -264,7 +274,7 @@ class MSEMetric(Metric):
     A Mean-Square Error metric class.
     Measures the average of the squares of the errors.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Mean-Square Error"
     
     def _result(
@@ -285,13 +295,14 @@ class MSEMetric(Metric):
         mse = np.mean((ground_truths - predictions) ** 2)
         return mse
 
+
 class MAEMetric(Metric):
     """
     A Mean-Average Error metric class.
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Mean-Average Error"
     
     def _result(
@@ -314,13 +325,14 @@ class MAEMetric(Metric):
             )
         return mae
 
+
 class RsquaredMetric(Metric):
     """
     A R-squred metric class.
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "R-Squred"
     
     def _result(
@@ -377,13 +389,14 @@ class RsquaredMetric(Metric):
         ss_res = np.sum((ground_truths - predictions) ** 2)
         return ss_res
 
+
 class RMSEMetric(MSEMetric):
     """
     A Root-Mean-Square Error metric class.
     Measures the average of the absolute differences between
     the predicted and the actual values.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return "Root-Mean-Square Error"
     
     def _result(

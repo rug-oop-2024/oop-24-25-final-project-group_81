@@ -93,7 +93,11 @@ Pipeline(
         """
         return self._model
 
-    def artifacts(self, pipeline_name: str, pipeline_version: str) -> List[Artifact]:
+    def artifacts(
+            self,
+            pipeline_name: str,
+            pipeline_version: str
+            ) -> List[Artifact]:
         """
         Used to get the artifacts generated during
         the pipeline execution to be saved.
@@ -147,24 +151,41 @@ Pipeline(
         """
         The way the features are preprocessed.
         """
-        (target_feature_name, target_data, artifact) = preprocess_features([self._target_feature], self._dataset)[0]
+        (target_feature_name, target_data, artifact) = preprocess_features(
+            [self._target_feature],
+            self._dataset
+            )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(self._input_features, self._dataset)
-        for (feature_name, data, artifact) in input_results:
+        input_results = preprocess_features(
+            self._input_features,
+            self._dataset
+            )
+        for (feature_name, _, artifact) in input_results:
             self._register_artifact(feature_name, artifact)
-        # Get the input vectors and output vector, sort by feature name for consistency
+        # Get the input vectors and output vector,
+        # sort by feature name for consistency
         self._output_vector = target_data
-        self._input_vectors = [data for (feature_name, data, artifact) in input_results]
+        self._input_vectors = [data for (_, data, _) in input_results]
 
-    def _split_data(self):
+    def _split_data(self) -> None:
         """
         Split the data into training and testing sets.
         """
         split = self._split
-        self._train_X = [vector[:int(split * len(vector))] for vector in self._input_vectors]
-        self._test_X = [vector[int(split * len(vector)):] for vector in self._input_vectors]
-        self._train_y = self._output_vector[:int(split * len(self._output_vector))]
-        self._test_y = self._output_vector[int(split * len(self._output_vector)):]
+        self._train_X = [
+            vector[:int(split * len(vector))]
+            for vector in self._input_vectors
+            ]
+        self._test_X = [
+            vector[int(split * len(vector)):]
+            for vector in self._input_vectors
+            ]
+        self._train_y = self._output_vector[:int(
+            split * len(self._output_vector)
+            )]
+        self._test_y = self._output_vector[int(
+            split * len(self._output_vector)
+            ):]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """
@@ -219,11 +240,28 @@ Pipeline(
         return test_evaluation, train_evaluation
     
     def train(self):
+        """
+        Used to train the model
+        """
         self._preprocess_features()
         self._split_data()
         self._train()
 
-    def predict(self, input_features: list[Feature], dataset: Dataset):
+    def predict(
+            self,
+            input_features: list[Feature],
+            dataset: Dataset
+            ) -> np.ndarray:
+        """
+        Used to predict data using input data
+
+        :param input_features: the input features
+        :type input_features: list[Feature]
+        :param dataset: the dataaset
+        :type dataset: Dataset
+        :return: the predictions
+        :rtype: np.ndarray
+        """
         input_results = preprocess_features(input_features, dataset)
         input_vectors = [data for (_, data, _) in input_results]
         observations = [vector for vector in input_vectors]

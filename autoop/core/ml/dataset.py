@@ -1,11 +1,14 @@
-from autoop.core.ml.artifact import Artifact
-from abc import ABC, abstractmethod
 import pandas as pd
 import io
 
-class Dataset(Artifact):
+from autoop.core.ml.artifact import Artifact
 
-    def __init__(self, *args, **kwargs):
+
+class Dataset(Artifact):
+    """
+    A class for encompasing a dataset
+    """
+    def __init__(self, *args, **kwargs) -> None:
         """
         Instantiates a dataset by creating an artifact of type
         `dataset`.

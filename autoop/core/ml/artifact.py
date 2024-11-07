@@ -2,7 +2,10 @@ import base64
 
 
 class Artifact:
-    def __init__(self, *args, **kwargs):
+    """
+    A class defining Artifact that can be saved in a Database
+    """
+    def __init__(self, *args, **kwargs) -> None:
         """
         The way of instantiating an artifact.
 

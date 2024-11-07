@@ -1,10 +1,8 @@
-from typing import Literal
-import numpy as np
-
-from autoop.core.ml.dataset import Dataset
-
 class Feature():
-    def __init__(self, name: str, type: str):
+    """
+    A class defining the features of a dataset.
+    """
+    def __init__(self, name: str, type: str) -> None:
         """
         This is the way you instatiate a Feature.
 
