@@ -39,13 +39,10 @@ class PolynomialRegression(Model):
         """
         self._validate_input(observations, ground_truth)
 
-        # Fits transformer to the training data
-        poly = PolynomialFeatures(degree=self._degree)
-        observations_poly = poly.fit_transform(observations)
+        X_val = self._preprocess_data(observations)
 
-        # Makes a linear regression model with the transformed training data
         self._model = LinearRegression()
-        self._model.fit(observations_poly, ground_truth)
+        self._model.fit(X_val, ground_truth)
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """
@@ -54,20 +51,24 @@ class PolynomialRegression(Model):
         :param observations: The input data for which predictions are made.
         :return: The predicted values.
         """
-        self._validate_fit()
         self._validate_num_features(observations)
 
-        predictions = self._model.predict(observations)
+        X_val = self._preprocess_data(observations)
+
+        predictions = self._model.predict(X_val)
 
         return predictions
-
-    def _validate_fit(self) -> None:
+    
+    def _preprocess_data(self, observations: np.ndarray) -> np.ndarray:
         """
-        Checks if model has been fitted
+        Preprocess tha data to perfrom a polynomial regression.
 
-        Raises:
-            ValueError: If model has not stored 'weights'
+        :param observations: the observed data
+        :type observations: np.ndarray
+        :return: the processed data
+        :rtype: np.ndarray
         """
-        if "weights" not in self._parameters:
-            raise ValueError("The model has not been fitted!")
-        
+        poly = PolynomialFeatures(degree=self._degree)
+        observations_poly = poly.fit_transform(observations)
+        return observations_poly
+    

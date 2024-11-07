@@ -151,11 +151,4 @@ class Model(ABC):
                 f"observations in predicting the data"
                 f"({observations.shape[1]})."
             )
-
-    @abstractmethod
-    def _validate_fit(self) -> None:
-        """
-        Function used to validate if the fitting process
-        has been executed as expected.
-        """
-        pass
+        

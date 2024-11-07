@@ -1,7 +1,7 @@
 
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.regression.multiple_linear_regression import MultipleLinearRegression
-from autoop.core.ml.model.regression.sklearn_wrap import Lasso
+from autoop.core.ml.model.regression.sklearn_wrap import LassoWrapper
 from autoop.core.ml.model.regression.polynomial_regression import PolynomialRegression
 from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
 from autoop.core.ml.model.classification.linear_svc import LinearSVC
@@ -11,7 +11,7 @@ from autoop.core.ml.model.classification.multinomial_logistic_regression import 
 REGRESSION_MODELS = [
     "Multiple Linear Regression",
     "Polynomial Regression",
-    "Lasso Regression"
+    "Lasso Wrapper"
 ] # add your models as str here
 
 CLASSIFICATION_MODELS = [
@@ -33,8 +33,8 @@ def get_model(model_name: str) -> Model:
     # Instantiating the model
     if model_name == "Multiple Linear Regression":
         model = MultipleLinearRegression(type=type_)
-    if model_name == "Lasso":
-        model = Lasso(type=type_)
+    if model_name == "Lasso Wrapper":
+        model = LassoWrapper(type=type_)
     if model_name == "Polynomial Regression":
         model = PolynomialRegression(type=type_)
     if model_name == "K Nearest Neighbors":

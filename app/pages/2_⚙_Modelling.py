@@ -275,8 +275,10 @@ class ControllerModelling(ControllerWithDatasets):
 
         if self.ui_manager.action == "View Pipeline":
             self._handle_view_pipeline()
+
         elif self.ui_manager.action == "Execute":
             self._handle_execute_pipeline()
+            
         elif self.ui_manager.action == "Save":
             self._handle_save_pipeline()
 
