@@ -30,7 +30,8 @@ def preprocess_features(
             
             artifact = {
                 "type": "LabelEncoder",
-                "encoder": encoder.get_params()
+                "encoder": encoder.get_params(),
+                "classes": encoder.classes_
                 }
             
             results.append((feature.name, data, artifact))

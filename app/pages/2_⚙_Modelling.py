@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import numpy as np
 
 from app.core.streamlit_utils import GeneralUI
 from app.core.datasets_utils import ControllerWithDatasets
@@ -10,6 +11,7 @@ from autoop.core.ml.metric import get_metric
 from autoop.functional.feature import detect_feature_types
 from autoop.core.ml.model import get_model
 from autoop.core.ml.pipeline import Pipeline
+from autoop.core.ml.metric import Metric
 
 
 class UserInterfaceModelling(GeneralUI):
@@ -186,7 +188,8 @@ class UserInterfaceModelling(GeneralUI):
     
     def show_results(
             self,
-            exection: dict
+            exection: dict,
+            decoder_classes: np.ndarray|None = None
             ) -> None:
         """
         Show the result of the metrics.
@@ -196,13 +199,44 @@ class UserInterfaceModelling(GeneralUI):
         :type exection: dict
         """
         metrics_result = exection["metrics"]
-        predictions_results = exection["predictions"]
         st.subheader("Metrics:")
+        if decoder_classes is None:
+            self._show_numerical_results(metrics_result)
+        else:
+            self._show_categorical_results(metrics_result, decoder_classes)
+
+    def _show_numerical_results(
+            self,
+            metrics_result: tuple[Metric,float]
+            ) -> None:
+        """
+        Shows the results from the metrics of a regression model.
+
+        :param metrics_result: the metrics results
+        :type metrics_result: tuple[Metric,float]
+        """
         for metric_result in metrics_result:
             metric, result = metric_result
-            st.write(f"{metric}: {result}")#{round(result, 2)}")
-        st.subheader("Predictions:")
-        st.write(predictions_results)
+            st.write(f"{metric}: {round(result, 2)}")
+
+    def _show_categorical_results(
+            self,
+            metrics_result: tuple[Metric,np.ndarray],
+            decoder_classes: np.ndarray
+            ) -> None:
+        """
+        Shows the results from the metrics of a categorical model.
+
+        :param metrics_result: the results from the metrics
+        :type metrics_result: tuple[Metric,np.ndarray]
+        :param decoder_classes: the encoded classes
+        :type decoder_classes: np.ndarray
+        """
+        for metric_result in metrics_result:
+            metric, result = metric_result
+            st.write(f"{metric}:")
+            for count, res in enumerate(result):
+                st.write(f" - {decoder_classes[count]}: {round(res, 2)}")
 
     def get_pipeline_saving_info(self) -> tuple[str, str]:
         """
@@ -332,15 +366,23 @@ class ControllerModelling(ControllerWithDatasets):
         self._exection = self._pipeline.execute()
         test_evaluation, train_evaluation = self._exection
 
+        decoder_classes = self._pipeline.decoder_classes
+
         col1, col2 = st.columns(2)
 
         with col1:
             st.header("Test Evaluation")
-            self.ui_manager.show_results(test_evaluation)
+            if decoder_classes is not None:
+                self.ui_manager.show_results(test_evaluation, decoder_classes)
+            else:
+                self.ui_manager.show_results(test_evaluation)
 
         with col2:
             st.header("Train Evaluation")
-            self.ui_manager.show_results(train_evaluation)
+            if decoder_classes is not None:
+                self.ui_manager.show_results(train_evaluation, decoder_classes)
+            else:
+                self.ui_manager.show_results(train_evaluation)
 
     def _handle_save_pipeline(self) -> None:
         """

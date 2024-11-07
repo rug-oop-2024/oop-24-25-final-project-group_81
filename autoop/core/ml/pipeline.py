@@ -92,7 +92,18 @@ Pipeline(
         :rtype: Model
         """
         return self._model
+    
+    @property
+    def decoder_classes(self) -> np.ndarray:
+        """
+        Retrieves the classes from the decoder of the target
+        features. This is used later for displaying the metrics results.
 
+        :return: the classes from the decoder
+        :rtype: np.ndarray
+        """
+        return self._decoder_classes
+    
     def artifacts(
             self,
             pipeline_name: str,
@@ -155,6 +166,13 @@ Pipeline(
             [self._target_feature],
             self._dataset
             )[0]
+        
+        # Saved so that it can be displayed later to the user
+        if "classes" in artifact:
+            self._decoder_classes = artifact["classes"]
+        else:
+            self._decoder_classes = None
+
         self._register_artifact(target_feature_name, artifact)
         input_results = preprocess_features(
             self._input_features,
