@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 
-from app.core.system import AutoMLSystem
 from app.core.streamlit_utils import GeneralUI
 from app.core.datasets_utils import ControllerWithDatasets
 from autoop.core.ml.feature import Feature
@@ -214,7 +213,10 @@ class UserInterfaceModelling(GeneralUI):
         :type return: tuple[str, str]
         """
         st.subheader("Save your Pipeline")
-        pipeline_name = st.text_input("Pipeline Name", value="MyVeryNicePipeline")
+        pipeline_name = st.text_input(
+            "Pipeline Name",
+            value="MyVeryNicePipeline"
+            )
         version = st.text_input("Version", value="1.0")
         return pipeline_name, version
 

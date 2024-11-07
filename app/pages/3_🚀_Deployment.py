@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from typing import Any
 
-from app.core.system import AutoMLSystem
 from app.core.streamlit_utils import GeneralUI
 from app.core.deployment_utils import ControllerWithPipelines
 from autoop.core.ml.dataset import Dataset

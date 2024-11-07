@@ -47,3 +47,4 @@ class GeneralUI:
         :rtype: bool
         """
         return st.button(message, **kwargs)
+    
