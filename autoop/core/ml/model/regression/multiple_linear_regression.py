@@ -1,6 +1,6 @@
-from autoop.core.ml.model import Model
-
 import numpy as np
+
+from autoop.core.ml.model import Model
 
 
 class MultipleLinearRegression(Model):
@@ -55,7 +55,9 @@ class MultipleLinearRegression(Model):
         observations_with_intercept = self._add_trailing_one_to_observations(
             observations
         )
-        predictions = observations_with_intercept @ self._parameters["weights"]
+        predictions = (
+            observations_with_intercept @ self._parameters["weights"]
+            )
         predictions = np.array(predictions).round(2)
         return predictions
 

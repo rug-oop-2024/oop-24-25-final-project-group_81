@@ -1,10 +1,11 @@
 
 from abc import ABC, abstractmethod
-from autoop.core.ml.artifact import Artifact
 import numpy as np
 from copy import deepcopy
-from typing import Literal
 import re
+
+from autoop.core.ml.artifact import Artifact
+
 
 class Model(ABC):
     """
@@ -55,14 +56,19 @@ class Model(ABC):
         return artifact
 
     @abstractmethod
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
+    def fit(
+            self,
+            observations: np.ndarray,
+            ground_truth: np.ndarray
+            ) -> None:
         """
          Fit the model to the observations and ground truth data.
 
         This method takes in observations (input data) and ground truth
         (actual values) and adjusts the model's parameters accordingly.
 
-        :param observations: Input data or features the model will learn from.
+        :param observations: Input data or features the model will
+        learn from.
         :type observations: np.ndarray
         :param ground_truth: Actual values of the target variable
             used to adjust the model's parameters during training.
@@ -121,7 +127,8 @@ class Model(ABC):
         num_samples, num_features = observations.shape
         if num_samples < 1 or num_features < 1:
             raise ValueError(
-                "The input data must have at least one sample and one feature."
+                "The input data must have at least"
+                " one sample and one feature."
             )
 
         if num_features > num_samples:
@@ -144,7 +151,10 @@ class Model(ABC):
             during fit and predict differ.
         """
         num_features = self._parameters["num_features"]
-        if num_features is not None and observations.shape[1] != num_features:
+        if (num_features is not None
+            and
+            observations.shape[1] != num_features
+            ):
             raise ValueError(
                 f"Number of dimensions from fitting the data"
                 f"({num_features}) don't match input"

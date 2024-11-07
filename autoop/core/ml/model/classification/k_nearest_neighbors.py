@@ -1,10 +1,8 @@
+import numpy as np
+from pydantic import Field
 from collections import Counter
 
 from autoop.core.ml.model import Model
-
-import numpy as np
-
-from pydantic import Field
 
 
 class KNearestNeighbors(Model):
@@ -20,7 +18,9 @@ class KNearestNeighbors(Model):
     k: int = Field(default=3, gt=0)
 
     def fit(
-            self, observations: np.ndarray, ground_truth: np.ndarray
+            self,
+            observations: np.ndarray,
+            ground_truth: np.ndarray
     ) -> np.ndarray:
         """
         The `fit` method takes in observations and ground truth data,
