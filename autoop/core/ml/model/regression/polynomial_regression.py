@@ -8,7 +8,7 @@ import numpy as np
 # Documentation: https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LinearRegression.html
 
 class PolynomialRegression(Model):
-    def __init__(self, type):
+    def __init__(self, type) -> None:
         super().__init__(type)
         self._model = None
         self._degree = 2

@@ -9,7 +9,7 @@ from autoop.core.ml.model.\
 from autoop.core.ml.model.\
     classification.k_nearest_neighbors import KNearestNeighbors
 from autoop.core.ml.model.\
-    classification.linear_svc import LinearSVC
+    classification.linear_svc import Linear_SVC
 from autoop.core.ml.model.\
     classification.\
         multinomial_logistic_regression import MultinomialLogisticRegression
@@ -47,7 +47,7 @@ def get_model(model_name: str) -> Model:
     if model_name == "K Nearest Neighbors":
         model = KNearestNeighbors(type=type_)
     if model_name == "Linear SVC":
-        model = LinearSVC(type=type_)
+        model = Linear_SVC(type=type_)
     if model_name == "Multinomial Logistic Regression":
         model = MultinomialLogisticRegression(type=type_)
 

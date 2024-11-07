@@ -3,7 +3,7 @@ import numpy as np
 
 from autoop.core.ml.feature import Feature
 from autoop.core.ml.dataset import Dataset
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 def preprocess_features(
@@ -22,18 +22,18 @@ def preprocess_features(
     raw = dataset.read()
     for feature in features:
         if feature.type == "categorical":
-            encoder = OneHotEncoder()
+            encoder = LabelEncoder()
 
             data = encoder.fit_transform(
-                raw[feature.name].values.reshape(-1, 1)
-                ).toarray()
+                raw[feature.name].values
+                )
             
-            aritfact = {
-                "type": "OneHotEncoder",
+            artifact = {
+                "type": "LabelEncoder",
                 "encoder": encoder.get_params()
                 }
             
-            results.append((feature.name, data, aritfact))
+            results.append((feature.name, data, artifact))
 
         if feature.type == "numerical":
             scaler = StandardScaler()

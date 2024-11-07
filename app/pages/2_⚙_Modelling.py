@@ -200,7 +200,7 @@ class UserInterfaceModelling(GeneralUI):
         st.subheader("Metrics:")
         for metric_result in metrics_result:
             metric, result = metric_result
-            st.write(f"{metric}: {round(result, 2)}")
+            st.write(f"{metric}: {result}")#{round(result, 2)}")
         st.subheader("Predictions:")
         st.write(predictions_results)
 
@@ -331,10 +331,16 @@ class ControllerModelling(ControllerWithDatasets):
         """
         self._exection = self._pipeline.execute()
         test_evaluation, train_evaluation = self._exection
-        st.header("Test Evaluation")
-        self.ui_manager.show_results(test_evaluation)
-        st.header("Train Evaluation")
-        self.ui_manager.show_results(train_evaluation)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.header("Test Evaluation")
+            self.ui_manager.show_results(test_evaluation)
+
+        with col2:
+            st.header("Train Evaluation")
+            self.ui_manager.show_results(train_evaluation)
 
     def _handle_save_pipeline(self) -> None:
         """
@@ -420,7 +426,7 @@ class ControllerModelling(ControllerWithDatasets):
         self._input_features = self.ui_manager.\
             display_input_features(
                 self._features,
-                self._feature_type
+                "numerical"
                 )
 
     def _select_target_features(self) -> None:

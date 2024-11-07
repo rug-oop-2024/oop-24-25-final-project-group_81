@@ -7,8 +7,8 @@ import numpy as np
 
 
 class MultinomialLogisticRegression(Model):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, type) -> None:
+        super().__init__(type)
         self._model = None
 
     def fit(

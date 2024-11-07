@@ -9,8 +9,8 @@ class LassoWrapper(Model):
     Wrapper around the Lasso model from scikit-learn that follows the same
     structure as the abstract base class from BaseModel.
     """
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, type) -> None:
+        super().__init__(type)
         self._model = Lasso()
 
     def fit(

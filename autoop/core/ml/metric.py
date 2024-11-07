@@ -164,7 +164,7 @@ class AccuracyMetric(Metric, ClassificationMetric):
             self,
             ground_truths: List[float],
             predictions: List[float]
-            ) -> float:
+            ) -> np.array:
         """
         This method computes the result of the accuracy metric.
 
@@ -192,7 +192,7 @@ class PrecisionMetric(Metric, ClassificationMetric):
             self,
             ground_truths: List[float],
             predictions: List[float]
-            ) -> float:
+            ) -> np.array:
         """
         This method computes the result of the precision metric.
 
@@ -220,7 +220,7 @@ class SensitivityMetric(Metric, ClassificationMetric):
             self,
             ground_truths: List[float],
             predictions: List[float]
-            ) -> float:
+            ) -> np.array:
         """
         This method computes the result of the sensitivity metric.
 
@@ -249,7 +249,7 @@ class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
             self,
             ground_truths: List[float],
             predictions: List[float]
-            ) -> float:
+            ) -> np.array:
         """
         This method computes the result of the F1 Score metric.
 
@@ -260,8 +260,8 @@ class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
         :return: the result
         :rtype: float
         """
-        precision = PrecisionMetric._result(ground_truths, predictions)
-        sensitivity = SensitivityMetric._result(ground_truths, predictions)
+        precision = PrecisionMetric()._result(ground_truths, predictions)
+        sensitivity = SensitivityMetric()._result(ground_truths, predictions)
         f1_score = 2 * (precision * sensitivity) / (precision + sensitivity)
         return f1_score
 

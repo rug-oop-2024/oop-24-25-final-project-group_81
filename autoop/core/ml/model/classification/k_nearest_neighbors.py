@@ -1,5 +1,4 @@
 import numpy as np
-from pydantic import Field
 from collections import Counter
 
 from autoop.core.ml.model import Model
@@ -14,8 +13,9 @@ class KNearestNeighbors(Model):
     It impliments methods for fitting the model and making predictions
     based on Euclidean distances.
     """
-
-    k: int = Field(default=3, gt=0)
+    def __init__(self, type, k_val: int = 3) -> None:
+        super().__init__(type)
+        self.k = k_val
 
     def fit(
             self,
@@ -39,7 +39,6 @@ class KNearestNeighbors(Model):
         :type ground_truth: np.ndarray
         """
         super()._validate_input(observations, ground_truth)
-
         self._parameters["training_data"] = observations
         self._parameters["training_labels"] = ground_truth
 
@@ -62,10 +61,10 @@ class KNearestNeighbors(Model):
         super()._validate_num_features(observations)
 
         predictions = []
-        k = self.k  # Store 'k' locally for better performance
+
         for observation in observations:
             distances = self._L2_norm(observation)
-            sorted_indices = distances[:, 0].argsort()[:k]
+            sorted_indices = distances[:, 0].argsort()[:self.k]
             closest_labels = distances[sorted_indices, 1]
             most_common_class = Counter(closest_labels).most_common(1)[0][0]
             predictions.append(most_common_class)
