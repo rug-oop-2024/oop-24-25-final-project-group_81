@@ -8,7 +8,13 @@ class Stock:
     Serves as a way to get stock data from Yahoo's API.
     """
 
-    def __init__(self, name: str, start_date: str, end_date: str, interval: str = "1d"):
+    def __init__(
+            self,
+            name: str,
+            start_date: str,
+            end_date: str,
+            interval: str = "1d"
+        ) -> None:
         """
         A way to initializes a Stock object with a name,
         start date, end date, and optional interval.
