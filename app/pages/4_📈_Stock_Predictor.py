@@ -3,8 +3,11 @@ from datetime import date, timedelta
 import os
 
 from app.core.streamlit_utils import GeneralUI
-from pricepredictor.forcast.forecastFactory_initializer import ForcastFactoryInitializer
-from pricepredictor.forcast.forcastFactory import ForcastFactory
+from pricepredictor.forcast.\
+    forecastFactory_initializer import ForcastFactoryInitializer
+from pricepredictor.forcast.\
+    forcastFactory import ForcastFactory
+from app.core.stock_predictor_utils import title
 
 
 class UserInterfaceStockPredictions(GeneralUI):
@@ -33,6 +36,7 @@ class UserInterfaceStockPredictions(GeneralUI):
             description = file.read()
         st.write(description)
 
+    @title("Chose a financial assset")
     def show_avaliable_stocks(self) -> str:
         """
         Shows the avaliable stocks and prompts the user to chose one.
@@ -40,10 +44,10 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the chosen stock.
         :rtype: str
         """
-        st.write("# Chose a financial assset")
         selected_stocks = st.selectbox("Options", ["AAPL", "MSFT"])
         return selected_stocks
 
+    @title("Select a date to do the prediction/s from")
     def avaliable_dates_for_predictions(self) -> date:
         """
         Shows the avaliable dates for predictions and promopt the
@@ -52,7 +56,6 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the user's choice.
         :rtype: date
         """
-        st.write("# Select a date to do the prediction/s from")
         # Define the date range
         min_date = date(2022, 1, 1)
         default_date = date(2024, 10, 1)
@@ -65,6 +68,7 @@ class UserInterfaceStockPredictions(GeneralUI):
         )
         return selected_date
 
+    @title("Chose number of predictions")
     def display_num_of_predictions(self) -> int:
         """
         Displays the avaliable number of predictions and prompts the
@@ -73,12 +77,15 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the user's chosen number of predictions.
         :rtype: int
         """
-        st.write("# Chose number of predictions")
         num_of_predictions = st.slider(
             "Options", min_value=1, max_value=5, step=1, value=5
         )
         return num_of_predictions
-
+    
+    @title(
+            "Chose number of neurons in the first " +
+            "and second hidden layer of the MLP"
+    )
     def avaliable_num_neurons(self) -> int:
         """
         Prompts the user to select number of neurons for the first and second
@@ -87,10 +94,6 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the user's choice of neuron configuration.
         :rtype: int
         """
-        st.write(
-            "# Chose number of neurons in the first " +
-            "and second hidden layer of the MLP"
-        )
         first_layer_number = st.number_input(
             "Select nummber of neurons in the first layer:",
             min_value=4,
@@ -109,6 +112,7 @@ class UserInterfaceStockPredictions(GeneralUI):
 
         return first_layer_number, second_layer_number
 
+    @title("Chose a learning rate")
     def avaliable_learning_rates(self) -> float:
         """
         Prompts the user to chose a learning rate.
@@ -116,7 +120,6 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the chosen learning rate.
         :rtype: float
         """
-        st.write("# Chose a learning rate")
         learning_rate = st.number_input(
             "Select a learning rate:",
             min_value=0.0005,
@@ -127,6 +130,7 @@ class UserInterfaceStockPredictions(GeneralUI):
         )
         return learning_rate
 
+    @title("Chose a batch size")
     def avaliable_batch_size(self) -> int:
         """
         Prompts the user to chose a batch size.
@@ -134,7 +138,6 @@ class UserInterfaceStockPredictions(GeneralUI):
         :return: the chosen batch size.
         :rtype: int
         """
-        st.write("# Chose a batch size")
         batch_size = st.slider("Select a batch size", 1, 5, step=1, value=3)
         return batch_size
 
@@ -220,12 +223,11 @@ class ControllerStockPredictions:
         self.ui_manager.\
             display_info()
 
+    @title("Chose an Action")
     def _chose_button(self) -> None:
         """
         Gives the user a choice between prediction or comparison.
         """
-        st.write("# Chose an Action")
-
         # Get two columns
         col1, col2 = st.columns(2)
         comparison_button = False
