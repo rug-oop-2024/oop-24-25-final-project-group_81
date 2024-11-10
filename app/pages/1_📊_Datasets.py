@@ -8,7 +8,13 @@ from app.core.datasets_utils import ControllerWithDatasets
 
 
 class UserInterfaceDatasets(GeneralUI):
-    def __init__(self):
+    """
+    User interface for Datasets.
+    """
+    def __init__(self) -> None:
+        """
+        Instantiates an User Interface.
+        """
         super().__init__()
         self._action_list = ["Upload Dataset", "View Datasets"]
         self._sidebar_header = "Actions"
@@ -26,11 +32,17 @@ class UserInterfaceDatasets(GeneralUI):
 
 
 class ControllerDatasets(ControllerWithDatasets):
-    def __init__(self):
+    """
+    Used to encapsulate the logic behind user's input.
+    """
+    def __init__(self) -> None:
+        """
+        Instantiates a Controller for Datasets.
+        """
         super().__init__()
         self.ui_manager = UserInterfaceDatasets()
 
-    def run(self):
+    def run(self) -> None:
         """
         Main loop to run the application.
         """
@@ -41,11 +53,12 @@ class ControllerDatasets(ControllerWithDatasets):
         elif self.ui_manager.action == "View Datasets":
             self._handle_view_saved_datasets()
 
-    def _handle_upload_dataset(self):
+    def _handle_upload_dataset(self) -> None:
         """
         Handle dataset upload logic.
         """
-        uploaded_file, dataset_name, version = self.ui_manager.get_dataset_upload_info()
+        uploaded_file, dataset_name, version = self.ui_manager.\
+            get_dataset_upload_info()
 
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
@@ -55,7 +68,10 @@ class ControllerDatasets(ControllerWithDatasets):
             if st.button("Save Dataset"):
                 # Create and save the dataset
                 dataset = Dataset.from_dataframe(
-                    df, name=dataset_name, asset_path=dataset_name, version=version
+                    df,
+                    name=dataset_name,
+                    asset_path=dataset_name,
+                    version=version
                 )
                 self._automl.registry.register(dataset)
                 self.ui_manager.display_success(

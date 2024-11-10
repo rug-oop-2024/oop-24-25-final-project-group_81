@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from typing import Any
 
 from app.core.streamlit_utils import GeneralUI
 from app.core.deployment_utils import ControllerWithPipelines
@@ -15,7 +14,7 @@ class UserInterfaceDeployment(GeneralUI):
     User Interface for Deployment page
     """
 
-    def get_csv_upload_info(self) -> Any:
+    def get_csv_upload_info(self) -> pd.DataFrame:
         """
         UI for uploading a csv to predict on.
         """
@@ -23,12 +22,12 @@ class UserInterfaceDeployment(GeneralUI):
         file = st.file_uploader("Choose a CSV file", type="csv")
         return file
 
-    def display_csv(self, file: Any) -> pd.DataFrame:
+    def display_csv(self, file: pd.DataFrame) -> pd.DataFrame:
         """
         Reads a CSV file and displays it
 
         :param file: a CSV file
-        :type file: Any
+        :type file: pd.DataFrame
         :return df: a panda dataframe of the csv file
         :type return: pd.DataFrame
         """
@@ -52,7 +51,8 @@ class UserInterfaceDeployment(GeneralUI):
         :rtype: list[Feature]
         """
         # Get the selection criterium
-        req_num_features, type_ = self._get_feature_selection_criterium(input_features)
+        req_num_features, type_ = self.\
+            _get_feature_selection_criterium(input_features)
 
         # Get a list of feature names
         list_of_features = [feature.name for feature in features]
@@ -109,12 +109,12 @@ class UserInterfaceDeployment(GeneralUI):
         )
         st.dataframe(styled_df, hide_index=True)
 
-    def _style_the_predictions(self, column: Any) -> list[str]:
+    def _style_the_predictions(self, column: pd.DataFrame) -> list[str]:
         """
         A way to style the column with the predictions.
 
         :param column: the column
-        :type column: Any
+        :type column: pd.DataFrame
         :return: a style map
         :rtype: list[str]
         """
@@ -151,7 +151,8 @@ class ControllerDeployment(ControllerWithPipelines):
             features = self._load_csv()
             if features is not None:
                 # Chose features to do predictions on
-                selected_features = self.ui_manager.display_csv_features(
+                selected_features = self.ui_manager.\
+                    display_csv_features(
                     features, self._input_features
                 )
 
@@ -159,7 +160,10 @@ class ControllerDeployment(ControllerWithPipelines):
                 if len(selected_features) == len(self._input_features):
                     if st.button("Predict"):
                         predictions = self._predict(selected_features)
-                        self._display_predictions(predictions, selected_features)
+                        self._display_predictions(
+                            predictions,
+                            selected_features
+                        )
 
     def _starting_page(self) -> None:
         """
@@ -169,7 +173,9 @@ class ControllerDeployment(ControllerWithPipelines):
 
         st.write("# 🚀 Deployment")
 
-        st.write("You can use this page to load and deploy existing Pipelines!")
+        st.write(
+            "You can use this page to load and deploy existing Pipelines!"
+        )
 
     def _predict(self, selected_features: list[Feature]) -> np.ndarray:
         """
@@ -245,7 +251,8 @@ class ControllerDeployment(ControllerWithPipelines):
         :rtype: list[Feature]
         """
         # Create a dataset object
-        self._dataset_to_predict: Dataset | None = Dataset().from_dataframe(
+        self._dataset_to_predict: Dataset | None = Dataset().\
+            from_dataframe(
             df, name="None", asset_path="None", version="None"
         )
 
