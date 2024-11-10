@@ -76,7 +76,10 @@ class NetworkFactory:
         """
         # Create Sequential model
         self._model.create_sequential_model(
-            self._model_shape, self._activations, self._input_shape, self._output_shape
+            self._model_shape,
+            self._activations,
+            self._input_shape,
+            self._output_shape
         )
 
         # Compile the model
@@ -92,7 +95,11 @@ class NetworkFactory:
             batch_size,
         )
 
-    def predict(self, data: tf.Tensor, number_of_predictions: int) -> list[float]:
+    def predict(
+            self,
+            data: tf.Tensor,
+            number_of_predictions: int
+    ) -> list[float]:
         """
         Generates a specified number of predictions based on input data
         using a sliding window approach. Appends each new prediction
@@ -131,7 +138,8 @@ class NetworkFactory:
             preprocessed_prediction = tf.reshape(prediction[0][0], (-1, 1))
 
             # Add the prediction to the sliding data
-            sliding_data = tf.concat([sliding_data, preprocessed_prediction], axis=1)
+            sliding_data = tf.\
+                concat([sliding_data, preprocessed_prediction], axis=1)
 
         # Separate the predictions from the input data and convert to list
         predictions = sliding_data[0][len(data[0]) :].numpy().tolist()

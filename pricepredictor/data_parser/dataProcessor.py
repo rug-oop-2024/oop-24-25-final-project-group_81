@@ -37,7 +37,9 @@ class DataProcessor:
         return deepcopy(self._data)
 
     def calculate_SMA(
-        self, stock_data: list[tuple[float, float, float, float]], length: int = 3
+        self,
+        stock_data: list[tuple[float, float, float, float]],
+        length: int = 3
     ) -> list[float]:
         """
         The function `_calculate_SMA` calculates the
@@ -69,7 +71,9 @@ class DataProcessor:
         return SMA_list
 
     def calculate_residuals(
-        self, stock_data: list[tuple[float, float, float, float]], sma: list[float]
+        self,
+        stock_data: list[tuple[float, float, float, float]],
+        sma: list[float]
     ) -> list[float]:
         """
         Calculates the residuals by substracting the closing prices
@@ -91,7 +95,10 @@ class DataProcessor:
         return residuals
 
     def extrapolate_the_SMA(
-        self, SMA_values: list[float], future_periods: int, start: int = 0
+        self,
+        SMA_values: list[float],
+        future_periods: int,
+        start: int = 0
     ) -> list[float]:
         """
         This method extrapolates a Simple Moving Average (SMA) using
@@ -122,11 +129,16 @@ class DataProcessor:
         model.fit(x_coord, y_coord)
 
         # Define the x-coordinates for future values we want to predict
-        x_future = np.arange(len(SMA_values), len(SMA_values) + future_periods)
+        stop = len(SMA_values) + future_periods
+        x_future = np.arange(
+            len(SMA_values),
+            stop
+        )
         x_future = x_future.reshape((-1, 1))
 
         # Do the extrapolation
-        extrapolated_SMA = model.predict(x_future).round(2)
+        extrapolated_SMA = model.predict(x_future)\
+            .round(2)
 
         # Convert to list
         extrapolated_SMA = extrapolated_SMA.tolist()
@@ -134,7 +146,8 @@ class DataProcessor:
         # Align with the data
         align_value = y_coord[-1]
 
-        aligned_extrapolation = self._align_extrapolation(extrapolated_SMA, align_value)
+        aligned_extrapolation = self.\
+            _align_extrapolation(extrapolated_SMA, align_value)
 
         return aligned_extrapolation
 
@@ -144,7 +157,7 @@ class DataProcessor:
         input_labels: list[float],
         train_size: float = 0.7,
         val_size: float = 0.15,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    ) -> tuple:
         """
         Applies a train, test, and validation split on the data and labels.
 
@@ -233,7 +246,10 @@ class DataProcessor:
             allData.append(data)
         return allData
 
-    def _unpack_data(self, data: list[tuple[str, float, float, float, float]]) -> None:
+    def _unpack_data(
+            self,
+            data: list[tuple[str, float, float, float, float]]
+    ) -> None:
         """
         Unpacks the data and separates Date from the Stock Data.
         Used in the instantiation of the Class
@@ -244,7 +260,8 @@ class DataProcessor:
         """
         dates, open_, high, low, close = zip(*data)
         self._dates = dates
-        data = [(op, hi, lo, cl) for op, hi, lo, cl in zip(open_, high, low, close)]
+        zipped = zip(open_, high, low, close)
+        data = [(op, hi, lo, cl) for op, hi, lo, cl in zipped]
         rounded_data = self._round_data(data)
         self._data = rounded_data
 

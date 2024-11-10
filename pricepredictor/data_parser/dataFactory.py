@@ -50,7 +50,7 @@ class StockDataFactory:
 
     def get_stock_data(
         self,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    ) -> tuple:
         """
         This method is used to get the required data for the training
         of a Neural Network.
@@ -90,7 +90,9 @@ class StockDataFactory:
             validation_labels,
             testing_labels,
         ) = self._data_processor.split_data(
-            data, labels, self._testing_percentage, self._validation_percentage
+            data, labels,
+            self._testing_percentage,
+            self._validation_percentage
         )
 
         return (
@@ -103,7 +105,10 @@ class StockDataFactory:
         )
 
     def get_raw_data(
-        self, number_of_points: int, end_date: str = "2024-09-01", interval: str = "1d"
+        self,
+        number_of_points: int,
+        end_date: str = "2024-09-01",
+        interval: str = "1d"
     ) -> list[tuple[str, float, float, float, float]]:
         """
         A way of getting a number of raw datapoints.
@@ -139,7 +144,8 @@ class StockDataFactory:
         :rtype: list[float]
         """
         stock_data = DataProcessor(data).data
-        return DataProcessor(None).calculate_SMA(stock_data, length=sma_lookback_period)
+        return DataProcessor(None).\
+            calculate_SMA(stock_data, length=sma_lookback_period)
 
     def get_extrapolated_sma(
         self,
@@ -175,7 +181,9 @@ class StockDataFactory:
         )
 
     def get_residuals_data(
-        self, raw_data: list[tuple[str, float, float, float, float]], sma: list[float]
+        self,
+        raw_data: list[tuple[str, float, float, float, float]],
+        sma: list[float]
     ) -> list[float]:
         """
         A way of getting the residuals of the SMA and the
@@ -189,10 +197,12 @@ class StockDataFactory:
         :rtype: list[float]
         """
         stock_data = DataProcessor(raw_data).data
-        return DataProcessor(None).calculate_residuals(stock_data, sma)
+        return DataProcessor(None).\
+            calculate_residuals(stock_data, sma)
 
     def get_closing_prices(
-        self, raw_data: list[tuple[str, float, float, float, float]]
+        self,
+        raw_data: list[tuple[str, float, float, float, float]]
     ) -> list[float]:
         """
         Gets closing prices from raw data.
@@ -223,7 +233,10 @@ class StockDataFactory:
         sets = self._data_processor.generate_sets(self._points_per_set + 2)
         return sets
 
-    def _calculate_residuals(self, sets: list[list[float]]) -> list[list[float]]:
+    def _calculate_residuals(
+            self,
+            sets: list[list[float]]
+    ) -> list[list[float]]:
         """
         This method is used to calculate the residuals
         of the different sets.

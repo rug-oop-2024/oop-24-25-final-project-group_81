@@ -60,7 +60,7 @@ class PlotStocks:
 
     def masterPlot(self) -> Figure:
         """
-        Creates a comprehensive plot displaying candlestick data and residuals
+        Creates a comprehensive plot displaying candlestick data and residual
         data.
         """
         self.masterPlot_on = True
@@ -120,7 +120,9 @@ class PlotStocks:
         # Candlestick plotting
         for i in range(num_data):
             # Plot the line between high and low (the wick)
-            ax.plot([dates[i], dates[i]], [self._high[i], self._low[i]], color="black")
+            wick_x = [dates[i], dates[i]]
+            wick_y = [self._high[i], self._low[i]]
+            ax.plot(wick_x, wick_y, color="black")
 
             # Determine the color based on the open and close prices
             color = "green" if self._close[i] > self._open[i] else "red"
@@ -266,8 +268,8 @@ class PlotStocks:
 
         future_dates_numeric = mdates.date2num(future_dates[1:])
 
-        for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
-            rounded_closing_price = round(predicted_closing_price, 2)
+        for count, price in enumerate(self._predicted_closing_prices):
+            rounded_closing_price = round(price, 2)
             ax.hlines(
                 rounded_closing_price,
                 future_dates_numeric[count] - 0.2,
@@ -374,8 +376,8 @@ class PlotForcastComparison(PlotStocks):
 
         future_dates_numeric = mdates.date2num(future_dates)
 
-        for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
-            rounded_closing_price = round(predicted_closing_price, 2)
+        for count, price in enumerate(self._predicted_closing_prices):
+            rounded_closing_price = round(price, 2)
             ax.hlines(
                 rounded_closing_price,
                 future_dates_numeric[count] - 0.2,
