@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Any
 from tensorflow import keras
 from tensorflow.keras.models import Sequential  # type: ignore
 from tensorflow.keras.layers import Dense, Input  # type: ignore
@@ -14,7 +13,7 @@ class Model:
     (that is used to create an MLP).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Instantiates a model.
         """
@@ -46,7 +45,10 @@ class Model:
         model.add(Input(shape=(input_shape,)))
 
         # Add all layers, including hidden layers and the output layer
-        for number_of_neurons, activation in zip(model_shape, activations[:-1]):
+        for (
+            number_of_neurons,
+            activation
+            ) in zip(model_shape, activations[:-1]):
             model.add(Dense(number_of_neurons, activation=activation))
 
         # Add the output layer
@@ -69,7 +71,9 @@ class Model:
         """
         self._model_validator()
         self.model.compile(
-            optimizer=Adam(learning_rate=learning_rate), loss=lossFunc, metrics=metrics
+            optimizer=Adam(learning_rate=learning_rate),
+            loss=lossFunc,
+            metrics=metrics
         )
 
     def trainModel(
@@ -90,8 +94,8 @@ class Model:
         :param training_labels: Labels for training data, matching the output
         shape of the model.
         :type training_labels: np.ndarray
-        :param validation_data: Data for validation during training to prevent
-        overfitting.
+        :param validation_data: Data for validation during training to
+        prevent overfitting.
         :type validation_data: np.ndarray
         :param validation_labels: Labels for validation data.
         :type validation_labels: np.ndarray
@@ -147,7 +151,7 @@ class Model:
         mae = mean_absolute_error(testing_labels, predictions)
         return mae
 
-    def model_summary(self) -> Any:
+    def model_summary(self) -> dict:
         """
         Returns the summary of the model.
         """
@@ -176,7 +180,9 @@ class Model:
         If the file doesn't exists it will raise an exception.
         """
         try:
-            self.model = keras.models.load_model(f"models/{stockName}_model.keras")
+            self.model = keras.models.load_model(
+                f"models/{stockName}_model.keras"
+            )
         except FileExistsError(
             f"No such Model named '{stockName}_model.keras'"
             "exists in the 'models' folder!"
