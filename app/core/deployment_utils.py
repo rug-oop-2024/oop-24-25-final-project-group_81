@@ -27,7 +27,7 @@ class ControllerWithPipelines(AbstractServer):
         """
         super().__init__(item_name="pipeline")
 
-    def _handle_view_saved_items_logic(self):
+    def _handle_view_saved_items_logic(self) -> None:
         """
         Handles the logic of viewing save pipelines in the database.
         """
@@ -113,7 +113,7 @@ class ControllerWithPipelines(AbstractServer):
 
         self._model = get_model(self._model_name)
 
-    def _display_item(self):
+    def _display_item(self) -> None:
         """
         Display a preview of the pipeline.
         """
@@ -138,7 +138,7 @@ class ControllerWithPipelines(AbstractServer):
             st.write("# Target feature:")
             self._display_features([self._target_feature])
 
-    def _display_features(self, features: list[Feature]):
+    def _display_features(self, features: list[Feature]) -> None:
         """
         Display the features in a nice way in the form of dataframes.
 

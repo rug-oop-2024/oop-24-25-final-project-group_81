@@ -1,8 +1,8 @@
 import streamlit as st
-from typing import Any
 
 from app.core.system import AutoMLSystem
 from app.core.streamlit_utils import GeneralUI
+from autoop.core.ml.artifact import Artifact
 
 
 class AbstractServer:
@@ -12,7 +12,7 @@ class AbstractServer:
     is nothing abstract about this class.
     """
 
-    def __init__(self, item_name: str):
+    def __init__(self, item_name: str) -> None:
         """
         A way of initialising an abstract server.
 
@@ -50,18 +50,18 @@ class AbstractServer:
             item_attributes = self._get_item_attributes(selected_item_id)
             return item_attributes
 
-    def _display_item(self):
+    def _display_item(self) -> None:
         """
         A way of displaying an item. Must impliment in children!
         """
         raise NotImplementedError("You need to implement this method")
 
-    def _choose_from_saved_items(self, item_list: list[Any]) -> str:
+    def _choose_from_saved_items(self, item_list: list[Artifact]) -> str:
         """
         Display the list of saved items and allow the user to select one.
 
         :param item_list: the list of saved items
-        :type item_list: list[Any]
+        :type item_list: list[Artifact]
         :return selcted_item: the choice of the user
         :type return: str
         """
@@ -70,7 +70,7 @@ class AbstractServer:
         return selected_item
 
     def _get_name_and_id_lists(
-        self, item_dict: dict[Any]
+        self, item_dict: dict[Artifact]
     ) -> tuple[list[str], list[str]]:
         """
         Creates two list, one containing the names of the items
@@ -78,7 +78,7 @@ class AbstractServer:
         contains the ids of said lists.
 
         :param item_dict: the dictinary containing the items
-        :type item_dict: dict[Any]
+        :type item_dict: dict[Artifact]
         :return: a list with names and a list with ids
         :rtype: tuple[list[str], list[str]]
         """
@@ -101,10 +101,10 @@ class AbstractServer:
         :param selected_item: the selected item's name
         :type selected_item: str
         :param item_list: the list of avaliable items
-        :type item_list: list[Any]
+        :type item_list: list[Artifact]
         :param item_id_list: the list of the ids of the avaliable
         items
-        :type item_id_list: list[Any]
+        :type item_id_list: list[Artifact]
         :return: the id of the selected item
         :rtype: str
         """
@@ -112,14 +112,14 @@ class AbstractServer:
         selected_item_id = item_id_list[selected_id_index]
         return selected_item_id
 
-    def _get_item_attributes(self, selected_item_id: str) -> Any:
+    def _get_item_attributes(self, selected_item_id: str) -> Artifact:
         """
         Gets the attributes of the selected item.
 
         :param selected_item_id: the id of the selected item
         :type selected_item_id: str
         :return: the attributes of the selected item
-        :rtype: Any
+        :rtype: Artifact
         """
         selected_artifact = self._automl.registry.get(selected_item_id)
         artifact_attributes = vars(selected_artifact)

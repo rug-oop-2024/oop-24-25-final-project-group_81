@@ -12,7 +12,7 @@ class ControllerWithDatasets(AbstractServer):
     which is the generic way of viewing items in the database.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         A way of insantiating the object. Sets the constructor
         of the AbstractServer in such a way as to look for `dataset`
@@ -20,7 +20,7 @@ class ControllerWithDatasets(AbstractServer):
         """
         super().__init__(item_name="dataset")
 
-    def _handle_view_saved_datasets(self):
+    def _handle_view_saved_datasets(self) -> None:
         """
         Handle dataset viewing logic. Uses the
         `_handle_view_saved_items_logic` method of AbstractServer
@@ -35,7 +35,7 @@ class ControllerWithDatasets(AbstractServer):
             self._display_item(df)
             self._dataset = dataset
 
-    def _display_item(self, df: pd.DataFrame):
+    def _display_item(self, df: pd.DataFrame) -> None:
         """
         Display the dataset as a dataframe.
 

@@ -7,7 +7,10 @@ class GeneralUI:
     This is a class for Genral User Interface with streamlit.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Instantiating a GeneralUI.
+        """
         self.action: str | None = None
         self._action_list: list[str] | None = None
         self._sidebar_header: str = None
