@@ -3,3 +3,8 @@ pydantic
 pandas
 numpy
 scikit-learn
+yfinance
+matplotlib
+tensorflow
+pandas-ta
+seaborn

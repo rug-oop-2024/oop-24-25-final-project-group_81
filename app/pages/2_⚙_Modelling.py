@@ -15,20 +15,10 @@ from autoop.core.ml.metric import Metric
 
 
 class UserInterfaceModelling(GeneralUI):
-    def __init__(self) -> None:
-        """
-        A way of instantiating the UI.
-        """
-        self.action = None
-
-    def render_sidebar(self) -> None:
-        """
-        Render the sidebar for selecting an action.
-        """
-        action_list = ["View Pipeline", "Execute", "Save"]
-        st.sidebar.header("The Pipeline is ready!")
-        self.action = st.sidebar.\
-            selectbox("Choose an Action", action_list)
+    def __init__(self):
+        super().__init__()
+        self._action_list = ["View Pipeline", "Execute", "Save"]
+        self._sidebar_header = "The Pipeline is ready!"
 
     def display_model_types(
             self,

@@ -9,15 +9,9 @@ from app.core.datasets_utils import ControllerWithDatasets
 
 class UserInterfaceDatasets(GeneralUI):
     def __init__(self):
-        self.action = None
-
-    def render_sidebar(self) -> None:
-        """
-        Render the sidebar for selecting an action.
-        """
-        st.sidebar.header("Actions")
-        self.action = st.sidebar.\
-            selectbox("Choose Action", ["Upload Dataset", "View Datasets"])
+        super().__init__()
+        self._action_list = ["Upload Dataset", "View Datasets"]
+        self._sidebar_header = "Actions"
 
     def get_dataset_upload_info(self) -> tuple[Any, str, str]:
         """
