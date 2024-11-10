@@ -10,6 +10,5 @@ _ = TestStorage()
 _ = TestFeatures()
 _ = TestPipeline()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-    

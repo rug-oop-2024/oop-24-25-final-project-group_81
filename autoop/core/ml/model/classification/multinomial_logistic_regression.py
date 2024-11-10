@@ -11,11 +11,7 @@ class MultinomialLogisticRegression(Model):
         super().__init__(type)
         self._model = None
 
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-            ) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fits the model to the observations and ground truth data.
 
@@ -42,7 +38,7 @@ class MultinomialLogisticRegression(Model):
         self._validate_fit()
         predictions = self._model.predict(observations)
         return predictions
-    
+
     def _validate_fit(self):
         """
         Used to validate if the model has been fitted.

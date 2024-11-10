@@ -10,16 +10,17 @@ from autoop.functional.preprocessing import preprocess_features
 import numpy as np
 
 
-class Pipeline():
-    
-    def __init__(self, 
-                 metrics: List[Metric],
-                 dataset: Dataset, 
-                 model: Model,
-                 input_features: List[Feature],
-                 target_feature: Feature,
-                 split=0.8,
-                 ) -> None:
+class Pipeline:
+
+    def __init__(
+        self,
+        metrics: List[Metric],
+        dataset: Dataset,
+        model: Model,
+        input_features: List[Feature],
+        target_feature: Feature,
+        split=0.8,
+    ) -> None:
         """
         A way to initialise a pipeline.
         Pipeline: a state machine that orchestrates the different stages.
@@ -50,24 +51,14 @@ class Pipeline():
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if (
-            target_feature.type == "categorical"
-            and
-            model.type != "classification"
-            ):
+        if target_feature.type == "categorical" and model.type != "classification":
             raise ValueError(
-                "Model type must be classification"
-                " for categorical target feature"
-                )
-        if (
-            target_feature.type == "continuous"
-            and
-            model.type != "regression"
-            ):
+                "Model type must be classification" " for categorical target feature"
+            )
+        if target_feature.type == "continuous" and model.type != "regression":
             raise ValueError(
-                "Model type must be regression"
-                " for continuous target feature"
-                )
+                "Model type must be regression" " for continuous target feature"
+            )
 
     def __str__(self) -> str:
         """
@@ -92,7 +83,7 @@ Pipeline(
         :rtype: Model
         """
         return self._model
-    
+
     @property
     def decoder_classes(self) -> np.ndarray:
         """
@@ -103,12 +94,8 @@ Pipeline(
         :rtype: np.ndarray
         """
         return self._decoder_classes
-    
-    def artifacts(
-            self,
-            pipeline_name: str,
-            pipeline_version: str
-            ) -> List[Artifact]:
+
+    def artifacts(self, pipeline_name: str, pipeline_version: str) -> List[Artifact]:
         """
         Used to get the artifacts generated during
         the pipeline execution to be saved.
@@ -132,25 +119,21 @@ Pipeline(
             "split": self._split,
         }
         model_artifact = self._model.to_artifact(
-            name=f"{pipeline_name}_model:{self._model.name}",
-            version=pipeline_version
-            )
-        metadata = {
-            "model_id": model_artifact.id,
-            "model_type": model_artifact.type
-        }
+            name=f"{pipeline_name}_model:{self._model.name}", version=pipeline_version
+        )
+        metadata = {"model_id": model_artifact.id, "model_type": model_artifact.type}
         artifacts.append(
             Artifact(
                 name=f"{pipeline_name}_config",
                 type="pipeline",
                 version=pipeline_version,
                 data=pickle.dumps(pipeline_data),
-                metadata=metadata
-                )
+                metadata=metadata,
             )
+        )
         artifacts.append(model_artifact)
         return artifacts
-    
+
     def _register_artifact(self, name: str, artifact) -> None:
         """
         A helper method for registering an artifact in
@@ -163,10 +146,9 @@ Pipeline(
         The way the features are preprocessed.
         """
         (target_feature_name, target_data, artifact) = preprocess_features(
-            [self._target_feature],
-            self._dataset
-            )[0]
-        
+            [self._target_feature], self._dataset
+        )[0]
+
         # Saved so that it can be displayed later to the user
         if "classes" in artifact:
             self._decoder_classes = artifact["classes"]
@@ -174,11 +156,8 @@ Pipeline(
             self._decoder_classes = None
 
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(
-            self._input_features,
-            self._dataset
-            )
-        for (feature_name, _, artifact) in input_results:
+        input_results = preprocess_features(self._input_features, self._dataset)
+        for feature_name, _, artifact in input_results:
             self._register_artifact(feature_name, artifact)
         # Get the input vectors and output vector,
         # sort by feature name for consistency
@@ -191,19 +170,13 @@ Pipeline(
         """
         split = self._split
         self._train_X = [
-            vector[:int(split * len(vector))]
-            for vector in self._input_vectors
-            ]
+            vector[: int(split * len(vector))] for vector in self._input_vectors
+        ]
         self._test_X = [
-            vector[int(split * len(vector)):]
-            for vector in self._input_vectors
-            ]
-        self._train_y = self._output_vector[:int(
-            split * len(self._output_vector)
-            )]
-        self._test_y = self._output_vector[int(
-            split * len(self._output_vector)
-            ):]
+            vector[int(split * len(vector)) :] for vector in self._input_vectors
+        ]
+        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
+        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """
@@ -239,10 +212,10 @@ Pipeline(
         self._preprocess_features()
         self._split_data()
         self._train()
-        
+
         # Evaluate on the test data
         self._evaluate(self._test_X, self._test_y)
-        
+
         test_evaluation = {
             "metrics": self._metrics_results,
             "predictions": self._predictions,
@@ -256,7 +229,7 @@ Pipeline(
             "predictions": self._predictions,
         }
         return test_evaluation, train_evaluation
-    
+
     def train(self):
         """
         Used to train the model
@@ -265,11 +238,7 @@ Pipeline(
         self._split_data()
         self._train()
 
-    def predict(
-            self,
-            input_features: list[Feature],
-            dataset: Dataset
-            ) -> np.ndarray:
+    def predict(self, input_features: list[Feature], dataset: Dataset) -> np.ndarray:
         """
         Used to predict data using input data
 
@@ -286,4 +255,3 @@ Pipeline(
         X_vals = self._compact_vectors(observations)
         predictions = self._model.predict(X_vals)
         return predictions
-       

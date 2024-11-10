@@ -1,4 +1,3 @@
-
 import unittest
 import random
 import tempfile
@@ -10,6 +9,7 @@ class TestStorage(unittest.TestCase):
     """
     Unit tests for the LocalStorage class.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment before each test.
@@ -83,4 +83,3 @@ class TestStorage(unittest.TestCase):
         keys = self.storage.list("test")
         keys = ["/".join(key.split("/")[-2:]) for key in keys]
         self.assertEqual(set(keys), set(random_keys))
-            

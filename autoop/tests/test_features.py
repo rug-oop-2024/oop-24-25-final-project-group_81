@@ -12,6 +12,7 @@ class TestFeatures(unittest.TestCase):
     Unit tests for the feature detection functionality
     in the feature extraction module.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment before each test.
@@ -50,7 +51,7 @@ class TestFeatures(unittest.TestCase):
             self.assertIsInstance(feature, Feature)
             self.assertEqual(feature.name in iris.feature_names, True)
             self.assertEqual(feature.type, "numerical")
-        
+
     def test_detect_features_with_categories(self) -> None:
         """
         Test detecting features in a dataset with both
@@ -96,11 +97,9 @@ class TestFeatures(unittest.TestCase):
         for feature in features:
             self.assertIsInstance(feature, Feature)
             self.assertEqual(feature.name in data.feature_names, True)
-        for detected_feature in filter(
-            lambda x: x.name in numerical_columns, features
-            ):
+        for detected_feature in filter(lambda x: x.name in numerical_columns, features):
             self.assertEqual(detected_feature.type, "numerical")
         for detected_feature in filter(
             lambda x: x.name in categorical_columns, features
-            ):
+        ):
             self.assertEqual(detected_feature.type, "categorical")

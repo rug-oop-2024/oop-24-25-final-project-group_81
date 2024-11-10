@@ -4,16 +4,13 @@ import numpy as np
 
 # Documentation: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.predict
 
+
 class Linear_SVC(Model):
     def __init__(self, type) -> None:
         super().__init__(type)
         self._model = None
 
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-            ) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fits the model to the observations and ground truth data.
 
@@ -40,7 +37,7 @@ class Linear_SVC(Model):
         self._validate_fit()
         predictions = self._model.predict(observations)
         return predictions
-    
+
     def _validate_fit(self):
         """
         Used to validate if the model has been fitted.

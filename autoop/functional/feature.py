@@ -1,4 +1,3 @@
-
 from typing import List
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
@@ -26,9 +25,9 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
             feature_type = "categorical"
         else:
             print(
-                f"Column {column} is of neither " +
-                "`numerical` nor `categorical` type")
-        
+                f"Column {column} is of neither " + "`numerical` nor `categorical` type"
+            )
+
         # Creating an instance of Feature
         feature = Feature(column, feature_type)
         features.append(feature)

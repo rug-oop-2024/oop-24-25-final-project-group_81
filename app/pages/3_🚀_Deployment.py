@@ -13,7 +13,8 @@ from autoop.core.ml.feature import Feature
 class UserInterfaceDeployment(GeneralUI):
     """
     User Interface for Deployment page
-    """       
+    """
+
     def get_csv_upload_info(self) -> Any:
         """
         UI for uploading a csv to predict on.
@@ -21,7 +22,7 @@ class UserInterfaceDeployment(GeneralUI):
         st.subheader("Upload a CSV you wish to do predictions on!")
         file = st.file_uploader("Choose a CSV file", type="csv")
         return file
-    
+
     def display_csv(self, file: Any) -> pd.DataFrame:
         """
         Reads a CSV file and displays it
@@ -33,14 +34,12 @@ class UserInterfaceDeployment(GeneralUI):
         """
         df = pd.read_csv(file)
         st.write("Preview:")
-        st.dataframe(df, hide_index = True)
+        st.dataframe(df, hide_index=True)
         return df
-    
+
     def display_csv_features(
-            self,
-            features: list[Feature],
-            input_features: list[Feature]
-            ) -> list[Feature]:
+        self, features: list[Feature], input_features: list[Feature]
+    ) -> list[Feature]:
         """
         Displays a CSV features selection menu.
 
@@ -53,34 +52,36 @@ class UserInterfaceDeployment(GeneralUI):
         :rtype: list[Feature]
         """
         # Get the selection criterium
-        req_num_features, type_ = self.\
-            _get_feature_selection_criterium(input_features)
-        
+        req_num_features, type_ = self._get_feature_selection_criterium(input_features)
+
         # Get a list of feature names
         list_of_features = [feature.name for feature in features]
 
         # User input instructions
-        st.write("# In order to make a prediction you need to chose " +
-                 str(req_num_features) + " " +
-                 type_ + " " +
-                 "features!")
-        
+        st.write(
+            "# In order to make a prediction you need to chose "
+            + str(req_num_features)
+            + " "
+            + type_
+            + " "
+            + "features!"
+        )
+
         selections = st.multiselect(
             f"Avaliable {type_} features:",
             list_of_features,
-            max_selections = req_num_features)
+            max_selections=req_num_features,
+        )
 
         # Get feature from selection
         selected_features = [
-            feature
-            for feature in features if feature.name in selections
-            ]
+            feature for feature in features if feature.name in selections
+        ]
         return selected_features
-    
+
     def _get_feature_selection_criterium(
-            self,
-            input_features: list[Feature]
-            ) -> tuple[int, str]:
+        self, input_features: list[Feature]
+    ) -> tuple[int, str]:
         """
         Used to generate feature slection criterium.
 
@@ -93,7 +94,7 @@ class UserInterfaceDeployment(GeneralUI):
         required_num_features = len(input_features)
         type_of_features = input_features[0].type
         return required_num_features, type_of_features
-    
+
     def display_predictions(self, dict_with_predictions: dict) -> None:
         """
         Used to displat the predictions of the pipeline.
@@ -104,11 +105,9 @@ class UserInterfaceDeployment(GeneralUI):
         """
         df = pd.DataFrame(dict_with_predictions)
         styled_df = df.style.apply(
-            self._style_the_predictions,
-            subset=["Predicted Values"],
-            axis=0
-            )
-        st.dataframe(styled_df, hide_index = True)
+            self._style_the_predictions, subset=["Predicted Values"], axis=0
+        )
+        st.dataframe(styled_df, hide_index=True)
 
     def _style_the_predictions(self, column: Any) -> list[str]:
         """
@@ -119,12 +118,14 @@ class UserInterfaceDeployment(GeneralUI):
         :return: a style map
         :rtype: list[str]
         """
-        return ['background-color: rgba(0, 255, 0, 0.2)'] * len(column)
+        return ["background-color: rgba(0, 255, 0, 0.2)"] * len(column)
+
 
 class ControllerDeployment(ControllerWithPipelines):
     """
     Controller for the Deployment page
     """
+
     def __init__(self) -> None:
         """
         A way of instantiating a ControllerDeployment
@@ -150,17 +151,15 @@ class ControllerDeployment(ControllerWithPipelines):
             features = self._load_csv()
             if features is not None:
                 # Chose features to do predictions on
-                selected_features = self.ui_manager.\
-                    display_csv_features(features, self._input_features)
-                
+                selected_features = self.ui_manager.display_csv_features(
+                    features, self._input_features
+                )
+
                 # Predict when sufficient number of features selected
                 if len(selected_features) == len(self._input_features):
                     if st.button("Predict"):
                         predictions = self._predict(selected_features)
-                        self._display_predictions(
-                            predictions,
-                            selected_features
-                            )
+                        self._display_predictions(predictions, selected_features)
 
     def _starting_page(self) -> None:
         """
@@ -170,14 +169,9 @@ class ControllerDeployment(ControllerWithPipelines):
 
         st.write("# 🚀 Deployment")
 
-        st.write(
-            "You can use this page to load and deploy existing Pipelines!"
-            )
+        st.write("You can use this page to load and deploy existing Pipelines!")
 
-    def _predict(
-            self,
-            selected_features: list[Feature]
-            ) -> np.ndarray:
+    def _predict(self, selected_features: list[Feature]) -> np.ndarray:
         """
         Used to predict on the slected features using the logic of
         the Pipeline class.
@@ -189,15 +183,13 @@ class ControllerDeployment(ControllerWithPipelines):
         """
         self._pipeline.train()
         predictions = self._pipeline.predict(
-            selected_features,
-            self._dataset_to_predict)
+            selected_features, self._dataset_to_predict
+        )
         return predictions
 
     def _display_predictions(
-            self,
-            predictions: np.ndarray,
-            selected_features: list[Feature]
-            ) -> None:
+        self, predictions: np.ndarray, selected_features: list[Feature]
+    ) -> None:
         """
         A way of displaying the predictions after they have
         been made.
@@ -215,8 +207,8 @@ class ControllerDeployment(ControllerWithPipelines):
         # to be used as keys in the dict
         selected_features_list: list[str] = [
             feature.name for feature in selected_features
-            ]
-        
+        ]
+
         # Populating the dict
         for col, val in self._dataset_to_predict.read().items():
             if col in selected_features_list:
@@ -233,8 +225,7 @@ class ControllerDeployment(ControllerWithPipelines):
         """
         Handle CSV upload logic.
         """
-        uploaded_file = self.\
-            ui_manager.get_csv_upload_info()
+        uploaded_file = self.ui_manager.get_csv_upload_info()
 
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
@@ -243,11 +234,8 @@ class ControllerDeployment(ControllerWithPipelines):
             features = self._get_csv_features(df)
 
             return features
-    
-    def _get_csv_features(
-            self,
-            df: pd.DataFrame
-            ) -> list[Feature]:
+
+    def _get_csv_features(self, df: pd.DataFrame) -> list[Feature]:
         """
         Get the features of the uoladed CSV file.
 
@@ -257,12 +245,9 @@ class ControllerDeployment(ControllerWithPipelines):
         :rtype: list[Feature]
         """
         # Create a dataset object
-        self._dataset_to_predict: Dataset|None = Dataset().from_dataframe(
-            df,
-            name = "None",
-            asset_path = "None",
-            version = "None"
-            )
+        self._dataset_to_predict: Dataset | None = Dataset().from_dataframe(
+            df, name="None", asset_path="None", version="None"
+        )
 
         # Detect features
         all_features = detect_feature_types(self._dataset)

@@ -1,7 +1,8 @@
-class Feature():
+class Feature:
     """
     A class defining the features of a dataset.
     """
+
     def __init__(self, name: str, type: str) -> None:
         """
         This is the way you instatiate a Feature.
@@ -23,7 +24,7 @@ class Feature():
         :rtype: str
         """
         return self._name
-    
+
     @property
     def type(self) -> str:
         """
@@ -33,7 +34,7 @@ class Feature():
         :rtype: str
         """
         return self._type
-    
+
     def get_column_type(self) -> tuple[str, str]:
         """
         Returns a tuple representing the column
@@ -43,7 +44,7 @@ class Feature():
         :rtype: tuple[str, str]
         """
         return (self._name, self._type)
-    
+
     def __str__(self) -> str:
         """
         A way of displaying a Feature object.
@@ -52,4 +53,3 @@ class Feature():
         :rtype: str
         """
         return f"{self._name}"
-    

@@ -8,6 +8,7 @@ class Dataset(Artifact):
     """
     A class for encompasing a dataset
     """
+
     def __init__(self, *args, **kwargs) -> None:
         """
         Instantiates a dataset by creating an artifact of type
@@ -17,11 +18,8 @@ class Dataset(Artifact):
 
     @staticmethod
     def from_dataframe(
-        data: pd.DataFrame,
-        name: str,
-        asset_path: str,
-        version: str="1.0.0"
-        ) -> "Dataset":
+        data: pd.DataFrame, name: str, asset_path: str, version: str = "1.0.0"
+    ) -> "Dataset":
         """
         This static method is used to create a dataset object
         from data frame.
@@ -43,9 +41,9 @@ class Dataset(Artifact):
             asset_path=asset_path,
             data=data.to_csv(index=False).encode(),
             version=version,
-            type="dataset"
+            type="dataset",
         )
-        
+
     def read(self) -> pd.DataFrame:
         """
         This method reads the data of the Dataset.
@@ -56,7 +54,7 @@ class Dataset(Artifact):
         bytes = super().read()
         csv = bytes.decode()
         return pd.read_csv(io.StringIO(csv))
-    
+
     def save(self, data: pd.DataFrame) -> bytes:
         """
         This method is used to save the data as bytes
@@ -69,4 +67,3 @@ class Dataset(Artifact):
         """
         bytes = data.to_csv(index=False).encode()
         return super().save(bytes)
-    

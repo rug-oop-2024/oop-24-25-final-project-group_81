@@ -1,4 +1,3 @@
-
 from abc import ABC, abstractmethod
 import numpy as np
 from copy import deepcopy
@@ -13,6 +12,7 @@ class Model(ABC):
 
     This class serves as a base class.
     """
+
     def __init__(self, type):
         self._type = type
         self._parameters = {}
@@ -40,27 +40,23 @@ class Model(ABC):
         :type return: str
         """
         return self._type
-    
+
     def to_artifact(self, name: str, version: str) -> Artifact:
         model = name
         path = "assets\\objects" + name
         params = self._parameters
         artifact = Artifact(
-            name = model,
-            type = self._type,
-            version = version,
-            asset_path = path,
-            parameters = params,
-            data = None
-            )
+            name=model,
+            type=self._type,
+            version=version,
+            asset_path=path,
+            parameters=params,
+            data=None,
+        )
         return artifact
 
     @abstractmethod
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-            ) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
          Fit the model to the observations and ground truth data.
 
@@ -127,8 +123,7 @@ class Model(ABC):
         num_samples, num_features = observations.shape
         if num_samples < 1 or num_features < 1:
             raise ValueError(
-                "The input data must have at least"
-                " one sample and one feature."
+                "The input data must have at least" " one sample and one feature."
             )
 
         if num_features > num_samples:
@@ -151,14 +146,10 @@ class Model(ABC):
             during fit and predict differ.
         """
         num_features = self._parameters["num_features"]
-        if (num_features is not None
-            and
-            observations.shape[1] != num_features
-            ):
+        if num_features is not None and observations.shape[1] != num_features:
             raise ValueError(
                 f"Number of dimensions from fitting the data"
                 f"({num_features}) don't match input"
                 f"observations in predicting the data"
                 f"({observations.shape[1]})."
             )
-        

@@ -45,8 +45,7 @@ class ControllerDatasets(ControllerWithDatasets):
         """
         Handle dataset upload logic.
         """
-        uploaded_file, dataset_name, version = self.\
-            ui_manager.get_dataset_upload_info()
+        uploaded_file, dataset_name, version = self.ui_manager.get_dataset_upload_info()
 
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
@@ -55,20 +54,15 @@ class ControllerDatasets(ControllerWithDatasets):
 
             if st.button("Save Dataset"):
                 # Create and save the dataset
-                dataset = Dataset.\
-                    from_dataframe(
-                        df,
-                        name=dataset_name,
-                        asset_path=dataset_name,
-                        version=version
-                        )
+                dataset = Dataset.from_dataframe(
+                    df, name=dataset_name, asset_path=dataset_name, version=version
+                )
                 self._automl.registry.register(dataset)
-                self.ui_manager.\
-                    display_success(
-                        f"Dataset '{dataset_name}' saved successfully!"
-                        )
+                self.ui_manager.display_success(
+                    f"Dataset '{dataset_name}' saved successfully!"
+                )
+
 
 if __name__ == "__main__":
     control = ControllerDatasets()
     control.run()
-    

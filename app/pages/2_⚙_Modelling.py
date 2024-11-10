@@ -20,10 +20,7 @@ class UserInterfaceModelling(GeneralUI):
         self._action_list = ["View Pipeline", "Execute", "Save"]
         self._sidebar_header = "The Pipeline is ready!"
 
-    def display_model_types(
-            self,
-            list_of_model_types: list[str]
-            ) -> str:
+    def display_model_types(self, list_of_model_types: list[str]) -> str:
         """
         Display the model types that can be used in the pipeline.
 
@@ -31,16 +28,10 @@ class UserInterfaceModelling(GeneralUI):
         :type return: str
         """
         st.write("Chose the type of model you want to use.")
-        selected_model = st.selectbox(
-            "Options",
-            list_of_model_types
-            )
+        selected_model = st.selectbox("Options", list_of_model_types)
         return selected_model
 
-    def display_models(
-            self,
-            models_list: list[str]
-            ) -> str:
+    def display_models(self, models_list: list[str]) -> str:
         """
         Displays the avaliable models to be used in making
         the pipeline.
@@ -53,11 +44,8 @@ class UserInterfaceModelling(GeneralUI):
         st.subheader("Avaliable models")
         selected_model = st.selectbox("Choose a Model", models_list)
         return selected_model
-    
-    def display_model_info(
-            self,
-            model_name: str
-            ) -> None:
+
+    def display_model_info(self, model_name: str) -> None:
         """
         Used to display some general info about the selected model by
         reading it from a file stored in "assets\\model_descriptions\\".
@@ -68,9 +56,7 @@ class UserInterfaceModelling(GeneralUI):
         :type model_name: str
         """
         st.subheader(model_name)
-        filename = model_name.\
-            lower().\
-                replace(" ", "_")
+        filename = model_name.lower().replace(" ", "_")
         file_path = "assets\\model_descriptions\\" + filename + ".txt"
         working_dir = os.getcwd()
         full_path = os.path.join(working_dir, file_path)
@@ -78,10 +64,7 @@ class UserInterfaceModelling(GeneralUI):
             description = file.read()
         st.write(description)
 
-    def display_metrics(
-            self,
-            metrics_list: list[str]
-            ) -> list[str]:
+    def display_metrics(self, metrics_list: list[str]) -> list[str]:
         """
         A way of displaying the matrics avaliable for the
         specific model type.
@@ -92,26 +75,21 @@ class UserInterfaceModelling(GeneralUI):
         :rtype: list[str]
         """
         metrics_display_list = [
-            metric.\
-                replace("_", " ").\
-                    title()
-                    for metric in metrics_list
-            ]
+            metric.replace("_", " ").title() for metric in metrics_list
+        ]
         st.subheader("Chose metric/s to evaluate the model.")
         metrics = st.multiselect("Avaliable metrics:", metrics_display_list)
         metrics_indecies = [
             index
             for index, value in enumerate(metrics_display_list)
             if value in metrics
-            ]
+        ]
         selected_metrics = [metrics_list[i] for i in metrics_indecies]
         return selected_metrics
-    
+
     def display_input_features(
-            self,
-            features: list[Feature],
-            feature_type: str
-            ) -> list[str]:
+        self, features: list[Feature], feature_type: str
+    ) -> list[str]:
         """
         Displays the avaliable input features and prompts the user
         to chose one or more from a multiselect box. It returns
@@ -125,24 +103,15 @@ class UserInterfaceModelling(GeneralUI):
         :return: a list of the chosen features
         :rtype: list[str]
         """
-        avaliable_columns = self._get_avaliable_features(
-            features,
-            feature_type
-            )
+        avaliable_columns = self._get_avaliable_features(features, feature_type)
 
         st.subheader("Chose input feature/s:")
-        features_list = st.multiselect(
-            "Avaliable input feature/s:",
-            avaliable_columns
-            )
+        features_list = st.multiselect("Avaliable input feature/s:", avaliable_columns)
         return features_list
 
     def display_target_features(
-            self,
-            features: list[Feature],
-            input_features: list[Feature],
-            feature_type: str
-            ) -> Feature:
+        self, features: list[Feature], input_features: list[Feature], feature_type: str
+    ) -> Feature:
         """
         Displays the remaining features, by considering the choice
         the user made for input feature/s, and prompts the user
@@ -158,9 +127,7 @@ class UserInterfaceModelling(GeneralUI):
         :rtype: str
         """
         avaliable_columns = []
-        input_features_names = [
-            name.get_column_type()[0] for name in input_features
-            ]
+        input_features_names = [name.get_column_type()[0] for name in input_features]
         for feature in features:
             # Get the name and the type of the feature
             name, type = feature.get_column_type()
@@ -170,17 +137,12 @@ class UserInterfaceModelling(GeneralUI):
                 avaliable_columns.append(feature)
 
         st.subheader("Chose target feature:")
-        target_feature = st.selectbox(
-            "Avaliable target feature:",
-            avaliable_columns
-            )
+        target_feature = st.selectbox("Avaliable target feature:", avaliable_columns)
         return target_feature
-    
+
     def show_results(
-            self,
-            exection: dict,
-            decoder_classes: np.ndarray|None = None
-            ) -> None:
+        self, exection: dict, decoder_classes: np.ndarray | None = None
+    ) -> None:
         """
         Show the result of the metrics.
 
@@ -195,10 +157,7 @@ class UserInterfaceModelling(GeneralUI):
         else:
             self._show_categorical_results(metrics_result, decoder_classes)
 
-    def _show_numerical_results(
-            self,
-            metrics_result: tuple[Metric,float]
-            ) -> None:
+    def _show_numerical_results(self, metrics_result: tuple[Metric, float]) -> None:
         """
         Shows the results from the metrics of a regression model.
 
@@ -210,10 +169,8 @@ class UserInterfaceModelling(GeneralUI):
             st.write(f"{metric}: {round(result, 2)}")
 
     def _show_categorical_results(
-            self,
-            metrics_result: tuple[Metric,np.ndarray],
-            decoder_classes: np.ndarray
-            ) -> None:
+        self, metrics_result: tuple[Metric, np.ndarray], decoder_classes: np.ndarray
+    ) -> None:
         """
         Shows the results from the metrics of a categorical model.
 
@@ -237,18 +194,13 @@ class UserInterfaceModelling(GeneralUI):
         :type return: tuple[str, str]
         """
         st.subheader("Save your Pipeline")
-        pipeline_name = st.text_input(
-            "Pipeline Name",
-            value="MyVeryNicePipeline"
-            )
+        pipeline_name = st.text_input("Pipeline Name", value="MyVeryNicePipeline")
         version = st.text_input("Version", value="1.0")
         return pipeline_name, version
 
     def _get_avaliable_features(
-            self,
-            features: list[Feature],
-            feature_type: str
-            ) -> list[Feature]:
+        self, features: list[Feature], feature_type: str
+    ) -> list[Feature]:
         """
         Gets the avaliable features from a feature list
         based on a chosen feature type.
@@ -304,7 +256,7 @@ class ControllerModelling(ControllerWithDatasets):
 
         elif self.ui_manager.action == "Execute":
             self._handle_execute_pipeline()
-            
+
         elif self.ui_manager.action == "Save":
             self._handle_save_pipeline()
 
@@ -378,22 +330,19 @@ class ControllerModelling(ControllerWithDatasets):
         """
         A method that handles the saving of a pipeline.
         """
-        pipeline_name, version = self.\
-            ui_manager.get_pipeline_saving_info()
+        pipeline_name, version = self.ui_manager.get_pipeline_saving_info()
 
         if pipeline_name and version:
             # Gets a list of artifacts for saving
-            pipeline_artifacts = self._pipeline.\
-                artifacts(pipeline_name, version)
-            
+            pipeline_artifacts = self._pipeline.artifacts(pipeline_name, version)
+
             if st.button("Save Pipeline"):
                 for pipeline_artifact in pipeline_artifacts:
                     # Saves every element in the list of artifacts
                     self._automl.registry.register(pipeline_artifact)
-                self.ui_manager.\
-                    display_success(
-                        f"Pipeline '{pipeline_name}' saved successfully!"
-                        )
+                self.ui_manager.display_success(
+                    f"Pipeline '{pipeline_name}' saved successfully!"
+                )
 
     def _build_pipeline(self) -> None:
         """
@@ -405,7 +354,8 @@ class ControllerModelling(ControllerWithDatasets):
             self._model,
             self._input_features,
             self._target_features,
-            self._split)
+            self._split,
+        )
 
     def _select_model(self) -> None:
         """
@@ -423,8 +373,10 @@ class ControllerModelling(ControllerWithDatasets):
         """
         # Full list of model types
         list_of_model_types = [
-            "Select Model Type", "Regression Model", "Classification Model"
-            ]
+            "Select Model Type",
+            "Regression Model",
+            "Classification Model",
+        ]
 
         # Cheecks the avaliable features in the dataset
         list_of_types = self._check_features_type()
@@ -436,13 +388,12 @@ class ControllerModelling(ControllerWithDatasets):
             list_of_model_types.remove("Classification Model")
 
         # Select the model type
-        model_type = self.ui_manager.\
-            display_model_types(list_of_model_types)
-        
+        model_type = self.ui_manager.display_model_types(list_of_model_types)
+
         if model_type == "Select Model Type":
             st.write("Please select a model type to continue.")
             self._feature_type = None
-        
+
         if model_type == "Regression Model":
             self._feature_type = "numerical"
 
@@ -455,28 +406,19 @@ class ControllerModelling(ControllerWithDatasets):
         """
         Used to select input features.
         """
-        self._input_features = self.ui_manager.\
-            display_input_features(
-                self._features,
-                "numerical"
-                )
+        self._input_features = self.ui_manager.display_input_features(
+            self._features, "numerical"
+        )
 
     def _select_target_features(self) -> None:
         """
         Used to select target features.
         """
-        self._target_features = self.ui_manager.\
-            display_target_features(
-                self._features,
-                self._input_features,
-                self._feature_type
-                )
+        self._target_features = self.ui_manager.display_target_features(
+            self._features, self._input_features, self._feature_type
+        )
 
-    def _chose_model(
-            self,
-            list_of_models: list[str],
-            type_of_models: str
-            ) -> None:
+    def _chose_model(self, list_of_models: list[str], type_of_models: str) -> None:
         """
         Used to instantiate a specific model from a list of models.
         It utises the `get_model` function from the model package in
@@ -488,13 +430,12 @@ class ControllerModelling(ControllerWithDatasets):
         :type type_of_models: str
         """
         self.ui_manager.progress_bar()
-        self.ui_manager.\
-            display_success(f"You chose to use a {type_of_models} model.")
-        
+        self.ui_manager.display_success(f"You chose to use a {type_of_models} model.")
+
         selected_model = self.ui_manager.display_models(list_of_models)
         self.ui_manager.display_model_info(selected_model)
         self._model = get_model(selected_model)
-        
+
     def _chose_metrics(self) -> None:
         """
         Used to chose metrics based on the type of model.
@@ -502,20 +443,15 @@ class ControllerModelling(ControllerWithDatasets):
         selected_metrics = None
 
         if self._model_type == "Classification Model":
-            selected_metrics = self.ui_manager.\
-                display_metrics(CLASSIFICATION_METRICS)
+            selected_metrics = self.ui_manager.display_metrics(CLASSIFICATION_METRICS)
 
         if self._model_type == "Regression Model":
-            selected_metrics = self.ui_manager.\
-                display_metrics(REGRESSION_METRICS)
+            selected_metrics = self.ui_manager.display_metrics(REGRESSION_METRICS)
 
         if selected_metrics is not None:
             self._get_metrics(selected_metrics)
 
-    def _get_metrics(
-            self,
-            selected_metrics: list[str]
-            ) -> None:
+    def _get_metrics(self, selected_metrics: list[str]) -> None:
         """
         Used to instantiate a metric by utilising the `get_metric`
         funciton in the metrics.py.
@@ -539,30 +475,27 @@ class ControllerModelling(ControllerWithDatasets):
         """
         list_of_types = []
         for feature in self._features:
-            list_of_types\
-                .append(
-                    feature.type
-                    )
-        
+            list_of_types.append(feature.type)
+
         # In case the user has selected a dataset with 1 feature
         if len(list_of_types) == 1:
             self.ui_manager.display_error(
                 "No avaliable model because of invalid dataset."
                 "You can not do any analysis on a single column!"
                 "You need to chose a different dataset."
-                )
+            )
             self.ui_manager.progress_bar()
             self._reboot()
             return self.run()
-        
+
         return list_of_types
-    
+
     def _chose_split(self) -> None:
         """
         Used to chose a split for the pipeline.
         """
         self._split = st.slider("Select a dataset split", 0.01, 0.99)
-    
+
     def _reboot(self) -> None:
         """
         Used to reboot the pipeline creation procedure.
@@ -578,6 +511,7 @@ class ControllerModelling(ControllerWithDatasets):
         self._split = None
         self._pipeline = None
         self._exection = None
+
 
 if __name__ == "__main__":
     control = ControllerModelling()

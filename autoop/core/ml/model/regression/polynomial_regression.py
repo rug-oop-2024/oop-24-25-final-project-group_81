@@ -7,6 +7,7 @@ import numpy as np
 # Documentation: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures.fit_transform
 # Documentation: https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LinearRegression.html
 
+
 class PolynomialRegression(Model):
     def __init__(self, type) -> None:
         super().__init__(type)
@@ -19,7 +20,7 @@ class PolynomialRegression(Model):
         Getter for the degree of the polynomial.
         """
         return self._degree
-    
+
     @degree.setter
     def degree(self, degree: int):
         """
@@ -27,9 +28,7 @@ class PolynomialRegression(Model):
         """
         self._degree = degree
 
-    def fit(
-            self, observations: np.ndarray, ground_truth: np.ndarray
-    ) -> np.ndarray:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
         """
         Fit the model.
 
@@ -58,7 +57,7 @@ class PolynomialRegression(Model):
         predictions = self._model.predict(X_val)
 
         return predictions
-    
+
     def _preprocess_data(self, observations: np.ndarray) -> np.ndarray:
         """
         Preprocess tha data to perfrom a polynomial regression.
@@ -71,4 +70,3 @@ class PolynomialRegression(Model):
         poly = PolynomialFeatures(degree=self._degree)
         observations_poly = poly.fit_transform(observations)
         return observations_poly
-    

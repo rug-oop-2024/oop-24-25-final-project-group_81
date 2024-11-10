@@ -7,9 +7,8 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 def preprocess_features(
-        features: List[Feature],
-        dataset: Dataset
-        ) -> List[Tuple[str, np.ndarray, dict]]:
+    features: List[Feature], dataset: Dataset
+) -> List[Tuple[str, np.ndarray, dict]]:
     """Preprocess features.
     Args:
         features (List[Feature]): List of features.
@@ -24,32 +23,25 @@ def preprocess_features(
         if feature.type == "categorical":
             encoder = LabelEncoder()
 
-            data = encoder.fit_transform(
-                raw[feature.name].values
-                )
-            
+            data = encoder.fit_transform(raw[feature.name].values)
+
             artifact = {
                 "type": "LabelEncoder",
                 "encoder": encoder.get_params(),
-                "classes": encoder.classes_
-                }
-            
+                "classes": encoder.classes_,
+            }
+
             results.append((feature.name, data, artifact))
 
         if feature.type == "numerical":
             scaler = StandardScaler()
 
-            data = scaler.fit_transform(
-                raw[feature.name].values.reshape(-1, 1)
-                )
-            
-            artifact = {
-                "type": "StandardScaler",
-                "scaler": scaler.get_params()
-                }
-            
+            data = scaler.fit_transform(raw[feature.name].values.reshape(-1, 1))
+
+            artifact = {"type": "StandardScaler", "scaler": scaler.get_params()}
+
             results.append((feature.name, data, artifact))
-            
+
     # Sort for consistency
     results = list(sorted(results, key=lambda x: x[0]))
     return results

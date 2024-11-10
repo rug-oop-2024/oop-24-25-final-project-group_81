@@ -1,14 +1,14 @@
-
 import json
 from typing import Tuple, List, Union
 
 from autoop.core.storage import Storage
 
 
-class Database():
+class Database:
     """
     Class to serve as a database
     """
+
     def __init__(self, storage: Storage) -> None:
         self._storage = storage
         self._data = {}
@@ -54,7 +54,7 @@ class Database():
         if not self._data.get(collection, None):
             return None
         return self._data[collection].get(id, None)
-    
+
     def delete(self, collection: str, id: str) -> None:
         """Delete a key from the database
         Args:
@@ -91,10 +91,7 @@ class Database():
             if not data:
                 continue
             for id, item in data.items():
-                self._storage.save(
-                    json.dumps(item).encode(),
-                    f"{collection}/{id}"
-                    )
+                self._storage.save(json.dumps(item).encode(), f"{collection}/{id}")
 
         # for things that were deleted,
         # we need to remove them from the storage
@@ -103,7 +100,7 @@ class Database():
             collection, id = key.split("/")[-2:]
             if not self._data.get(collection, id):
                 self._storage.delete(f"{collection}/{id}")
-    
+
     def _load(self) -> None:
         """Load the data from storage"""
         self._data = {}

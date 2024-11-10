@@ -11,6 +11,7 @@ class AbstractServer:
     view items in the database. Despite the name AbstractServer there
     is nothing abstract about this class.
     """
+
     def __init__(self, item_name: str):
         """
         A way of initialising an abstract server.
@@ -33,24 +34,20 @@ class AbstractServer:
         if not items_dict:
             self.ui_manager.display_error(f"No {self._item_name} available.")
             return
-        
+
         # Get the name and the id of the items
-        item_list, item_id_list = self.\
-            _get_name_and_id_lists(items_dict)
+        item_list, item_id_list = self._get_name_and_id_lists(items_dict)
 
         # Select an item
-        selected_item = self.\
-            _choose_from_saved_items(item_list)
+        selected_item = self._choose_from_saved_items(item_list)
 
         # Get the slected item's id
-        selected_item_id = self.\
-            _get_id(selected_item, item_list, item_id_list)
+        selected_item_id = self._get_id(selected_item, item_list, item_id_list)
 
         # Get the attributes of the item
         if selected_item != f"Select a {self._item_name}":
             self.ui_manager.progress_bar()
-            item_attributes = self.\
-                _get_item_attributes(selected_item_id)
+            item_attributes = self._get_item_attributes(selected_item_id)
             return item_attributes
 
     def _display_item(self):
@@ -59,10 +56,7 @@ class AbstractServer:
         """
         raise NotImplementedError("You need to implement this method")
 
-    def _choose_from_saved_items(
-            self,
-            item_list: list[Any]
-            ) -> str:
+    def _choose_from_saved_items(self, item_list: list[Any]) -> str:
         """
         Display the list of saved items and allow the user to select one.
 
@@ -76,9 +70,8 @@ class AbstractServer:
         return selected_item
 
     def _get_name_and_id_lists(
-            self,
-            item_dict: dict[Any]
-            ) -> tuple[list[str], list[str]]:
+        self, item_dict: dict[Any]
+    ) -> tuple[list[str], list[str]]:
         """
         Creates two list, one containing the names of the items
         that are avaliable along with their version. The other
@@ -93,18 +86,15 @@ class AbstractServer:
         item_list = [f"Select a {self._item_name}"]
         for item in item_dict:
             name = item.name
-            version = item.version 
+            version = item.version
             display_name = name + " " + "(version" + " " + version + ")"
             item_list.append(display_name)
             item_id_list.append(item.id)
         return item_list, item_id_list
-    
+
     def _get_id(
-            self,
-            selected_item: str,
-            item_list: list[str],
-            item_id_list: list[str]
-            ) -> str:
+        self, selected_item: str, item_list: list[str], item_id_list: list[str]
+    ) -> str:
         """
         A way of getting the id of the slected item.
 
@@ -121,11 +111,8 @@ class AbstractServer:
         selected_id_index = item_list.index(selected_item)
         selected_item_id = item_id_list[selected_id_index]
         return selected_item_id
-    
-    def _get_item_attributes(
-            self,
-            selected_item_id: str
-            ) -> Any:
+
+    def _get_item_attributes(self, selected_item_id: str) -> Any:
         """
         Gets the attributes of the selected item.
 
@@ -137,4 +124,3 @@ class AbstractServer:
         selected_artifact = self._automl.registry.get(selected_item_id)
         artifact_attributes = vars(selected_artifact)
         return artifact_attributes
-    

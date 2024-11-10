@@ -13,15 +13,12 @@ class KNearestNeighbors(Model):
     It impliments methods for fitting the model and making predictions
     based on Euclidean distances.
     """
+
     def __init__(self, type, k_val: int = 3) -> None:
         super().__init__(type)
         self.k = k_val
 
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-    ) -> np.ndarray:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
         """
         The `fit` method takes in observations and ground truth data,
         validates them, and assigns parameters based on the observations
@@ -64,7 +61,7 @@ class KNearestNeighbors(Model):
 
         for observation in observations:
             distances = self._L2_norm(observation)
-            sorted_indices = distances[:, 0].argsort()[:self.k]
+            sorted_indices = distances[:, 0].argsort()[: self.k]
             closest_labels = distances[sorted_indices, 1]
             most_common_class = Counter(closest_labels).most_common(1)[0][0]
             predictions.append(most_common_class)

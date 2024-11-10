@@ -12,6 +12,7 @@ class TestDatabase(unittest.TestCase):
     of interacting with the database, including setting, getting, deleting,
     and persisting data, as well as refreshing the database.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment before each test.
@@ -96,9 +97,7 @@ class TestDatabase(unittest.TestCase):
         other_db = Database(self.storage)
         self.db.set("collection", key, value)
         other_db.refresh()
-        self.assertEqual(
-            other_db.get("collection", key)["key"], value["key"]
-            )
+        self.assertEqual(other_db.get("collection", key)["key"], value["key"])
 
     def test_list(self):
         """

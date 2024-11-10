@@ -5,16 +5,15 @@ from autoop.core.storage import Storage
 from typing import List
 
 
-class ArtifactRegistry():
+class ArtifactRegistry:
     """
     Manages the registration, retrieval, listing,
-    and deletion of artifacts. 
+    and deletion of artifacts.
     Artifacts are stored in a storage system,
     and metadata is saved in a database.
     """
-    def __init__(self, 
-                 database: Database,
-                 storage: Storage) -> None:
+
+    def __init__(self, database: Database, storage: Storage) -> None:
         """
         Initializes the ArtifactRegistry with a given database
         and storage system.
@@ -46,7 +45,8 @@ class ArtifactRegistry():
         except TypeError:
             print(
                 f"{artifact.name} has no data to be saved!"
-                "Procceded with saving the metadata...")
+                "Procceded with saving the metadata..."
+            )
         # save the metadata in the database
         entry = {
             "name": artifact.name,
@@ -57,8 +57,8 @@ class ArtifactRegistry():
             "type": artifact.type,
         }
         self._database.set("artifacts", artifact.id, entry)
-    
-    def list(self, type: str=None) -> List[Artifact]:
+
+    def list(self, type: str = None) -> List[Artifact]:
         """
         Lists all registered artifacts, optionally filtered by type.
 
@@ -84,7 +84,7 @@ class ArtifactRegistry():
             )
             artifacts.append(artifact)
         return artifacts
-    
+
     def get(self, artifact_id: str) -> Artifact:
         """
         Retrieves an artifact by its ID.
@@ -104,7 +104,7 @@ class ArtifactRegistry():
             data=self._storage.load(data["asset_path"]),
             type=data["type"],
         )
-    
+
     def delete(self, artifact_id: str) -> None:
         """
         Deletes an artifact by its ID, including its
@@ -116,7 +116,7 @@ class ArtifactRegistry():
         data = self._database.get("artifacts", artifact_id)
         self._storage.delete(data["asset_path"])
         self._database.delete("artifacts", artifact_id)
-    
+
 
 class AutoMLSystem:
     """
@@ -124,7 +124,7 @@ class AutoMLSystem:
     that manages artifacts and their metadata.
 
     The AutoMLSystem is responsible for interacting
-    with a storage system and a database 
+    with a storage system and a database
     to manage machine learning artifacts
     and related metadata.
     """
@@ -162,14 +162,11 @@ class AutoMLSystem:
         """
         if AutoMLSystem._instance is None:
             AutoMLSystem._instance = AutoMLSystem(
-                LocalStorage("./assets/objects"), 
-                Database(
-                    LocalStorage("./assets/dbo")
-                )
+                LocalStorage("./assets/objects"), Database(LocalStorage("./assets/dbo"))
             )
         AutoMLSystem._instance._database.refresh()
         return AutoMLSystem._instance
-    
+
     @property
     def registry(self) -> ArtifactRegistry:
         """

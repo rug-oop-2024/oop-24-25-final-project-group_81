@@ -4,20 +4,21 @@ import streamlit as st
 from autoop.core.ml.dataset import Dataset
 from app.core.abstract_server import AbstractServer
 
-   
+
 class ControllerWithDatasets(AbstractServer):
     """
     This class serves as a parent class for all classes trying to
     view the database for datasets. It inherits from AbstractServer
     which is the generic way of viewing items in the database.
     """
+
     def __init__(self):
         """
         A way of insantiating the object. Sets the constructor
         of the AbstractServer in such a way as to look for `dataset`
         items in the database.
         """
-        super().__init__(item_name = "dataset")
+        super().__init__(item_name="dataset")
 
     def _handle_view_saved_datasets(self):
         """
@@ -31,8 +32,7 @@ class ControllerWithDatasets(AbstractServer):
         if artifact_attributes is not None:
             dataset = Dataset(**artifact_attributes)
             df = dataset.read()
-            self.\
-                _display_item(df)
+            self._display_item(df)
             self._dataset = dataset
 
     def _display_item(self, df: pd.DataFrame):
@@ -42,5 +42,4 @@ class ControllerWithDatasets(AbstractServer):
         :param df: the dataframe to be dispalyed
         """
         st.write("Preview of Dataset:")
-        st.dataframe(df, hide_index = True)
-        
+        st.dataframe(df, hide_index=True)

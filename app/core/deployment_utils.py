@@ -11,20 +11,21 @@ from autoop.core.ml.pipeline import Pipeline
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.metric import Metric
 
-   
+
 class ControllerWithPipelines(AbstractServer):
     """
     This class serves as a parent class for all classes trying to
     view the database for datasets. It inherits from AbstractServer
     which is the generic way of viewing items in the database.
     """
+
     def __init__(self) -> None:
         """
         A way of insantiating the object. Sets the constructor
         of the AbstractServer in such a way as to look for `dataset`
         items in the database.
         """
-        super().__init__(item_name = "pipeline")
+        super().__init__(item_name="pipeline")
 
     def _handle_view_saved_items_logic(self):
         """
@@ -34,10 +35,7 @@ class ControllerWithPipelines(AbstractServer):
         if artifact_attributes is not None:
             self._pipeline = self._reassemble_pipeline(artifact_attributes)
 
-    def _reassemble_pipeline(
-            self,
-            artifact_attributes: list[Any]
-            ) -> Pipeline:
+    def _reassemble_pipeline(self, artifact_attributes: list[Any]) -> Pipeline:
         """
         Manges the reassembly of the pipeline
 
@@ -52,14 +50,14 @@ class ControllerWithPipelines(AbstractServer):
 
         # Retrieve the input and output features
         self._retrieve_features(pipeline_data)
-        
+
         # Retrieve split
         self._split: int = pipeline_data["split"]
 
         # Retrieve dataset
         dataset_id: str = pipeline_data["dataset_id"]
         self._retrieve_dataset(dataset_id)
-        
+
         # Retrieve metrics
         self._metrics: list[Metric] = pipeline_data["metrics"]
 
@@ -73,9 +71,9 @@ class ControllerWithPipelines(AbstractServer):
             self._model,
             self._input_features,
             self._target_feature,
-            self._split
-            )
-    
+            self._split,
+        )
+
     def _retrieve_features(self, pipeline_data: dict) -> None:
         """
         Used to retrieve the input and output features of the Pipeline
@@ -111,9 +109,8 @@ class ControllerWithPipelines(AbstractServer):
 
         # Split on space and take the first part,
         # then replace underscores with spaces
-        self._model_name = artifact_model_name.split(" ")[0]\
-            .replace("_", " ")
-        
+        self._model_name = artifact_model_name.split(" ")[0].replace("_", " ")
+
         self._model = get_model(self._model_name)
 
     def _display_item(self):
@@ -150,12 +147,12 @@ class ControllerWithPipelines(AbstractServer):
         """
         dict_features = {}
         df = self._dataset.read()
-        
+
         for feature in features:
             key = feature.name
             dict_features[key] = df[key]
 
-        st.dataframe(pd.DataFrame(dict_features), hide_index = True)
+        st.dataframe(pd.DataFrame(dict_features), hide_index=True)
 
     def _model_info(self, model_name: str) -> None:
         """
@@ -165,13 +162,10 @@ class ControllerWithPipelines(AbstractServer):
         :type model_name: str
         """
         st.write(model_name)
-        filename = model_name.\
-            lower().\
-                replace(" ", "_")
+        filename = model_name.lower().replace(" ", "_")
         file_path = "assets\\model_descriptions\\" + filename + ".txt"
         working_dir = os.getcwd()
         full_path = os.path.join(working_dir, file_path)
         with open(full_path, "r", encoding="utf-8") as file:
             description = file.read()
         st.write(description)
-        
