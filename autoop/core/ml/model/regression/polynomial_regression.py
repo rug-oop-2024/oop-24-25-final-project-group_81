@@ -31,7 +31,9 @@ class PolynomialRegression(Model):
         """
         self._degree = degree
 
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
+    def fit(
+        self, observations: np.ndarray, ground_truth: np.ndarray
+    ) -> np.ndarray:
         """
         Fit the model.
 

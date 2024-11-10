@@ -18,6 +18,7 @@ class UserInterfaceModelling(GeneralUI):
     """
     User interface for Modelling.
     """
+
     def __init__(self) -> None:
         """
         Instantiates an user interface.
@@ -109,13 +110,13 @@ class UserInterfaceModelling(GeneralUI):
         :return: a list of the chosen features
         :rtype: list[str]
         """
-        avaliable_columns = self.\
-            _get_avaliable_features(features, feature_type)
+        avaliable_columns = self._get_avaliable_features(
+            features, feature_type
+        )
 
         st.subheader("Chose input feature/s:")
         features_list = st.multiselect(
-            "Avaliable input feature/s:",
-            avaliable_columns
+            "Avaliable input feature/s:", avaliable_columns
         )
         return features_list
 
@@ -123,7 +124,7 @@ class UserInterfaceModelling(GeneralUI):
         self,
         features: list[Feature],
         input_features: list[Feature],
-        feature_type: str
+        feature_type: str,
     ) -> Feature:
         """
         Displays the remaining features, by considering the choice
@@ -141,8 +142,7 @@ class UserInterfaceModelling(GeneralUI):
         """
         avaliable_columns = []
         input_features_names = [
-            name.get_column_type()[0]
-            for name in input_features
+            name.get_column_type()[0] for name in input_features
         ]
         for feature in features:
             # Get the name and the type of the feature
@@ -154,8 +154,7 @@ class UserInterfaceModelling(GeneralUI):
 
         st.subheader("Chose target feature:")
         target_feature = st.selectbox(
-            "Avaliable target feature:",
-            avaliable_columns
+            "Avaliable target feature:", avaliable_columns
         )
         return target_feature
 
@@ -177,8 +176,7 @@ class UserInterfaceModelling(GeneralUI):
             self._show_categorical_results(metrics_result, decoder_classes)
 
     def _show_numerical_results(
-            self,
-            metrics_result: tuple[Metric, float]
+        self, metrics_result: tuple[Metric, float]
     ) -> None:
         """
         Shows the results from the metrics of a regression model.
@@ -193,7 +191,7 @@ class UserInterfaceModelling(GeneralUI):
     def _show_categorical_results(
         self,
         metrics_result: tuple[Metric, np.ndarray],
-        decoder_classes: np.ndarray
+        decoder_classes: np.ndarray,
     ) -> None:
         """
         Shows the results from the metrics of a categorical model.
@@ -219,8 +217,7 @@ class UserInterfaceModelling(GeneralUI):
         """
         st.subheader("Save your Pipeline")
         pipeline_name = st.text_input(
-            "Pipeline Name",
-            value="MyVeryNicePipeline"
+            "Pipeline Name", value="MyVeryNicePipeline"
         )
         version = st.text_input("Version", value="1.0")
         return pipeline_name, version
@@ -253,6 +250,7 @@ class ControllerModelling(ControllerWithDatasets):
     """
     Controller for Modelling.
     """
+
     def __init__(self) -> None:
         """
         A way of instantiating a ControllerModelling.
@@ -348,20 +346,14 @@ class ControllerModelling(ControllerWithDatasets):
         with col1:
             st.header("Test Evaluation")
             if decoder_classes is not None:
-                self.ui_manager.show_results(
-                    test_evaluation,
-                    decoder_classes
-                )
+                self.ui_manager.show_results(test_evaluation, decoder_classes)
             else:
                 self.ui_manager.show_results(test_evaluation)
 
         with col2:
             st.header("Train Evaluation")
             if decoder_classes is not None:
-                self.ui_manager.show_results(
-                    train_evaluation,
-                    decoder_classes
-                )
+                self.ui_manager.show_results(train_evaluation, decoder_classes)
             else:
                 self.ui_manager.show_results(train_evaluation)
 
@@ -373,8 +365,9 @@ class ControllerModelling(ControllerWithDatasets):
 
         if pipeline_name and version:
             # Gets a list of artifacts for saving
-            pipeline_artifacts = self._pipeline.\
-                artifacts(pipeline_name, version)
+            pipeline_artifacts = self._pipeline.artifacts(
+                pipeline_name, version
+            )
 
             if st.button("Save Pipeline"):
                 for pipeline_artifact in pipeline_artifacts:
@@ -459,9 +452,7 @@ class ControllerModelling(ControllerWithDatasets):
         )
 
     def _chose_model(
-            self,
-            list_of_models: list[str],
-            type_of_models: str
+        self, list_of_models: list[str], type_of_models: str
     ) -> None:
         """
         Used to instantiate a specific model from a list of models.
@@ -474,8 +465,9 @@ class ControllerModelling(ControllerWithDatasets):
         :type type_of_models: str
         """
         self.ui_manager.progress_bar()
-        self.ui_manager.\
-            display_success(f"You chose to use a {type_of_models} model.")
+        self.ui_manager.display_success(
+            f"You chose to use a {type_of_models} model."
+        )
 
         selected_model = self.ui_manager.display_models(list_of_models)
         self.ui_manager.display_model_info(selected_model)
@@ -488,12 +480,14 @@ class ControllerModelling(ControllerWithDatasets):
         selected_metrics = None
 
         if self._model_type == "Classification Model":
-            selected_metrics = self.ui_manager.\
-                display_metrics(CLASSIFICATION_METRICS)
+            selected_metrics = self.ui_manager.display_metrics(
+                CLASSIFICATION_METRICS
+            )
 
         if self._model_type == "Regression Model":
-            selected_metrics = self.ui_manager.\
-                display_metrics(REGRESSION_METRICS)
+            selected_metrics = self.ui_manager.display_metrics(
+                REGRESSION_METRICS
+            )
 
         if selected_metrics is not None:
             self._get_metrics(selected_metrics)

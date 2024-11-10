@@ -3,10 +3,10 @@ from datetime import date, timedelta
 import os
 
 from app.core.streamlit_utils import GeneralUI
-from pricepredictor.forcast.\
-    forecastFactory_initializer import ForcastFactoryInitializer
-from pricepredictor.forcast.\
-    forcastFactory import ForcastFactory
+from pricepredictor.forcast.forecastFactory_initializer import (
+    ForcastFactoryInitializer,
+)
+from pricepredictor.forcast.forcastFactory import ForcastFactory
 from app.core.stock_predictor_utils import title
 
 
@@ -14,6 +14,7 @@ class UserInterfaceStockPredictions(GeneralUI):
     """
     UI for Stock Predictions.
     """
+
     def __init__(self) -> None:
         """
         A way of instantiating an UI.
@@ -81,10 +82,10 @@ class UserInterfaceStockPredictions(GeneralUI):
             "Options", min_value=1, max_value=5, step=1, value=5
         )
         return num_of_predictions
-    
+
     @title(
-        "Chose number of neurons in the first " +
-        "and second hidden layer of the MLP"
+        "Chose number of neurons in the first "
+        + "and second hidden layer of the MLP"
     )
     def avaliable_num_neurons(self) -> int:
         """
@@ -146,6 +147,7 @@ class ControllerStockPredictions:
     """
     Controller for Stock Predictions.
     """
+
     def __init__(self) -> None:
         """
         A way of instantiating ControllerStockPredictions.
@@ -157,8 +159,7 @@ class ControllerStockPredictions:
         """
         Main loop to run the application.
         """
-        self.ui_manager.\
-            render_sidebar()
+        self.ui_manager.render_sidebar()
 
         if self.ui_manager.action == "Information":
             self._handle_information()
@@ -181,10 +182,8 @@ class ControllerStockPredictions:
         Handles the logic behind getting a comparison.
         """
         # Compare the predictions with observations
-        mse = self._forcast_factory.\
-            compare_predictions_with_observations()
-        fig = self._forcast_factory.\
-            plot_comparison()
+        mse = self._forcast_factory.compare_predictions_with_observations()
+        fig = self._forcast_factory.plot_comparison()
         st.pyplot(fig)
         st.write("# Mean Squared Error")
         st.write(
@@ -220,8 +219,7 @@ class ControllerStockPredictions:
         """
         Handles the logioc behind displaying the information.
         """
-        self.ui_manager.\
-            display_info()
+        self.ui_manager.display_info()
 
     @title("Chose an Action")
     def _chose_button(self) -> None:
@@ -233,15 +231,13 @@ class ControllerStockPredictions:
         comparison_button = False
 
         with col1:
-            forcast_button = self.ui_manager.\
-                button("Get a forcast")
-        end_date_of_prediction = (
-            self._date + timedelta(days=self._num_predictions + 1)
+            forcast_button = self.ui_manager.button("Get a forcast")
+        end_date_of_prediction = self._date + timedelta(
+            days=self._num_predictions + 1
         )
         if end_date_of_prediction < date.today():
             with col2:
-                comparison_button = self.ui_manager.\
-                    button("Get a comparison")
+                comparison_button = self.ui_manager.button("Get a comparison")
 
         if forcast_button:
             self._handle_get_forcast()
@@ -258,48 +254,39 @@ class ControllerStockPredictions:
         model_parameters = initializer.generate_model_parameters(
             self._architecture,
             self._learning_rate,
-            batch_size=self._batch_size
+            batch_size=self._batch_size,
         )
 
         # Generate datafacotry parameters
-        datafactory_parameters = initializer.\
-            generate_datafactory_parameters()
+        datafactory_parameters = initializer.generate_datafactory_parameters()
 
         self._forcast_factory = ForcastFactory(
-            self._stock,
-            model_parameters,
-            datafactory_parameters
+            self._stock, model_parameters, datafactory_parameters
         )
 
-        self._forcast_factory.\
-            predict(
-                self._num_predictions,
-                end_date=self._date_str
-            )
+        self._forcast_factory.predict(
+            self._num_predictions, end_date=self._date_str
+        )
 
     def _chose_stock(self) -> None:
         """
         Choses a stock.
         """
-        self._stock = self.ui_manager.\
-            show_avaliable_stocks()
+        self._stock = self.ui_manager.show_avaliable_stocks()
 
     def _chose_date(self) -> None:
         """
         Choses avaliable date and saves it as an attribute.
         It saves both the date as datetime and as string.
         """
-        self._date = self.ui_manager.\
-            avaliable_dates_for_predictions()
-        self._date_str = self._date.\
-            strftime("%Y-%m-%d")
+        self._date = self.ui_manager.avaliable_dates_for_predictions()
+        self._date_str = self._date.strftime("%Y-%m-%d")
 
     def _chose_num_predictions(self) -> None:
         """
         Choses the number of predictions.
         """
-        self._num_predictions = self.ui_manager.\
-            display_num_of_predictions()
+        self._num_predictions = self.ui_manager.display_num_of_predictions()
 
     def _chose_architecture(self) -> None:
         """
@@ -307,8 +294,7 @@ class ControllerStockPredictions:
         second layer is left to 0 it creates only 1 hidden layer.
         This is prefered as the model performs best.
         """
-        first_layer, second_layer = self.ui_manager.\
-            avaliable_num_neurons()
+        first_layer, second_layer = self.ui_manager.avaliable_num_neurons()
         if second_layer == 0:
             self._architecture = [first_layer]
         else:
@@ -318,15 +304,13 @@ class ControllerStockPredictions:
         """
         Choses the learning rate.
         """
-        self._learning_rate = self.ui_manager.\
-            avaliable_learning_rates()
+        self._learning_rate = self.ui_manager.avaliable_learning_rates()
 
     def _chose_batch_size(self) -> None:
         """
         Choses the batch size.
         """
-        self._batch_size = self.ui_manager.\
-            avaliable_batch_size()
+        self._batch_size = self.ui_manager.avaliable_batch_size()
 
 
 if __name__ == "__main__":

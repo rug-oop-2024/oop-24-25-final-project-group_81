@@ -11,6 +11,7 @@ class UserInterfaceDatasets(GeneralUI):
     """
     User interface for Datasets.
     """
+
     def __init__(self) -> None:
         """
         Instantiates an User Interface.
@@ -35,6 +36,7 @@ class ControllerDatasets(ControllerWithDatasets):
     """
     Used to encapsulate the logic behind user's input.
     """
+
     def __init__(self) -> None:
         """
         Instantiates a Controller for Datasets.
@@ -57,8 +59,9 @@ class ControllerDatasets(ControllerWithDatasets):
         """
         Handle dataset upload logic.
         """
-        uploaded_file, dataset_name, version = self.ui_manager.\
-            get_dataset_upload_info()
+        uploaded_file, dataset_name, version = (
+            self.ui_manager.get_dataset_upload_info()
+        )
 
         if uploaded_file:
             # Read the uploaded file into a pandas DataFrame
@@ -71,7 +74,7 @@ class ControllerDatasets(ControllerWithDatasets):
                     df,
                     name=dataset_name,
                     asset_path=dataset_name,
-                    version=version
+                    version=version,
                 )
                 self._automl.registry.register(dataset)
                 self.ui_manager.display_success(

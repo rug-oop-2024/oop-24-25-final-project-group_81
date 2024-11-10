@@ -8,7 +8,9 @@ class MultipleLinearRegression(Model):
     A multiple linear regression model.
     """
 
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
+    def fit(
+        self, observations: np.ndarray, ground_truth: np.ndarray
+    ) -> np.ndarray:
         """
         Fit the model using the Normal Equation.
 
@@ -22,7 +24,9 @@ class MultipleLinearRegression(Model):
             observations
         )
 
-        covariance_matrix = observations_with_intercept.T @ observations_with_intercept
+        covariance_matrix = (
+            observations_with_intercept.T @ observations_with_intercept
+        )
 
         determinant = np.linalg.det(covariance_matrix)
 
@@ -33,7 +37,9 @@ class MultipleLinearRegression(Model):
             inverse_covariance_matrix = np.linalg.inv(covariance_matrix)
 
         weights = (
-            inverse_covariance_matrix @ observations_with_intercept.T @ ground_truth
+            inverse_covariance_matrix
+            @ observations_with_intercept.T
+            @ ground_truth
         )
         self._parameters["weights"] = weights
 
@@ -64,7 +70,9 @@ class MultipleLinearRegression(Model):
         if "weights" not in self._parameters:
             raise ValueError("The model has not been fitted!")
 
-    def _add_trailing_one_to_observations(self, observations: np.ndarray) -> np.ndarray:
+    def _add_trailing_one_to_observations(
+        self, observations: np.ndarray
+    ) -> np.ndarray:
         """
         Add a column of ones to the beginning of a matrix
         representing observations.

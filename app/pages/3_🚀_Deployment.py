@@ -51,8 +51,9 @@ class UserInterfaceDeployment(GeneralUI):
         :rtype: list[Feature]
         """
         # Get the selection criterium
-        req_num_features, type_ = self.\
-            _get_feature_selection_criterium(input_features)
+        req_num_features, type_ = self._get_feature_selection_criterium(
+            input_features
+        )
 
         # Get a list of feature names
         list_of_features = [feature.name for feature in features]
@@ -153,8 +154,7 @@ class ControllerDeployment(ControllerWithPipelines):
             features = self._load_csv()
             if features is not None:
                 # Chose features to do predictions on
-                selected_features = self.ui_manager.\
-                    display_csv_features(
+                selected_features = self.ui_manager.display_csv_features(
                     features, self._input_features
                 )
 
@@ -163,8 +163,7 @@ class ControllerDeployment(ControllerWithPipelines):
                     if st.button("Predict"):
                         predictions = self._predict(selected_features)
                         self._display_predictions(
-                            predictions,
-                            selected_features
+                            predictions, selected_features
                         )
 
     def _starting_page(self) -> None:
@@ -253,8 +252,7 @@ class ControllerDeployment(ControllerWithPipelines):
         :rtype: list[Feature]
         """
         # Create a dataset object
-        self._dataset_to_predict: Dataset | None = Dataset().\
-            from_dataframe(
+        self._dataset_to_predict: Dataset | None = Dataset().from_dataframe(
             df, name="None", asset_path="None", version="None"
         )
 

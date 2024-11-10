@@ -5,8 +5,12 @@ from autoop.core.ml.model.regression.multiple_linear_regression import (
     MultipleLinearRegression,
 )
 from autoop.core.ml.model.regression.sklearn_wrap import LassoWrapper
-from autoop.core.ml.model.regression.polynomial_regression import PolynomialRegression
-from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
+from autoop.core.ml.model.regression.polynomial_regression import (
+    PolynomialRegression,
+)
+from autoop.core.ml.model.classification.k_nearest_neighbors import (
+    KNearestNeighbors,
+)
 from autoop.core.ml.model.classification.linear_svc import Linear_SVC
 from autoop.core.ml.model.classification.multinomial_logistic_regression import (
     MultinomialLogisticRegression,

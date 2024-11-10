@@ -97,7 +97,9 @@ class TestFeatures(unittest.TestCase):
         for feature in features:
             self.assertIsInstance(feature, Feature)
             self.assertEqual(feature.name in data.feature_names, True)
-        for detected_feature in filter(lambda x: x.name in numerical_columns, features):
+        for detected_feature in filter(
+            lambda x: x.name in numerical_columns, features
+        ):
             self.assertEqual(detected_feature.type, "numerical")
         for detected_feature in filter(
             lambda x: x.name in categorical_columns, features

@@ -163,7 +163,7 @@ class AutoMLSystem:
         if AutoMLSystem._instance is None:
             AutoMLSystem._instance = AutoMLSystem(
                 LocalStorage("./assets/objects"),
-                Database(LocalStorage("./assets/dbo"))
+                Database(LocalStorage("./assets/dbo")),
             )
         AutoMLSystem._instance._database.refresh()
         return AutoMLSystem._instance
