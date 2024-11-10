@@ -20,11 +20,7 @@ class LassoWrapper(Model):
         super().__init__(type)
         self._model = Lasso()
 
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-        ) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fit the Lasso model to the data.
         :param observations: Input data (features).

@@ -9,10 +9,7 @@ class DataReader:
     """
 
     def __init__(
-        self,
-        stock_name: str,
-        end_date: str = "2024-09-01",
-        interval: str = "1d"
+        self, stock_name: str, end_date: str = "2024-09-01", interval: str = "1d"
     ) -> None:
         """
         A way of instantiating a DataReader
@@ -85,10 +82,7 @@ class DataReader:
             approx_total_days = int(approx_total_days * 1.5)
             start = end - timedelta(days=approx_total_days)
             startdate = start.strftime("%Y-%m-%d")
-            print(
-                f"Retry {attempts}:"
-                f"Extending the start date to {startdate}..."
-            )
+            print(f"Retry {attempts}:" f"Extending the start date to {startdate}...")
 
         raise ValueError(
             "Unable to retrieve sufficient data after" f"{max_attempts} attempts."
@@ -116,12 +110,7 @@ class DataReader:
                 Series
                 ]
         """
-        stock = Stock(
-            self.stock_name,
-            start_date,
-            self.end_date,
-            self.interval
-        )
+        stock = Stock(self.stock_name, start_date, self.end_date, self.interval)
         return stock.get_data()
 
     def _validate_data_sufficiency(self, required_data_points: int) -> bool:
@@ -141,10 +130,7 @@ class DataReader:
             return True
 
     def getLabels(
-        self,
-        input_data: Series,
-        number_of_points: int = 50,
-        label_size: int = 5
+        self, input_data: Series, number_of_points: int = 50, label_size: int = 5
     ) -> tuple[list[float], list[float]]:
         """
         Get the labels, thus next label_size candlesticks,
@@ -166,16 +152,12 @@ class DataReader:
                 start = i * number_of_points
                 finish = (i + 1) * number_of_points - label_size
                 # Parse input feature
-                data = input_data[
-                    start : finish
-                ]
+                data = input_data[start:finish]
 
                 start = finish
                 finish = (i + 1) * number_of_points
                 # Parse target feature
-                label = input_data[
-                    start : finish
-                ]
+                label = input_data[start:finish]
 
                 # Append to respective lists
                 all_data.append(data)

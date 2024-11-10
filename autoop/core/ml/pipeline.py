@@ -51,19 +51,13 @@ class Pipeline:
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if (
-            target_feature.type == "categorical"
-            and
-            model.type != "classification"
-            ):
+        if target_feature.type == "categorical" and model.type != "classification":
             raise ValueError(
-                "Model type must be classification" +
-                " for categorical target feature"
+                "Model type must be classification" + " for categorical target feature"
             )
         if target_feature.type == "continuous" and model.type != "regression":
             raise ValueError(
-                "Model type must be regression" +
-                " for continuous target feature"
+                "Model type must be regression" + " for continuous target feature"
             )
 
     def __str__(self) -> str:
@@ -101,11 +95,7 @@ Pipeline(
         """
         return self._decoder_classes
 
-    def artifacts(
-            self,
-            pipeline_name: str,
-            pipeline_version: str
-        ) -> List[Artifact]:
+    def artifacts(self, pipeline_name: str, pipeline_version: str) -> List[Artifact]:
         """
         Used to get the artifacts generated during
         the pipeline execution to be saved.
@@ -129,13 +119,9 @@ Pipeline(
             "split": self._split,
         }
         model_artifact = self._model.to_artifact(
-            name=f"{pipeline_name}_model:{self._model.name}",
-            version=pipeline_version
+            name=f"{pipeline_name}_model:{self._model.name}", version=pipeline_version
         )
-        metadata = {
-            "model_id": model_artifact.id,
-            "model_type": model_artifact.type
-        }
+        metadata = {"model_id": model_artifact.id, "model_type": model_artifact.type}
         artifacts.append(
             Artifact(
                 name=f"{pipeline_name}_config",
@@ -170,10 +156,7 @@ Pipeline(
             self._decoder_classes = None
 
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(
-            self._input_features,
-            self._dataset
-        )
+        input_results = preprocess_features(self._input_features, self._dataset)
         for feature_name, _, artifact in input_results:
             self._register_artifact(feature_name, artifact)
         # Get the input vectors and output vector,
@@ -187,17 +170,13 @@ Pipeline(
         """
         split = self._split
         self._train_X = [
-            vector[: int(split * len(vector))]
-            for vector in self._input_vectors
+            vector[: int(split * len(vector))] for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)) :]
-            for vector in self._input_vectors
+            vector[int(split * len(vector)) :] for vector in self._input_vectors
         ]
-        self._train_y = self.\
-            _output_vector[: int(split * len(self._output_vector))]
-        self._test_y = self.\
-            _output_vector[int(split * len(self._output_vector)) :]
+        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
+        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """
@@ -259,11 +238,7 @@ Pipeline(
         self._split_data()
         self._train()
 
-    def predict(
-            self,
-            input_features: list[Feature],
-            dataset: Dataset
-        ) -> np.ndarray:
+    def predict(self, input_features: list[Feature], dataset: Dataset) -> np.ndarray:
         """
         Used to predict data using input data
 

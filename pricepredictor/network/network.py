@@ -45,10 +45,7 @@ class Model:
         model.add(Input(shape=(input_shape,)))
 
         # Add all layers, including hidden layers and the output layer
-        for (
-            number_of_neurons,
-            activation
-            ) in zip(model_shape, activations[:-1]):
+        for number_of_neurons, activation in zip(model_shape, activations[:-1]):
             model.add(Dense(number_of_neurons, activation=activation))
 
         # Add the output layer
@@ -71,9 +68,7 @@ class Model:
         """
         self._model_validator()
         self.model.compile(
-            optimizer=Adam(learning_rate=learning_rate),
-            loss=lossFunc,
-            metrics=metrics
+            optimizer=Adam(learning_rate=learning_rate), loss=lossFunc, metrics=metrics
         )
 
     def trainModel(
@@ -180,9 +175,7 @@ class Model:
         If the file doesn't exists it will raise an exception.
         """
         try:
-            self.model = keras.models.load_model(
-                f"models/{stockName}_model.keras"
-            )
+            self.model = keras.models.load_model(f"models/{stockName}_model.keras")
         except FileExistsError(
             f"No such Model named '{stockName}_model.keras'"
             "exists in the 'models' folder!"

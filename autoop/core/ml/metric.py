@@ -57,11 +57,7 @@ class Metric(ABC):
     Base class for all metrics.
     """
 
-    def __call__(
-            self,
-            ground_truths: np.ndarray,
-            predictions: np.ndarray
-    ) -> float:
+    def __call__(self, ground_truths: np.ndarray, predictions: np.ndarray) -> float:
         """
         Retrieves the results of the metric upon call
         """
@@ -75,11 +71,7 @@ class Metric(ABC):
         pass
 
     @abstractmethod
-    def _result(
-        self,
-        ground_truths: np.ndarray,
-        predictions: np.ndarray
-    ) -> float:
+    def _result(self, ground_truths: np.ndarray, predictions: np.ndarray) -> float:
         """
         The way a Metric computes the result
 
@@ -92,11 +84,7 @@ class Metric(ABC):
         """
         pass
 
-    def evaluate(
-            self,
-            predictions: np.ndarray,
-            ground_truths: np.ndarray
-    ) -> float:
+    def evaluate(self, predictions: np.ndarray, ground_truths: np.ndarray) -> float:
         """
         This method is a way for evaluating a metric.
 
@@ -300,11 +288,7 @@ class MSEMetric(Metric):
         """
         return "Mean-Square Error"
 
-    def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-    ) -> float:
+    def _result(self, ground_truths: List[float], predictions: List[float]) -> float:
         """
         This method computes the result of the MSE metric.
 
@@ -332,9 +316,7 @@ class MAEMetric(Metric):
         """
         return "Mean-Average Error"
 
-    def _result(
-            self, ground_truths: List[float], predictions: List[float]
-    ) -> float:
+    def _result(self, ground_truths: List[float], predictions: List[float]) -> float:
         """
         This method computes the result of the MAE metric.
 
@@ -362,9 +344,7 @@ class RsquaredMetric(Metric):
         """
         return "R-Squred"
 
-    def _result(
-            self, ground_truths: List[float], predictions: List[float]
-    ) -> float:
+    def _result(self, ground_truths: List[float], predictions: List[float]) -> float:
         """
         This method computes the result of the R-squared metric.
 
@@ -423,9 +403,7 @@ class RMSEMetric(MSEMetric):
         """
         return "Root-Mean-Square Error"
 
-    def _result(
-            self, ground_truths: List[float], predictions: List[float]
-    ) -> float:
+    def _result(self, ground_truths: List[float], predictions: List[float]) -> float:
         """
         This method computes the result of the RMSE metric.
 

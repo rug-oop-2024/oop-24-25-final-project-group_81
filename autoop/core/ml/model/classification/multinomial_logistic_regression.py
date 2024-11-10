@@ -8,6 +8,7 @@ class MultinomialLogisticRegression(Model):
     """
     This is a wrapper of sklearn's LogisticRegression.
     """
+
     def __init__(self, type: str) -> None:
         """
         A way of instantiating MultinomialLogisticRegression.

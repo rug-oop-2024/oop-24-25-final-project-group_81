@@ -25,8 +25,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
             feature_type = "categorical"
         else:
             print(
-                f"Column {column} is of neither " +
-                "`numerical` nor `categorical` type"
+                f"Column {column} is of neither " + "`numerical` nor `categorical` type"
             )
 
         # Creating an instance of Feature

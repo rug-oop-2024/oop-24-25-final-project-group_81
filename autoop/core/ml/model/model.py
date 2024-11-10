@@ -65,11 +65,7 @@ class Model(ABC):
         return artifact
 
     @abstractmethod
-    def fit(
-        self,
-        observations: np.ndarray,
-        ground_truth: np.ndarray
-        ) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
          Fit the model to the observations and ground truth data.
 
@@ -136,8 +132,7 @@ class Model(ABC):
         num_samples, num_features = observations.shape
         if num_samples < 1 or num_features < 1:
             raise ValueError(
-                "The input data must have at least" +
-                " one sample and one feature."
+                "The input data must have at least" + " one sample and one feature."
             )
 
         if num_features > num_samples:

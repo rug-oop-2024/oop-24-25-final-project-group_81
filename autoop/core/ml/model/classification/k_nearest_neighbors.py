@@ -26,11 +26,7 @@ class KNearestNeighbors(Model):
         super().__init__(type)
         self.k = k_val
 
-    def fit(
-            self,
-            observations: np.ndarray,
-            ground_truth: np.ndarray
-        ) -> np.ndarray:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
         """
         The `fit` method takes in observations and ground truth data,
         validates them, and assigns parameters based on the observations

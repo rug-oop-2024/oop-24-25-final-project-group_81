@@ -6,9 +6,7 @@ from copy import deepcopy
 
 from pricepredictor.network.networkFactory import NetworkFactory
 from pricepredictor.data_parser.dataFactory import StockDataFactory
-from pricepredictor.visualisation.visualize import (
-    PlotStocks, PlotForcastComparison
-)
+from pricepredictor.visualisation.visualize import PlotStocks, PlotForcastComparison
 
 
 class ForcastFactory:
@@ -17,9 +15,7 @@ class ForcastFactory:
     """
 
     def __init__(
-        self, stock_name: str,
-        model_param_dict: dict,
-        datafactory_param_dict: dict
+        self, stock_name: str, model_param_dict: dict, datafactory_param_dict: dict
     ) -> None:
         """
         A way of initializing a ForcastFactory. There is
@@ -79,9 +75,7 @@ class ForcastFactory:
         self._interval: str | None = None
 
         # Values that are being calculated
-        self._raw_data: list[
-            tuple[str, float, float, float, float]
-        ] | None = None
+        self._raw_data: list[tuple[str, float, float, float, float]] | None = None
         self._sma: list[float] | None = None
         self._residuals: list[float] | None = None
 
@@ -91,9 +85,9 @@ class ForcastFactory:
         self._extrapolated_sma: list[float] | None = None
 
         # Observed data
-        self._observed_raw_data: list[
-            tuple[str, float, float, float, float]
-        ] | None = None
+        self._observed_raw_data: list[tuple[str, float, float, float, float]] | None = (
+            None
+        )
         self._observed_sma: list[float] | None = None
         self._observed_residuals: list[float] | None = None
         self._observed_closing_prices: list[float] | None = None
@@ -134,9 +128,7 @@ class ForcastFactory:
 
         mse = mean_squared_error(
             np.array(self._observed_closing_prices),
-            np.array(self._predicted_closing_prices[: len(
-                self._observed_raw_data
-            )]),
+            np.array(self._predicted_closing_prices[: len(self._observed_raw_data)]),
         )
 
         return mse
@@ -235,13 +227,7 @@ class ForcastFactory:
         Helper method used to train the model.
         """
         # Get training data
-        (training_data,
-         validation_data,
-         _,
-         training_labels,
-         validation_labels,
-         _
-        ) = (
+        (training_data, validation_data, _, training_labels, validation_labels, _) = (
             self._data_factory.get_stock_data()
         )
 
@@ -258,12 +244,7 @@ class ForcastFactory:
             self._batch_size,
         )
 
-    def _get_raw_data(
-            self,
-            raw_data_amount: int,
-            end_date: str,
-            interval: str
-        ) -> None:
+    def _get_raw_data(self, raw_data_amount: int, end_date: str, interval: str) -> None:
         """
         Helper method to get raw data used for plotting
         utilising the DataFactory.
@@ -339,10 +320,7 @@ class ForcastFactory:
 
         # Convert to tensors in the correct shape
         residuals_tensor = tf.convert_to_tensor(reduced_residuals)
-        residuals_tensor = tf.reshape(
-            residuals_tensor,
-            (-1, self._input_shape)
-        )
+        residuals_tensor = tf.reshape(residuals_tensor, (-1, self._input_shape))
 
         return residuals_tensor
 
@@ -366,11 +344,7 @@ class ForcastFactory:
         :return: a list of the predicted closing prices
         :rtype: list[float]
         """
-        return [
-            sum(x)
-            for x in
-            zip(self._extrapolated_sma, self._predicted_residuals)
-        ]
+        return [sum(x) for x in zip(self._extrapolated_sma, self._predicted_residuals)]
 
     def _get_observations_data(self) -> None:
         """
@@ -388,17 +362,13 @@ class ForcastFactory:
             observed_raw_data, self._observed_sma
         )
 
-        self._observed_raw_data = observed_raw_data[
-            self._sma_lookback_period :
-        ]
+        self._observed_raw_data = observed_raw_data[self._sma_lookback_period :]
 
         self._observed_closing_prices = self._data_factory.get_closing_prices(
             self._observed_raw_data
         )
 
-    def _get_observed_raw_data(
-            self
-        ) -> list[tuple[str, float, float, float, float]]:
+    def _get_observed_raw_data(self) -> list[tuple[str, float, float, float, float]]:
         """
         Gets the observed raw data.
 

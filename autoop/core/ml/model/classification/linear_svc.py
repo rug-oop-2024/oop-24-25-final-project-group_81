@@ -7,6 +7,7 @@ class Linear_SVC(Model):
     """
     This is a wrapper on sklearn's LinearSVC.
     """
+
     def __init__(self, type: str) -> None:
         """
         A way of instantiating a Linear SVC.
