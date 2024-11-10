@@ -26,7 +26,10 @@ class Artifact:
         # Generating the id
         self.id = self._generate_id()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        Defines the representation of the artifact.
+        """
         return f"{self.name} (v{self.version})"
 
     def _generate_id(self) -> str:
@@ -42,7 +45,8 @@ class Artifact:
         :rtype: str
         """
         # Encode the asset_path
-        encoded_asset_path = base64.b64encode(self.asset_path.encode("utf-8")).decode(
+        encoded_asset_path = base64.\
+            b64encode(self.asset_path.encode("utf-8")).decode(
             "utf-8"
         )
 

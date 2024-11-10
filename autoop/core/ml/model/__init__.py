@@ -2,11 +2,16 @@ from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.regression.multiple_linear_regression import (
     MultipleLinearRegression,
 )
-from autoop.core.ml.model.regression.sklearn_wrap import LassoWrapper
-from autoop.core.ml.model.regression.polynomial_regression import PolynomialRegression
-from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
-from autoop.core.ml.model.classification.linear_svc import Linear_SVC
-from autoop.core.ml.model.classification.multinomial_logistic_regression import (
+from autoop.core.ml.model.\
+    regression.sklearn_wrap import LassoWrapper
+from autoop.core.ml.model.\
+    regression.polynomial_regression import PolynomialRegression
+from autoop.core.ml.model.\
+    classification.k_nearest_neighbors import KNearestNeighbors
+from autoop.core.ml.model.\
+    classification.linear_svc import Linear_SVC
+from autoop.core.ml.model.\
+    classification.multinomial_logistic_regression import (
     MultinomialLogisticRegression,
 )
 
@@ -25,7 +30,15 @@ CLASSIFICATION_MODELS = [
 
 
 def get_model(model_name: str) -> Model:
-    if model_name not in REGRESSION_MODELS and CLASSIFICATION_MODELS:
+    """
+    Gets an instance of a Model.
+
+    :param model_name: the name of the model
+    :type model_name: str
+    :return: the instance of a model
+    :rtype: Model
+    """
+    if model_name not in REGRESSION_MODELS or CLASSIFICATION_MODELS:
         print(f"No such model `{model_name}` found.")
 
     # Determining the type of the model
