@@ -46,9 +46,7 @@ class Artifact:
         """
         # Encode the asset_path
         encoded_asset_path = base64.\
-            b64encode(self.asset_path.encode("utf-8")).decode(
-            "utf-8"
-        )
+            b64encode(self.asset_path.encode("utf-8")).decode("utf-8")
 
         # Combine the encoded asset_path and version into the id
         asset_id = f"{encoded_asset_path}_{self.version}"

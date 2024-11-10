@@ -29,10 +29,9 @@ def get_metric(name: str) -> "Metric":
     :return metric: an insance of a metric class.
     :type return: Metric
     """
+    error = f"The metric you provided: {name} is not a viable metric!"
     if name not in METRICS:
-        raise ValueError(
-            f"The metric you provided: {name} is not a viable metric!"
-        )
+        raise ValueError(error)
     if name == "mean_squared_error":
         metric = MSEMetric()
     if name == "accuracy":
@@ -62,7 +61,7 @@ class Metric(ABC):
             self,
             ground_truths: np.ndarray,
             predictions: np.ndarray
-        ) -> float:
+    ) -> float:
         """
         Retrieves the results of the metric upon call
         """
@@ -80,7 +79,7 @@ class Metric(ABC):
         self,
         ground_truths: np.ndarray,
         predictions: np.ndarray
-        ) -> float:
+    ) -> float:
         """
         The way a Metric computes the result
 
@@ -97,7 +96,7 @@ class Metric(ABC):
             self,
             predictions: np.ndarray,
             ground_truths: np.ndarray
-        ) -> float:
+    ) -> float:
         """
         This method is a way for evaluating a metric.
 
@@ -175,10 +174,8 @@ class AccuracyMetric(Metric, ClassificationMetric):
         return "Accuracy"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> np.ndarray:
+        self, ground_truths: List[float], predictions: List[float]
+    ) -> np.ndarray:
         """
         This method computes the result of the accuracy metric.
 
@@ -207,10 +204,8 @@ class PrecisionMetric(Metric, ClassificationMetric):
         return "Precision"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> np.ndarray:
+        self, ground_truths: List[float], predictions: List[float]
+    ) -> np.ndarray:
         """
         This method computes the result of the precision metric.
 
@@ -239,10 +234,8 @@ class SensitivityMetric(Metric, ClassificationMetric):
         return "Sensitivity"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> np.ndarray:
+        self, ground_truths: List[float], predictions: List[float]
+    ) -> np.ndarray:
         """
         This method computes the result of the sensitivity metric.
 
@@ -272,10 +265,8 @@ class F1ScoreMetric(PrecisionMetric, SensitivityMetric):
         return "F1 Score"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> np.ndarray:
+        self, ground_truths: List[float], predictions: List[float]
+    ) -> np.ndarray:
         """
         This method computes the result of the F1 Score metric.
 
@@ -313,7 +304,7 @@ class MSEMetric(Metric):
             self,
             ground_truths: List[float],
             predictions: List[float]
-        ) -> float:
+    ) -> float:
         """
         This method computes the result of the MSE metric.
 
@@ -342,10 +333,8 @@ class MAEMetric(Metric):
         return "Mean-Average Error"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> float:
+            self, ground_truths: List[float], predictions: List[float]
+    ) -> float:
         """
         This method computes the result of the MAE metric.
 
@@ -374,10 +363,8 @@ class RsquaredMetric(Metric):
         return "R-Squred"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> float:
+            self, ground_truths: List[float], predictions: List[float]
+    ) -> float:
         """
         This method computes the result of the R-squared metric.
 
@@ -437,10 +424,8 @@ class RMSEMetric(MSEMetric):
         return "Root-Mean-Square Error"
 
     def _result(
-            self,
-            ground_truths: List[float],
-            predictions: List[float]
-        ) -> float:
+            self, ground_truths: List[float], predictions: List[float]
+    ) -> float:
         """
         This method computes the result of the RMSE metric.
 
