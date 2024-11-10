@@ -14,11 +14,23 @@ class KNearestNeighbors(Model):
     based on Euclidean distances.
     """
 
-    def __init__(self, type, k_val: int = 3) -> None:
+    def __init__(self, type: str, k_val: int = 3) -> None:
+        """
+        Instantiates a KNN Model.
+
+        :param type: the type of model
+        :type type: str
+        :param k_val: the k value, defaults to 3
+        :type k_val: int, optional
+        """
         super().__init__(type)
         self.k = k_val
 
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
+    def fit(
+            self,
+            observations: np.ndarray,
+            ground_truth: np.ndarray
+        ) -> np.ndarray:
         """
         The `fit` method takes in observations and ground truth data,
         validates them, and assigns parameters based on the observations

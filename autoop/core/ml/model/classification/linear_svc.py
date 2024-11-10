@@ -2,11 +2,15 @@ from autoop.core.ml.model import Model
 from sklearn.svm import LinearSVC
 import numpy as np
 
-# Documentation: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.predict
-
 
 class Linear_SVC(Model):
-    def __init__(self, type) -> None:
+    """
+    This is a wrapper on sklearn's LinearSVC.
+    """
+    def __init__(self, type: str) -> None:
+        """
+        A way of instantiating a Linear SVC.
+        """
         super().__init__(type)
         self._model = None
 

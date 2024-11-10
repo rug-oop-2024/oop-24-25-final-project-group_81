@@ -10,6 +10,9 @@ class NotFoundError(Exception):
     """
 
     def __init__(self, path: str) -> None:
+        """
+        A way to instantiate an exception.
+        """
         super().__init__(f"Path not found: {path}")
 
 

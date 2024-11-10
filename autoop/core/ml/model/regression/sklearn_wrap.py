@@ -10,11 +10,21 @@ class LassoWrapper(Model):
     structure as the abstract base class from BaseModel.
     """
 
-    def __init__(self, type) -> None:
+    def __init__(self, type: str) -> None:
+        """
+        A way of insantiating a LassoWrapper.
+
+        :param type: the type of model
+        :type type: str
+        """
         super().__init__(type)
         self._model = Lasso()
 
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
+    def fit(
+            self,
+            observations: np.ndarray,
+            ground_truth: np.ndarray
+        ) -> None:
         """
         Fit the Lasso model to the data.
         :param observations: Input data (features).
@@ -36,8 +46,8 @@ class LassoWrapper(Model):
         super()._validate_num_features(observations)
         # Casting the array into the appripriate shape
         predictions = self._model.predict(observations)
-        predictions = predictions.reshape(predictions.shape[0], 1).round(2)
-        return predictions
+        predictions = predictions.reshape(predictions.shape[0], 1)
+        return predictions.round(2)
 
     def _validate_fit(self) -> None:
         """

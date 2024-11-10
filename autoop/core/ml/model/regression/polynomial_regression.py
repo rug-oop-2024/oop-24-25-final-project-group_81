@@ -4,31 +4,38 @@ from sklearn.linear_model import LinearRegression
 
 import numpy as np
 
-# Documentation: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures.fit_transform
-# Documentation: https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LinearRegression.html
-
 
 class PolynomialRegression(Model):
-    def __init__(self, type) -> None:
+    def __init__(self, type: str) -> None:
+        """
+        A way of instantiating a Poly Regression.
+
+        :param type: _description_
+        :type type: _type_
+        """
         super().__init__(type)
         self._model = None
         self._degree = 2
 
     @property
-    def degree(self):
+    def degree(self) -> int:
         """
         Getter for the degree of the polynomial.
         """
         return self._degree
 
     @degree.setter
-    def degree(self, degree: int):
+    def degree(self, degree: int) -> None:
         """
         Setter for the degree of the polynomial.
         """
         self._degree = degree
 
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> np.ndarray:
+    def fit(
+            self,
+            observations: np.ndarray,
+            ground_truth: np.ndarray
+        ) -> np.ndarray:
         """
         Fit the model.
 

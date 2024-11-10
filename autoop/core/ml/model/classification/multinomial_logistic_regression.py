@@ -3,11 +3,15 @@ from sklearn.linear_model import LogisticRegression
 
 import numpy as np
 
-# Documentation: https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression.predict
-
 
 class MultinomialLogisticRegression(Model):
-    def __init__(self, type) -> None:
+    """
+    This is a wrapper of sklearn's LogisticRegression.
+    """
+    def __init__(self, type: str) -> None:
+        """
+        A way of instantiating MultinomialLogisticRegression.
+        """
         super().__init__(type)
         self._model = None
 
