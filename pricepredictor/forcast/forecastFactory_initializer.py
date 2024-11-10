@@ -16,17 +16,17 @@ class ForcastFactoryInitializer:
         Generates a dictionary of model parameters for network architecture,
         training configurations, and performance metrics.
 
-        :param architecture: List specifying the number of neurons in each layer
-        of the network. Default is [13, 24].
+        :param architecture: List specifying the number of neurons in each
+        layer of the network. Default is [13, 24].
         :type architecture: list[int]
-        :param learning_rate: The step size for adjusting model weights during
-        training. Default is 0.01.
+        :param learning_rate: The step size for adjusting model weights
+        during training. Default is 0.01.
         :type learning_rate: float
         :param loss_function: The loss function used in training, e.g., "mse"
         for Mean Squared Error. Default is "mse".
         :type loss_function: str
-        :param metrics: List of metrics to monitor during training, e.g., ["mae"].
-        Default is ["mae"].
+        :param metrics: List of metrics to monitor during training,
+        e.g., ["mae"]. Default is ["mae"].
         :type metrics: list[str]
         :param epochs: Number of training epochs. Default is 50.
         :type epochs: int
@@ -63,8 +63,8 @@ class ForcastFactoryInitializer:
         :param testing_percentage: Percentage of data allocated to testing.
         Default is 0.8.
         :type testing_percentage: float
-        :param validation_percentage: Percentage of data allocated to validation.
-        Default is 0.1.
+        :param validation_percentage: Percentage of data allocated to
+        validation. Default is 0.1.
         :type validation_percentage: float
 
         :return: A dictionary containing data factory parameters.
