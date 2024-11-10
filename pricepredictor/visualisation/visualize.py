@@ -153,7 +153,7 @@ class PlotStocks:
 
         ax.legend(loc="lower right", bbox_to_anchor=(1, 0))
 
-    def _plot_sma(self, ax: Axes, dates) -> None:
+    def _plot_sma(self, ax: Axes, dates: list[str]) -> None:
         """
         Helper method to plot the SMA on the
         specified axis, with optional extrapolated SMA.
