@@ -1,9 +1,9 @@
 from functools import wraps
-from typing import Any, Callable
+from typing import Callable
 import streamlit as st
 
 
-def title(title: str) -> Callable[..., Any]:
+def title(title: str) -> Callable[..., any]:
     """
     Wraps a function and prints a title before execution.
 
@@ -15,13 +15,13 @@ def title(title: str) -> Callable[..., Any]:
     :rtype: Callable[...,Any]
     """
 
-    def decorator(function: Callable[..., Any]) -> Callable[..., Any]:
+    def decorator(function: Callable[..., any]) -> Callable[..., any]:
         """
         The decorator.
         """
 
         @wraps(function)
-        def wrapped_function(*args: Any, **kwargs: Any) -> Any:
+        def wrapped_function(*args: any, **kwargs: any) -> any:
             st.write(f"# {title}")
             result = function(*args, **kwargs)
             return result
