@@ -110,7 +110,7 @@ Pipeline(
         artifacts = []
         for name, artifact in self._artifacts.items():
             artifact_type = artifact.get("type")
-            if artifact_type in ["OneHotEncoder"]:
+            if artifact_type in ["LabelEncoder"]:
                 data = artifact["encoder"]
                 data = pickle.dumps(data)
                 artifacts.append(Artifact(name=name, data=data))

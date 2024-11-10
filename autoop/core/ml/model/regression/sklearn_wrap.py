@@ -38,19 +38,8 @@ class LassoWrapper(Model):
         :param observations: Input data to predict on.
         :return: Predicted values.
         """
-        self._validate_fit()
         super()._validate_num_features(observations)
         # Casting the array into the appripriate shape
         predictions = self._model.predict(observations)
         predictions = predictions.reshape(predictions.shape[0], 1)
         return predictions.round(2)
-
-    def _validate_fit(self) -> None:
-        """
-        Checks if model has been fitted
-
-        Raises:
-            ValueError: If model has not stored 'coefficients' or 'intercept'
-        """
-        if "coefficients" or "intercept" not in self._parameters:
-            raise ValueError("The model has not been fitted!")

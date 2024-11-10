@@ -64,7 +64,6 @@ class KNearestNeighbors(Model):
         predicted class labels for the input observations based on the
         k-nearest neighbors algorithm.
         """
-        self._validate_fit()
         super()._validate_num_features(observations)
 
         predictions = []
@@ -77,17 +76,6 @@ class KNearestNeighbors(Model):
             predictions.append(most_common_class)
 
         return np.array(predictions)
-
-    def _validate_fit(self) -> None:
-        """
-        Checks if model has been properly fitted
-
-        Raises:
-            ValueError: If model has not stored
-                'training_data' or 'training_labels'
-        """
-        if "training_data" or "training_labels" not in self._parameters:
-            raise ValueError("The model has not been fitted!")
 
     def _L2_norm(self, observation: np.ndarray) -> np.ndarray:
         """

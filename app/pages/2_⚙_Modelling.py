@@ -363,19 +363,16 @@ class ControllerModelling(ControllerWithDatasets):
         """
         pipeline_name, version = self.ui_manager.get_pipeline_saving_info()
 
-        if pipeline_name and version:
-            # Gets a list of artifacts for saving
+        if st.button("Save Pipeline"):
             pipeline_artifacts = self._pipeline.artifacts(
                 pipeline_name, version
             )
-
-            if st.button("Save Pipeline"):
-                for pipeline_artifact in pipeline_artifacts:
-                    # Saves every element in the list of artifacts
-                    self._automl.registry.register(pipeline_artifact)
-                self.ui_manager.display_success(
-                    f"Pipeline '{pipeline_name}' saved successfully!"
-                )
+            for pipeline_artifact in pipeline_artifacts:
+                # Saves every element in the list of artifacts
+                self._automl.registry.register(pipeline_artifact)
+            self.ui_manager.display_success(
+                f"Pipeline '{pipeline_name}' saved successfully!"
+            )
 
     def _build_pipeline(self) -> None:
         """
@@ -535,7 +532,7 @@ class ControllerModelling(ControllerWithDatasets):
         """
         Used to chose a split for the pipeline.
         """
-        self._split = st.slider("Select a dataset split", 0.01, 0.99)
+        self._split = st.slider("Select a dataset split", 0.01, 0.99, 0.80)
 
     def _reboot(self) -> None:
         """

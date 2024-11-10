@@ -39,9 +39,6 @@ def get_model(model_name: str) -> Model:
     :return: the instance of a model
     :rtype: Model
     """
-    if model_name not in REGRESSION_MODELS or CLASSIFICATION_MODELS:
-        print(f"No such model `{model_name}` found.")
-
     # Determining the type of the model
     if model_name in REGRESSION_MODELS:
         type_ = "regression"
