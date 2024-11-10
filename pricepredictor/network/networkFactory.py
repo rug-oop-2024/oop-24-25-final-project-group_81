@@ -142,5 +142,5 @@ class NetworkFactory:
                 concat([sliding_data, preprocessed_prediction], axis=1)
 
         # Separate the predictions from the input data and convert to list
-        predictions = sliding_data[0][len(data[0]) :].numpy().tolist()
+        predictions = sliding_data[0][len(data[0]):].numpy().tolist()
         return predictions

@@ -161,7 +161,7 @@ class PlotStocks:
         :type dates: list
         """
         # Delete the first n elements
-        x_val_SMA = dates[self._sma_length - 1 :]
+        x_val_SMA = dates[self._sma_length - 1:]
         ax.plot(x_val_SMA, self._sma, color="red", label="SMA")
         if self._extrapolated_sma is not None:
             # Getting the x value for the days that the extrapolation happend
@@ -329,7 +329,7 @@ class PlotForcastComparison(PlotStocks):
         :param ax: The axis on which to plot residuals.
         :type ax: matplotlib.axes.Axes
         """
-        self._residuals = self._residuals[-len(self._dates) :]
+        self._residuals = self._residuals[-len(self._dates):]
         super()._plot_residuals(ax)
 
     def _plot_sma(self, ax: Axes, dates: list[str]) -> None:
@@ -344,7 +344,7 @@ class PlotForcastComparison(PlotStocks):
         """
         # Delete the first n elements
         x_val_SMA = dates
-        y_val_SMA = self._sma[-len(dates) :]
+        y_val_SMA = self._sma[-len(dates):]
         ax.plot(x_val_SMA, y_val_SMA, color="gold", label="SMA")
         if self._extrapolated_sma is not None:
             # Getting the x value for the days that the extrapolation happend

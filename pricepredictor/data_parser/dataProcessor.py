@@ -242,7 +242,7 @@ class DataProcessor:
         """
         allData = []
         for i in range(len(self._data) // pointsPerSet):
-            data = self._data[i * pointsPerSet : (i + 1) * pointsPerSet]
+            data = self._data[i * pointsPerSet: (i + 1) * pointsPerSet]
             allData.append(data)
         return allData
 

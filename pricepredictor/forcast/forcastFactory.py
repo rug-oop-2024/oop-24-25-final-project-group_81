@@ -338,7 +338,7 @@ class ForcastFactory:
             )
 
         # Reduce the number of residuals
-        reduced_residuals = self._residuals[-self._input_shape :]
+        reduced_residuals = self._residuals[-self._input_shape:]
 
         # Convert to tensors in the correct shape
         corr_shape = (-1, self._input_shape)
@@ -387,7 +387,7 @@ class ForcastFactory:
         )
 
         start = self._sma_lookback_period
-        self._observed_raw_data = observed_raw_data[start :]
+        self._observed_raw_data = observed_raw_data[start:]
 
         self._observed_closing_prices = self._data_factory.\
             get_closing_prices(self._observed_raw_data)
