@@ -14,7 +14,6 @@ class Pipeline:
     """
     The Pipeline of the autoop.
     """
-    
     def __init__(
         self,
         metrics: List[Metric],
@@ -54,15 +53,12 @@ class Pipeline:
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if (
-            target_feature.type == "categorical"
-            and
-            model.type != "classification"
-        ):
-            raise ValueError(
-                "Model type must be classification"
-                " for categorical target feature"
-            )
+        if target_feature.type == "categorical":
+            if model.type != "classification":
+                raise ValueError(
+                    "Model type must be classification"
+                    " for categorical target feature"
+                )
         if target_feature.type == "continuous" and model.type != "regression":
             raise ValueError(
                 "Model type must be regression"
@@ -201,7 +197,7 @@ Pipeline(
             int(split * len(self._output_vector)) :
         ]
 
-    def _compact_vectors(self, vectors: List[np.array]) -> np.array:
+    def _compact_vectors(self, vectors: List[np.array]) -> np.ndarray:
         """
         Join a sequence of vectors.
         """
@@ -253,7 +249,7 @@ Pipeline(
         }
         return test_evaluation, train_evaluation
 
-    def train(self):
+    def train(self) -> None:
         """
         Used to train the model
         """

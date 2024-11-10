@@ -43,7 +43,7 @@ class Linear_SVC(Model):
         predictions = self._model.predict(observations)
         return predictions
 
-    def _validate_fit(self):
+    def _validate_fit(self) -> None:
         """
         Used to validate if the model has been fitted.
 

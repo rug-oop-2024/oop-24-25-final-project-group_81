@@ -12,8 +12,7 @@ from autoop.core.ml.model.classification.k_nearest_neighbors import (
     KNearestNeighbors,
 )
 from autoop.core.ml.model.classification.linear_svc import Linear_SVC
-from autoop.core.ml.model.\
-    classification.multinomial_logistic_regression import (
+from autoop.core.ml.model.classification.mlr import (
     MultinomialLogisticRegression,
 )
 
