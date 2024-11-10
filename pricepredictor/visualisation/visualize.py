@@ -60,15 +60,8 @@ class PlotStocks:
 
     def masterPlot(self) -> Figure:
         """
-        Creates a comprehensive plot displaying candlestick data, residuals, and optionally SMA and
-        predicted prices.
-
-        :param simpleMovingAverage: If True, includes SMA in the plot.
-        :type simpleMovingAverage: bool
-        :param predictedClosingPrices: If True, includes predicted closing prices in the plot.
-        :type predictedClosingPrices: bool
-        :param predictedResiduals: If True, includes predicted residuals in the plot.
-        :type predictedResiduals: bool
+        Creates a comprehensive plot displaying candlestick data and residuals
+        data.
         """
         self.masterPlot_on = True
         fig, (ax, ax1) = plt.subplots(
@@ -127,7 +120,12 @@ class PlotStocks:
         # Candlestick plotting
         for i in range(num_data):
             # Plot the line between high and low (the wick)
-            ax.plot([dates[i], dates[i]], [self._high[i], self._low[i]], color="black")
+            ax.plot(
+                [dates[i],
+                 dates[i]],
+                 [self._high[i], self._low[i]],
+                 color="black"
+                 )
 
             # Determine the color based on the open and close prices
             color = "green" if self._close[i] > self._open[i] else "red"
@@ -169,7 +167,7 @@ class PlotStocks:
         x_val_SMA = dates[self._sma_length - 1 :]
         ax.plot(x_val_SMA, self._sma, color="red", label="SMA")
         if self._extrapolated_sma is not None:
-            # Getting the x values for the days that the extrapolation happend
+            # Getting the x value for the days that the extrapolation happend
             nr_days_extrapolated = len(self._extrapolated_sma)
             last_day = dates[-1]
 
@@ -273,7 +271,9 @@ class PlotStocks:
 
         future_dates_numeric = mdates.date2num(future_dates[1:])
 
-        for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
+        for count, predicted_closing_price in enumerate(
+            self._predicted_closing_prices
+            ):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
@@ -295,15 +295,10 @@ class PlotForcastComparison(PlotStocks):
 
     def _plot_candlestick(self, ax: Axes) -> None:
         """
-        Plots observed candlestick data on the provided axis, with optional
-        overlays of the simple moving average (SMA) and predicted closing prices.
+        Plots observed candlestick data on the provided axis.
 
         :param ax: The axis on which to plot the candlestick chart.
         :type ax: matplotlib.axes.Axes
-        :param simpleMovingAverage: If True, plots the SMA.
-        :type simpleMovingAverage: bool
-        :param predictedClosingPrices: If True, plots predicted closing prices.
-        :type predictedClosingPrices: bool
         """
         # Number of days
         num_data = len(self._high)
@@ -334,19 +329,17 @@ class PlotForcastComparison(PlotStocks):
 
     def _plot_residuals(self, ax: Axes) -> None:
         """
-        Plots residuals of the observed data, with an option to add predicted residuals.
+        Plots residuals of the observed data and predicted residuals.
 
         :param ax: The axis on which to plot residuals.
         :type ax: matplotlib.axes.Axes
-        :param predictedResiduals: If True, plots predicted residuals as well.
-        :type predictedResiduals: bool
         """
         self._residuals = self._residuals[-len(self._dates) :]
         super()._plot_residuals(ax)
 
     def _plot_sma(self, ax: Axes, dates: list[str]) -> None:
         """
-        Plots the simple moving average (SMA) on the specified axis and optionally
+        Plots the simple moving average (SMA) on the specified axis and
         the extrapolated SMA if available.
 
         :param ax: The axis on which to plot the SMA.
@@ -359,7 +352,7 @@ class PlotForcastComparison(PlotStocks):
         y_val_SMA = self._sma[-len(dates) :]
         ax.plot(x_val_SMA, y_val_SMA, color="gold", label="SMA")
         if self._extrapolated_sma is not None:
-            # Getting the x values for the days that the extrapolation happend
+            # Getting the x value for the days that the extrapolation happend
             nr_days_extrapolated = len(self._extrapolated_sma)
 
             ax.plot(
@@ -371,7 +364,7 @@ class PlotForcastComparison(PlotStocks):
 
     def _plot_predicted_closing_prices(self, ax: Axes) -> None:
         """
-        Plots the simple moving average (SMA) on the specified axis and optionally
+        Plots the simple moving average (SMA) on the specified axis and
         the extrapolated SMA if available.
 
         :param ax: The axis on which to plot the SMA.
@@ -388,7 +381,9 @@ class PlotForcastComparison(PlotStocks):
 
         future_dates_numeric = mdates.date2num(future_dates)
 
-        for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
+        for count, predicted_closing_price in enumerate(
+            self._predicted_closing_prices
+            ):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
