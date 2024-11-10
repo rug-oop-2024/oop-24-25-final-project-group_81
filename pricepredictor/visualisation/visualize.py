@@ -125,7 +125,7 @@ class PlotStocks:
                  dates[i]],
                  [self._high[i], self._low[i]],
                  color="black"
-                 )
+            )
 
             # Determine the color based on the open and close prices
             color = "green" if self._close[i] > self._open[i] else "red"
@@ -271,9 +271,10 @@ class PlotStocks:
 
         future_dates_numeric = mdates.date2num(future_dates[1:])
 
-        for count, predicted_closing_price in enumerate(
-            self._predicted_closing_prices
-            ):
+        for (
+            count,
+            predicted_closing_price
+            ) in enumerate(self._predicted_closing_prices):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
@@ -381,9 +382,10 @@ class PlotForcastComparison(PlotStocks):
 
         future_dates_numeric = mdates.date2num(future_dates)
 
-        for count, predicted_closing_price in enumerate(
-            self._predicted_closing_prices
-            ):
+        for (
+            count,
+            predicted_closing_price
+            ) in enumerate(self._predicted_closing_prices):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
