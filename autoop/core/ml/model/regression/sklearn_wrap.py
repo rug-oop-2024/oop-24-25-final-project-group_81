@@ -54,6 +54,7 @@ class LassoWrapper(Model):
         """
         if (
             "coefficients" not in self._parameters
-            or "intercept" not in self._parameters
+            or
+            "intercept" not in self._parameters
         ):
             raise ValueError("The model has not been fitted!")

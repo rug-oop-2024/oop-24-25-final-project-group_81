@@ -6,6 +6,9 @@ import numpy as np
 
 
 class PolynomialRegression(Model):
+    """
+    A wrapper of sklearn's Polynomial Reg and Linear Reg.
+    """
     def __init__(self, type: str) -> None:
         """
         A way of instantiating a Poly Regression.

@@ -88,7 +88,8 @@ class KNearestNeighbors(Model):
         """
         if (
             "training_data" not in self._parameters
-            or "training_labels" not in self._parameters
+            or
+            "training_labels" not in self._parameters
         ):
             raise ValueError("The model has not been fitted!")
 
