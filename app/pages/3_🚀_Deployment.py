@@ -57,8 +57,7 @@ class UserInterfaceDeployment(GeneralUI):
         # Get a list of feature names
         list_of_features = [feature.name for feature in features]
 
-        # User input instructions
-        st.write(
+        input_instructions = (
             "# In order to make a prediction you need to chose "
             + str(req_num_features)
             + " "
@@ -66,6 +65,9 @@ class UserInterfaceDeployment(GeneralUI):
             + " "
             + "features!"
         )
+
+        # User input instructions
+        st.write(input_instructions)
 
         selections = st.multiselect(
             f"Avaliable {type_} features:",

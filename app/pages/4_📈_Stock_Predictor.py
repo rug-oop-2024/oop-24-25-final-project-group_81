@@ -83,8 +83,8 @@ class UserInterfaceStockPredictions(GeneralUI):
         return num_of_predictions
     
     @title(
-            "Chose number of neurons in the first " +
-            "and second hidden layer of the MLP"
+        "Chose number of neurons in the first " +
+        "and second hidden layer of the MLP"
     )
     def avaliable_num_neurons(self) -> int:
         """
@@ -258,7 +258,7 @@ class ControllerStockPredictions:
         model_parameters = initializer.generate_model_parameters(
             self._architecture,
             self._learning_rate,
-            batch_size = self._batch_size
+            batch_size=self._batch_size
         )
 
         # Generate datafacotry parameters
