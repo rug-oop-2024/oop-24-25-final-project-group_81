@@ -49,9 +49,9 @@ class NetworkFactory:
         batch_size: int,
     ) -> None:
         """
-        Trains the model using specified training and validation data, with the
-        given configurations for learning rate, loss function, metrics, epochs,
-        and batch size.
+        Trains the model using specified training and validation data,
+        with the given configurations for learning rate, loss function,
+        metrics, epochs, and batch size.
 
         :param training_data: Input data for training.
         :type training_data: np.ndarray
@@ -76,7 +76,10 @@ class NetworkFactory:
         """
         # Create Sequential model
         self._model.create_sequential_model(
-            self._model_shape, self._activations, self._input_shape, self._output_shape
+            self._model_shape,
+            self._activations,
+            self._input_shape,
+            self._output_shape
         )
 
         # Compile the model
@@ -92,15 +95,20 @@ class NetworkFactory:
             batch_size,
         )
 
-    def predict(self, data: tf.Tensor, number_of_predictions: int) -> list[float]:
+    def predict(
+            self,
+            data: tf.Tensor,
+            number_of_predictions: int
+        ) -> list[float]:
         """
-        Generates a specified number of predictions based on input data using a
-        sliding window approach. Appends each new prediction to the input data
-        to iteratively make future predictions.
+        Generates a specified number of predictions based on input data
+        using a sliding window approach. Appends each new prediction
+        to the input data to iteratively make future predictions.
 
         :param data: Input data in the form of a Tensor.
         :type data: tf.Tensor
-        :param number_of_predictions: Number of future predictions to generate.
+        :param number_of_predictions: Number of future predictions
+        to generate.
         :type number_of_predictions: int
 
         :raises ValueError: If `data` is not of type `tf.Tensor`.
@@ -130,7 +138,10 @@ class NetworkFactory:
             preprocessed_prediction = tf.reshape(prediction[0][0], (-1, 1))
 
             # Add the prediction to the sliding data
-            sliding_data = tf.concat([sliding_data, preprocessed_prediction], axis=1)
+            sliding_data = tf.concat(
+                [sliding_data, preprocessed_prediction],
+                axis=1
+            )
 
         # Separate the predictions from the input data and convert to list
         predictions = sliding_data[0][len(data[0]) :].numpy().tolist()
