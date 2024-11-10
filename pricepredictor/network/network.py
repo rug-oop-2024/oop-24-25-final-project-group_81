@@ -1,17 +1,19 @@
 import numpy as np
 from typing import Any
 from tensorflow import keras
-from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Dense,Input # type: ignore
-from tensorflow.keras.optimizers import Adam # type: ignore
-from tensorflow.keras.callbacks import EarlyStopping # type: ignore
+from tensorflow.keras.models import Sequential  # type: ignore
+from tensorflow.keras.layers import Dense, Input  # type: ignore
+from tensorflow.keras.optimizers import Adam  # type: ignore
+from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import mean_absolute_error
+
 
 class Model:
     """
     Used as an interface between keras' sequantial model
     (that is used to create an MLP).
     """
+
     def __init__(self):
         """
         Instantiates a model.
@@ -19,12 +21,12 @@ class Model:
         self.model = None
 
     def create_sequential_model(
-            self,
-            model_shape : list[float],
-            activations: list[str],
-            input_shape: int,
-            output_size: int
-            ) -> None:
+        self,
+        model_shape: list[float],
+        activations: list[str],
+        input_shape: int,
+        output_size: int,
+    ) -> None:
         """
         Creates the model architecture and assigns it to the model attribute.
 
@@ -53,11 +55,8 @@ class Model:
         self.model = model
 
     def compileModel(
-            self,
-            learning_rate: float,
-            lossFunc: str,
-            metrics: list[str]
-            ) -> None:
+        self, learning_rate: float, lossFunc: str, metrics: list[str]
+    ) -> None:
         """
         Compiles the model to prepare it for training.
 
@@ -70,37 +69,35 @@ class Model:
         """
         self._model_validator()
         self.model.compile(
-            optimizer=Adam(learning_rate=learning_rate),
-            loss=lossFunc,
-            metrics=metrics
-            )
+            optimizer=Adam(learning_rate=learning_rate), loss=lossFunc, metrics=metrics
+        )
 
     def trainModel(
-            self,
-            training_data: np.ndarray,
-            training_labels: np.ndarray,
-            validation_data: np.ndarray,
-            validation_labels: np.ndarray,
-            epochs: int,
-            batch_size: int
-            ) -> None:
+        self,
+        training_data: np.ndarray,
+        training_labels: np.ndarray,
+        validation_data: np.ndarray,
+        validation_labels: np.ndarray,
+        epochs: int,
+        batch_size: int,
+    ) -> None:
         """
         Trains the model using specified training and validation data.
 
-        :param training_data: Data for training, matching the input shape of 
+        :param training_data: Data for training, matching the input shape of
         the model.
         :type training_data: np.ndarray
-        :param training_labels: Labels for training data, matching the output 
+        :param training_labels: Labels for training data, matching the output
         shape of the model.
         :type training_labels: np.ndarray
-        :param validation_data: Data for validation during training to prevent 
+        :param validation_data: Data for validation during training to prevent
         overfitting.
         :type validation_data: np.ndarray
         :param validation_labels: Labels for validation data.
         :type validation_labels: np.ndarray
         :param epochs: Number of training iterations.
         :type epochs: int
-        :param batch_size: Data points per batch, the number processed before 
+        :param batch_size: Data points per batch, the number processed before
         updating weights.
         :type batch_size: int
         """
@@ -108,25 +105,22 @@ class Model:
         self._model_validator()
 
         # Stops training when validation performance stops improving
-        early_stopping = EarlyStopping(monitor='val_loss', patience=4)
-        
+        early_stopping = EarlyStopping(monitor="val_loss", patience=4)
+
         self.model.fit(
             training_data,
             training_labels,
             epochs=epochs,
             batch_size=batch_size,
-            validation_data=(validation_data, validation_labels), 
+            validation_data=(validation_data, validation_labels),
             callbacks=[early_stopping],
-            verbose=0
+            verbose=0,
         )
 
-    def predict(
-            self,
-            data: np.ndarray
-            ) -> np.ndarray:
+    def predict(self, data: np.ndarray) -> np.ndarray:
         """
         Makes a prediction on the specified data using the trained model
-        
+
         :param data: the data you want to predict
         :type data: np.ndarray
         :return: the predictions
@@ -135,12 +129,10 @@ class Model:
         self._model_validator()
         predictions = self.model.predict(data)
         return predictions
-    
+
     def compute_mae(
-            self,
-            testing_data: np.ndarray,
-            testing_labels: np.ndarray
-            ) -> float:
+        self, testing_data: np.ndarray, testing_labels: np.ndarray
+    ) -> float:
         """
         Computes the mean absolute error of the model.
 
@@ -154,7 +146,7 @@ class Model:
         predictions = self.predict(testing_data)
         mae = mean_absolute_error(testing_labels, predictions)
         return mae
-    
+
     def model_summary(self) -> Any:
         """
         Returns the summary of the model.
@@ -162,10 +154,7 @@ class Model:
         self._model_validator()
         return self.model.summary()
 
-    def save_model(
-            self,
-            stockName: str
-            ) -> None:
+    def save_model(self, stockName: str) -> None:
         """
         Saves the model.
 
@@ -175,13 +164,9 @@ class Model:
         and is going to be stored in the models folder.
         """
         self._model_validator()
-        self.model.\
-            save(f"models/{stockName}_model.keras")
+        self.model.save(f"models/{stockName}_model.keras")
 
-    def load_model(
-            self,
-            stockName: str
-            ) -> None:
+    def load_model(self, stockName: str) -> None:
         """
         Loads a model from the models folder.
 
@@ -191,18 +176,16 @@ class Model:
         If the file doesn't exists it will raise an exception.
         """
         try:
-            self.model = keras.models.\
-                load_model(f"models/{stockName}_model.keras")
+            self.model = keras.models.load_model(f"models/{stockName}_model.keras")
         except FileExistsError(
             f"No such Model named '{stockName}_model.keras'"
             "exists in the 'models' folder!"
-            ) as e:
+        ) as e:
             raise e
 
-    def _model_validator(self)  -> None:
+    def _model_validator(self) -> None:
         """
         Validates if there is a model instantiated.
         """
         if self.model is None:
             raise AttributeError("There is no Model!")
-        

@@ -11,16 +11,17 @@ class PlotStocks:
     A class for visualizing stock data, including candlestick charts,
     simple moving averages (SMA), residuals, and predicted closing prices.
     """
+
     def __init__(
-            self,
-            stockData: list[tuple[Series,Series,Series,Series,Series]],
-            sma: list[float] = None,
-            extrapolated_sma: list[float] = None,
-            residuals: list[float] = None,
-            predicted_closing_prices: list[float] = None,
-            predicted_residuals: list[float] = None,
-            sma_length: int = 3
-            ) -> None:
+        self,
+        stockData: list[tuple[Series, Series, Series, Series, Series]],
+        sma: list[float] = None,
+        extrapolated_sma: list[float] = None,
+        residuals: list[float] = None,
+        predicted_closing_prices: list[float] = None,
+        predicted_residuals: list[float] = None,
+        sma_length: int = 3,
+    ) -> None:
         """
         Initializes the PlotStocks class with stock data and
         optional parameters for additional visualizations.
@@ -38,7 +39,7 @@ class PlotStocks:
         :type sma: list[float], optional
         :param extrapolated_sma: Extrapolated SMA values for future dates.
         :type extrapolated_sma: list[float], optional
-        :param residuals: The residuals 
+        :param residuals: The residuals
         :type residuals: list[float], optional
         :param predicted_closing_prices: Predicted closing prices.
         :type predicted_closing_prices: list[float], optional
@@ -47,7 +48,9 @@ class PlotStocks:
         :param sma_length: Lookback period for calculating SMA.
         :type sma_length: int
         """
-        self._dates, self._open, self._high, self._low, self._close = list(zip(*stockData))
+        self._dates, self._open, self._high, self._low, self._close = list(
+            zip(*stockData)
+        )
         self._sma = sma
         self._sma_length = sma_length
         self._extrapolated_sma = extrapolated_sma
@@ -57,7 +60,7 @@ class PlotStocks:
 
     def masterPlot(self) -> Figure:
         """
-        Creates a comprehensive plot displaying candlestick data, residuals, and optionally SMA and 
+        Creates a comprehensive plot displaying candlestick data, residuals, and optionally SMA and
         predicted prices.
 
         :param simpleMovingAverage: If True, includes SMA in the plot.
@@ -68,7 +71,9 @@ class PlotStocks:
         :type predictedResiduals: bool
         """
         self.masterPlot_on = True
-        fig, (ax, ax1) = plt.subplots(2, 1, figsize=(8, 6), gridspec_kw={"height_ratios": [3, 1]})
+        fig, (ax, ax1) = plt.subplots(
+            2, 1, figsize=(8, 6), gridspec_kw={"height_ratios": [3, 1]}
+        )
 
         ax.grid(color="#D3D3D3", linestyle="-", linewidth=0.5)
         ax1.grid(color="#D3D3D3", linestyle="-", linewidth=0.5)
@@ -78,7 +83,7 @@ class PlotStocks:
         num_datum = len(self._close)
         num_days = num_datum - num_predictions
         x_min = self._dates[num_days]
-        
+
         # Create the Plots
         self._plot_candlestick(ax)
         self._plot_residuals(ax1)
@@ -86,10 +91,12 @@ class PlotStocks:
         # Adjust the spacing between subplots (increase hspace)
         plt.subplots_adjust(hspace=0.5)
 
-        ax.set_xlim(left = x_min)
-        ax1.set_xlim(left = x_min)
+        ax.set_xlim(left=x_min)
+        ax1.set_xlim(left=x_min)
 
-        fig.patch.set_facecolor("lightgray")  # Set a light background color for the entire figure
+        fig.patch.set_facecolor(
+            "lightgray"
+        )  # Set a light background color for the entire figure
         ax.set_facecolor("whitesmoke")  # Set a lighter background for the first axis
         ax1.set_facecolor("whitesmoke")  # Set the same for the second axis
 
@@ -125,7 +132,14 @@ class PlotStocks:
             # Determine the color based on the open and close prices
             color = "green" if self._close[i] > self._open[i] else "red"
             # Plot the rectangle (the body) between open and close
-            ax.add_patch(plt.Rectangle((dates_numeric[i] - 0.2, self._open[i]), 0.4, abs(self._close[i] - self._open[i]), color=color))
+            ax.add_patch(
+                plt.Rectangle(
+                    (dates_numeric[i] - 0.2, self._open[i]),
+                    0.4,
+                    abs(self._close[i] - self._open[i]),
+                    color=color,
+                )
+            )
 
         self._plot_sma(ax, dates)
 
@@ -152,30 +166,29 @@ class PlotStocks:
         :type dates: list
         """
         # Delete the first n elements
-        x_val_SMA = dates[self._sma_length-1:]
-        ax.plot(x_val_SMA, self._sma, color="red", label = "SMA")
+        x_val_SMA = dates[self._sma_length - 1 :]
+        ax.plot(x_val_SMA, self._sma, color="red", label="SMA")
         if self._extrapolated_sma is not None:
             # Getting the x values for the days that the extrapolation happend
             nr_days_extrapolated = len(self._extrapolated_sma)
             last_day = dates[-1]
 
             extrapolated_dates = pd.bdate_range(
-                start=last_day,
-                periods=nr_days_extrapolated
-                ).tolist()
-            
+                start=last_day, periods=nr_days_extrapolated
+            ).tolist()
+
             ax.plot(
                 extrapolated_dates,
                 self._extrapolated_sma,
-                color = "yellow",
-                label = f"Extrapolated SMA ({nr_days_extrapolated} days)"
-                )
+                color="yellow",
+                label=f"Extrapolated SMA ({nr_days_extrapolated} days)",
+            )
 
     def plot_residuals(self) -> None:
         """
         This method plots the residuals.
 
-        :param ax1: used only when called 
+        :param ax1: used only when called
         """
         _, ax = plt.subplots()
 
@@ -196,14 +209,14 @@ class PlotStocks:
         """
         # Number of data points
         num_data = len(self._residuals)
-        
+
         # Create an array of index values to represent days
-        dates = self._dates[-num_data:]#range(num_data)
+        dates = self._dates[-num_data:]  # range(num_data)
 
         ax.plot(dates, self._residuals, color="purple", label="Residuals")
-        
+
         self._plot_predicted_residuals(ax)
-            
+
         # Formatting
         ax.set_title("Plot of the residuals")
         ax.set_ylabel("Value")
@@ -220,9 +233,16 @@ class PlotStocks:
         nr_days_extrapolated = len(self._predicted_residuals)
         last_day = self._dates[-1]
 
-        future_dates = pd.bdate_range(start=last_day, periods=nr_days_extrapolated).tolist()
+        future_dates = pd.bdate_range(
+            start=last_day, periods=nr_days_extrapolated
+        ).tolist()
 
-        ax.plot(future_dates, self._predicted_residuals, color="orange", label="Predicted Residuals")
+        ax.plot(
+            future_dates,
+            self._predicted_residuals,
+            color="orange",
+            label="Predicted Residuals",
+        )
 
     def plot_predicted_closing_prices(self) -> None:
         """
@@ -248,36 +268,34 @@ class PlotStocks:
         last_day = self._dates[-1]
 
         future_dates = pd.bdate_range(
-            start=last_day,
-            periods=nr_days_extrapolated + 1
-            ).tolist()
+            start=last_day, periods=nr_days_extrapolated + 1
+        ).tolist()
 
         future_dates_numeric = mdates.date2num(future_dates[1:])
-        
-        for count, predicted_closing_price in enumerate(
-            self._predicted_closing_prices
-            ):
+
+        for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
                 future_dates_numeric[count] - 0.2,
                 future_dates_numeric[count] + 0.2,
-                color = "green",
-                label = "Predicted Closing Prices" if count == 0 else None
-                )
+                color="green",
+                label="Predicted Closing Prices" if count == 0 else None,
+            )
 
 
 class PlotForcastComparison(PlotStocks):
     """
-    A class for plotting stock data comparisons, including observed and 
+    A class for plotting stock data comparisons, including observed and
     predicted closing prices, simple moving averages (SMA), and residuals.
 
     Inherits from:
     PlotStocks: Provides the core plotting functionality and data handling.
     """
+
     def _plot_candlestick(self, ax: Axes) -> None:
         """
-        Plots observed candlestick data on the provided axis, with optional 
+        Plots observed candlestick data on the provided axis, with optional
         overlays of the simple moving average (SMA) and predicted closing prices.
 
         :param ax: The axis on which to plot the candlestick chart.
@@ -300,10 +318,10 @@ class PlotForcastComparison(PlotStocks):
                 self._close[i],
                 dates_numeric[i] - 0.2,
                 dates_numeric[i] + 0.2,
-                color = "darkgreen",
-                label = "Observed Closing Prices" if i == 0 else None
-                )
-            
+                color="darkgreen",
+                label="Observed Closing Prices" if i == 0 else None,
+            )
+
         self._plot_sma(ax, dates)
 
         self._plot_predicted_closing_prices(ax)
@@ -323,12 +341,12 @@ class PlotForcastComparison(PlotStocks):
         :param predictedResiduals: If True, plots predicted residuals as well.
         :type predictedResiduals: bool
         """
-        self._residuals = self._residuals[-len(self._dates):]
+        self._residuals = self._residuals[-len(self._dates) :]
         super()._plot_residuals(ax)
 
     def _plot_sma(self, ax: Axes, dates: list[str]) -> None:
         """
-        Plots the simple moving average (SMA) on the specified axis and optionally 
+        Plots the simple moving average (SMA) on the specified axis and optionally
         the extrapolated SMA if available.
 
         :param ax: The axis on which to plot the SMA.
@@ -338,17 +356,22 @@ class PlotForcastComparison(PlotStocks):
         """
         # Delete the first n elements
         x_val_SMA = dates
-        y_val_SMA = self._sma[-len(dates):]
-        ax.plot(x_val_SMA, y_val_SMA, color="gold", label = "SMA")
+        y_val_SMA = self._sma[-len(dates) :]
+        ax.plot(x_val_SMA, y_val_SMA, color="gold", label="SMA")
         if self._extrapolated_sma is not None:
             # Getting the x values for the days that the extrapolation happend
             nr_days_extrapolated = len(self._extrapolated_sma)
-            
-            ax.plot(x_val_SMA, self._extrapolated_sma, color = "darkorange", label = f"Extrapolated SMA ({nr_days_extrapolated} days)")
+
+            ax.plot(
+                x_val_SMA,
+                self._extrapolated_sma,
+                color="darkorange",
+                label=f"Extrapolated SMA ({nr_days_extrapolated} days)",
+            )
 
     def _plot_predicted_closing_prices(self, ax: Axes) -> None:
         """
-        Plots the simple moving average (SMA) on the specified axis and optionally 
+        Plots the simple moving average (SMA) on the specified axis and optionally
         the extrapolated SMA if available.
 
         :param ax: The axis on which to plot the SMA.
@@ -359,20 +382,22 @@ class PlotForcastComparison(PlotStocks):
         nr_days_extrapolated = len(self._predicted_closing_prices)
         first_day = self._dates[0]
 
-        future_dates = pd.bdate_range(start=first_day, periods=nr_days_extrapolated).tolist()
+        future_dates = pd.bdate_range(
+            start=first_day, periods=nr_days_extrapolated
+        ).tolist()
 
         future_dates_numeric = mdates.date2num(future_dates)
-        
+
         for count, predicted_closing_price in enumerate(self._predicted_closing_prices):
             rounded_closing_price = round(predicted_closing_price, 2)
             ax.hlines(
                 rounded_closing_price,
                 future_dates_numeric[count] - 0.2,
                 future_dates_numeric[count] + 0.2,
-                color = "dodgerblue",
-                label = "Predicted Closing Prices" if count == 0 else None
-                )
-            
+                color="dodgerblue",
+                label="Predicted Closing Prices" if count == 0 else None,
+            )
+
     def _plot_predicted_residuals(self, ax: Axes) -> None:
         """
         Plots predicted residuals on the specified axis.
@@ -383,7 +408,13 @@ class PlotForcastComparison(PlotStocks):
         nr_days_extrapolated = len(self._predicted_residuals)
         last_day = self._dates[0]
 
-        future_dates = pd.bdate_range(start=last_day, periods=nr_days_extrapolated).tolist()
+        future_dates = pd.bdate_range(
+            start=last_day, periods=nr_days_extrapolated
+        ).tolist()
 
-        ax.plot(future_dates, self._predicted_residuals, color="green", label="Predicted Residuals")
-            
+        ax.plot(
+            future_dates,
+            self._predicted_residuals,
+            color="green",
+            label="Predicted Residuals",
+        )

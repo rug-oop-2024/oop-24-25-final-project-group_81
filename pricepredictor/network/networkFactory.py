@@ -8,13 +8,14 @@ class NetworkFactory:
     Serves as an way of creating a Neural Network model, that can be trained
     to predict.
     """
+
     def __init__(
-            self,
-            model_shape : list[float],
-            activations: list[str],
-            input_shape: int,
-            output_shape: int = 1
-            ) -> None:
+        self,
+        model_shape: list[float],
+        activations: list[str],
+        input_shape: int,
+        output_shape: int = 1,
+    ) -> None:
         """
         Instanitates a Network factory that is used to
         construct a Neural Network.
@@ -36,20 +37,20 @@ class NetworkFactory:
         self._model = Model()
 
     def train(
-            self,
-            training_data: np.ndarray,
-            training_labels: np.ndarray,
-            validation_data: np.ndarray,
-            validation_labels: np.ndarray,
-            learning_rate: float,
-            lossFunc: str,
-            metrics: list[str],
-            epochs: int,
-            batch_size: int
-            ) -> None:
+        self,
+        training_data: np.ndarray,
+        training_labels: np.ndarray,
+        validation_data: np.ndarray,
+        validation_labels: np.ndarray,
+        learning_rate: float,
+        lossFunc: str,
+        metrics: list[str],
+        epochs: int,
+        batch_size: int,
+    ) -> None:
         """
-        Trains the model using specified training and validation data, with the 
-        given configurations for learning rate, loss function, metrics, epochs, 
+        Trains the model using specified training and validation data, with the
+        given configurations for learning rate, loss function, metrics, epochs,
         and batch size.
 
         :param training_data: Input data for training.
@@ -74,18 +75,27 @@ class NetworkFactory:
         :return: None
         """
         # Create Sequential model
-        self._model.create_sequential_model(self._model_shape, self._activations, self._input_shape, self._output_shape)
+        self._model.create_sequential_model(
+            self._model_shape, self._activations, self._input_shape, self._output_shape
+        )
 
         # Compile the model
         self._model.compileModel(learning_rate, lossFunc, metrics)
 
         # Train the model
-        self._model.trainModel(training_data, training_labels, validation_data, validation_labels, epochs, batch_size)
+        self._model.trainModel(
+            training_data,
+            training_labels,
+            validation_data,
+            validation_labels,
+            epochs,
+            batch_size,
+        )
 
     def predict(self, data: tf.Tensor, number_of_predictions: int) -> list[float]:
         """
-        Generates a specified number of predictions based on input data using a 
-        sliding window approach. Appends each new prediction to the input data 
+        Generates a specified number of predictions based on input data using a
+        sliding window approach. Appends each new prediction to the input data
         to iteratively make future predictions.
 
         :param data: Input data in the form of a Tensor.
@@ -100,8 +110,10 @@ class NetworkFactory:
         """
         # Check if the input is a tensor
         if not isinstance(data, tf.Tensor):
-            raise ValueError("To predict use data of type <class 'tf.Tensor'>! "
-                            f"You are trying to use {type(data)}")
+            raise ValueError(
+                "To predict use data of type <class 'tf.Tensor'>! "
+                f"You are trying to use {type(data)}"
+            )
 
         sliding_data = data
         for current_prediction in range(number_of_predictions):
@@ -115,11 +127,11 @@ class NetworkFactory:
             # Adjust the shape of the prediction
             prediction = tf.tile(prediction, [1, sliding_data.shape[1]])
 
-            preprocessed_prediction = tf.reshape(prediction[0][0], (-1,1))
+            preprocessed_prediction = tf.reshape(prediction[0][0], (-1, 1))
 
             # Add the prediction to the sliding data
             sliding_data = tf.concat([sliding_data, preprocessed_prediction], axis=1)
 
         # Separate the predictions from the input data and convert to list
-        predictions = sliding_data[0][len(data[0]):].numpy().tolist()
+        predictions = sliding_data[0][len(data[0]) :].numpy().tolist()
         return predictions

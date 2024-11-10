@@ -14,12 +14,10 @@ class ForcastFactory:
     """
     Serves as a control point for making forcasts on data, using a NN.
     """
+
     def __init__(
-            self,
-            stock_name: str,
-            model_param_dict: dict,
-            datafactory_param_dict: dict
-            ) -> None:
+        self, stock_name: str, model_param_dict: dict, datafactory_param_dict: dict
+    ) -> None:
         """
         A way of initializing a ForcastFactory. There is
         a special class called ForecastFactoryInitializer that
@@ -36,17 +34,17 @@ class ForcastFactory:
         :type datafactory_param_dict: dict
         """
         self._stock_name = stock_name
-        
+
         # Unpack model parameters
         for key, value in model_param_dict.items():
             setattr(self, f"_{key}", value)
 
         # Unpack datafactory parameters
         for key, value in datafactory_param_dict.items():
-            setattr(self, f"_{key}", value)    
+            setattr(self, f"_{key}", value)
 
         # Define the model's activation functions
-        activations = ["relu" for _ in range(len(self._architecture))]    
+        activations = ["relu" for _ in range(len(self._architecture))]
         activations.append("linear")
 
         self._input_shape = self._points_per_set - self._labels_per_set
@@ -56,10 +54,10 @@ class ForcastFactory:
 
         # Initialize a model
         self._model = NetworkFactory(
-            model_shape = model_shape,
-            activations = activations,
-            input_shape = self._input_shape,
-            output_shape = output_shape
+            model_shape=model_shape,
+            activations=activations,
+            input_shape=self._input_shape,
+            output_shape=output_shape,
         )
 
         # Initialize a StockDataFactory
@@ -69,33 +67,31 @@ class ForcastFactory:
             self._num_sets,
             self._labels_per_set,
             self._testing_percentage,
-            self._validation_percentage
-            )
-        
+            self._validation_percentage,
+        )
+
         # Values being infered
-        self._number_of_predictions: int|None = None
-        self._end_date: str|None = None
-        self._interval: str|None = None
+        self._number_of_predictions: int | None = None
+        self._end_date: str | None = None
+        self._interval: str | None = None
 
         # Values that are being calculated
-        self._raw_data: list[
-            tuple[str, float, float, float, float]
-            ]|None = None
-        self._sma: list[float]|None = None
-        self._residuals: list[float]|None = None
+        self._raw_data: list[tuple[str, float, float, float, float]] | None = None
+        self._sma: list[float] | None = None
+        self._residuals: list[float] | None = None
 
         # Predictions
-        self._predicted_residuals: list[float]|None = None
-        self._predicted_closing_prices: list[float]|None = None
-        self._extrapolated_sma: list[float]|None = None
+        self._predicted_residuals: list[float] | None = None
+        self._predicted_closing_prices: list[float] | None = None
+        self._extrapolated_sma: list[float] | None = None
 
         # Observed data
-        self._observed_raw_data: list[
-            tuple[str, float, float, float, float]
-            ]|None = None
-        self._observed_sma: list[float]|None = None
-        self._observed_residuals: list[float]|None = None
-        self._observed_closing_prices: list[float]|None = None
+        self._observed_raw_data: list[tuple[str, float, float, float, float]] | None = (
+            None
+        )
+        self._observed_sma: list[float] | None = None
+        self._observed_residuals: list[float] | None = None
+        self._observed_closing_prices: list[float] | None = None
 
     @property
     def predicted_closing_prices(self) -> list[float]:
@@ -106,11 +102,11 @@ class ForcastFactory:
         Compare the model's predictions with the actual observed data.
 
         Note:
-            Be cautious when performing this comparison. In some cases, 
+            Be cautious when performing this comparison. In some cases,
             there may not be enough data to compare predictions with actual
             values. This situation can arise if the selected end date and
             prediction window result in a period where:
-            
+
                 (current date) < (end date + prediction window)
 
             Ensure there is sufficient observed data covering the
@@ -127,22 +123,20 @@ class ForcastFactory:
 
         mse = mean_squared_error(
             np.array(self._observed_closing_prices),
-            np.array(self._predicted_closing_prices
-                     [:len(self._observed_raw_data)]
-                     )
-            )
-        
+            np.array(self._predicted_closing_prices[: len(self._observed_raw_data)]),
+        )
+
         return mse
 
     def predict(
-            self,
-            number_of_predictions: int,
-            raw_data_amount: int = 50,
-            sma_lookback_period: int = 3,
-            regression_window: int|None = None,
-            end_date: str = "2024-09-01",
-            interval: str = "1d"
-            ) -> None:
+        self,
+        number_of_predictions: int,
+        raw_data_amount: int = 50,
+        sma_lookback_period: int = 3,
+        regression_window: int | None = None,
+        end_date: str = "2024-09-01",
+        interval: str = "1d",
+    ) -> None:
         """
         Predicts the closing prices and residuals.
 
@@ -166,7 +160,7 @@ class ForcastFactory:
         :type interval: str, optional
         """
         self._number_of_predictions = number_of_predictions
-        
+
         self._train_model()
 
         self._get_raw_data(raw_data_amount, end_date, interval)
@@ -176,7 +170,7 @@ class ForcastFactory:
         self._extrapolate_sma(regression_window)
 
         self._predicted_closing_prices = self._calculate_closing_prices()
-    
+
     def plot_predictions(self) -> None:
         """
         Plots the predictions and the raw data.
@@ -185,7 +179,7 @@ class ForcastFactory:
         before trying to use this method
         """
         self._validate_predictions(self._predicted_closing_prices)
-        
+
         # Initialize the plotting class
         plotter = PlotStocks(
             self._raw_data,
@@ -193,9 +187,9 @@ class ForcastFactory:
             self._extrapolated_sma,
             self._residuals,
             self._predicted_closing_prices,
-            self._predicted_residuals
-            )
-        
+            self._predicted_residuals,
+        )
+
         return plotter.masterPlot()
 
     def plot_comparison(self) -> None:
@@ -216,26 +210,20 @@ class ForcastFactory:
             self._extrapolated_sma,
             self._observed_residuals,
             self._predicted_closing_prices,
-            self._predicted_residuals
-            )
-        
+            self._predicted_residuals,
+        )
+
         return plotter.masterPlot()
-        
 
     def _train_model(self) -> None:
         """
         Helper method used to train the model.
         """
-        # Get training data 
-        (
-            training_data,
-            validation_data,
-            _,
-            training_labels,
-            validation_labels,
-            _
-            ) = self._data_factory.get_stock_data()
-        
+        # Get training data
+        (training_data, validation_data, _, training_labels, validation_labels, _) = (
+            self._data_factory.get_stock_data()
+        )
+
         # Train the model
         self._model.train(
             training_data,
@@ -246,14 +234,10 @@ class ForcastFactory:
             self._loss_function,
             self._metrics,
             self._epochs,
-            self._batch_size
-            )
-        
-    def _get_raw_data(
-            self,
-            raw_data_amount: int,
-            end_date: str,
-            interval: str) -> None:
+            self._batch_size,
+        )
+
+    def _get_raw_data(self, raw_data_amount: int, end_date: str, interval: str) -> None:
         """
         Helper method to get raw data used for plotting
         utilising the DataFactory.
@@ -268,11 +252,9 @@ class ForcastFactory:
         self._end_date = end_date
         self._interval = interval
         self._raw_data = self._data_factory.get_raw_data(
-            raw_data_amount,
-            end_date,
-            interval
-            )
-        
+            raw_data_amount, end_date, interval
+        )
+
     def _predict_residuals(self, sma_lookback_period: int) -> None:
         """
         Used to predict the residuals. First it calculates the SMA
@@ -286,22 +268,21 @@ class ForcastFactory:
         # Calculate the SMA
         self._sma_lookback_period = sma_lookback_period
         self._sma = self._data_factory.get_sma(
-            self._raw_data,
-            self._sma_lookback_period
-            )
-        
+            self._raw_data, self._sma_lookback_period
+        )
+
         # Calculate the residuals
         self._residuals = self._data_factory.get_residuals_data(
-            self._raw_data,
-            self._sma
-            )
+            self._raw_data, self._sma
+        )
 
         preprocessed_residuals = self._preprocess_residuals()
 
         # Predict the residuals
-        self._predicted_residuals = self._model.\
-            predict(preprocessed_residuals, self._number_of_predictions)
-    
+        self._predicted_residuals = self._model.predict(
+            preprocessed_residuals, self._number_of_predictions
+        )
+
     def _preprocess_residuals(self) -> tf.Tensor:
         """
         This method ensures that there are enough datapoints to fit
@@ -324,24 +305,19 @@ class ForcastFactory:
                 f"than the input shape {self._input_shape}.\n"
                 "You can not perform a prediction!\n"
                 "You can fix that by increasing 'raw_data_amount' in the "
-                "'predict' method")
-        
+                "'predict' method"
+            )
+
         # Reduce the number of residuals
-        reduced_residuals = self._residuals[-self._input_shape:]
+        reduced_residuals = self._residuals[-self._input_shape :]
 
         # Convert to tensors in the correct shape
         residuals_tensor = tf.convert_to_tensor(reduced_residuals)
-        residuals_tensor = tf.reshape(
-            residuals_tensor,
-            (-1, self._input_shape)
-            )
-        
+        residuals_tensor = tf.reshape(residuals_tensor, (-1, self._input_shape))
+
         return residuals_tensor
 
-    def _extrapolate_sma(
-            self,
-            regression_window: int|None
-            ) -> None:
+    def _extrapolate_sma(self, regression_window: int | None) -> None:
         """
         Extrapolates the SMA using the DataFactory.
 
@@ -350,11 +326,9 @@ class ForcastFactory:
         :type regression_window: int | None
         """
         self._extrapolated_sma = self._data_factory.get_extrapolated_sma(
-            self._sma,
-            self._number_of_predictions,
-            regression_window
-            )
-    
+            self._sma, self._number_of_predictions, regression_window
+        )
+
     def _calculate_closing_prices(self) -> list[float]:
         """
         Calculates the closing prices from the extrapolated SMA
@@ -363,15 +337,8 @@ class ForcastFactory:
         :return: a list of the predicted closing prices
         :rtype: list[float]
         """
-        return [
-            sum(x) 
-            for x in
-            zip(
-                self._extrapolated_sma,
-                self._predicted_residuals
-                )
-                ]
-    
+        return [sum(x) for x in zip(self._extrapolated_sma, self._predicted_residuals)]
+
     def _get_observations_data(self) -> None:
         """
         Calculates the obeserved raw data, the observed
@@ -380,44 +347,43 @@ class ForcastFactory:
         """
         observed_raw_data = self._get_observed_raw_data()
 
-        self._observed_sma = self._data_factory.\
-            get_sma(observed_raw_data, self._sma_lookback_period)
-        
-        self._observed_residuals = self._data_factory.\
-            get_residuals_data(observed_raw_data, self._observed_sma)
+        self._observed_sma = self._data_factory.get_sma(
+            observed_raw_data, self._sma_lookback_period
+        )
 
-        self._observed_raw_data = observed_raw_data[
-            self._sma_lookback_period:
-            ]
+        self._observed_residuals = self._data_factory.get_residuals_data(
+            observed_raw_data, self._observed_sma
+        )
 
-        self._observed_closing_prices = self._data_factory.\
-            get_closing_prices(self._observed_raw_data)
+        self._observed_raw_data = observed_raw_data[self._sma_lookback_period :]
 
-    def _get_observed_raw_data(self) -> list[
-            tuple[str, float, float, float, float]
-            ]:
+        self._observed_closing_prices = self._data_factory.get_closing_prices(
+            self._observed_raw_data
+        )
+
+    def _get_observed_raw_data(self) -> list[tuple[str, float, float, float, float]]:
         """
         Gets the observed raw data.
 
         :return: the observed raw data
         :rtype: list[tuple[str, float, float, float, float]]
         """
-        end_date = pd.bdate_range( # Getting a range of bussiness days
-            start = self._end_date,
-            periods = self._number_of_predictions).\
-                tolist()[-1] # Getting the last date
-        
-        end_date_str = str(end_date).\
-            split(" ")[0] # Getting only the yyyy/mm/dd
+        end_date = pd.bdate_range(  # Getting a range of bussiness days
+            start=self._end_date, periods=self._number_of_predictions
+        ).tolist()[
+            -1
+        ]  # Getting the last date
+
+        end_date_str = str(end_date).split(" ")[0]  # Getting only the yyyy/mm/dd
 
         observed_raw_data = self._data_factory.get_raw_data(
-            number_of_points = (
-                self._number_of_predictions +
-                self._sma_lookback_period
-                ), # Taking the #-predictions + #-sma-lookback
-            end_date = end_date_str,
-            interval = self._interval)
-        
+            number_of_points=(
+                self._number_of_predictions + self._sma_lookback_period
+            ),  # Taking the #-predictions + #-sma-lookback
+            end_date=end_date_str,
+            interval=self._interval,
+        )
+
         return observed_raw_data
 
     def _validate_predictions(self, predictions: Any) -> None:
@@ -431,8 +397,9 @@ class ForcastFactory:
         if predictions is None:
             raise ValueError(
                 "You need to make predictions first!"
-                "Please first use the `predict` method.")
-        
+                "Please first use the `predict` method."
+            )
+
     def _validate_comparison_possibility(self) -> None:
         """
         Validates if it is possible to make a comparison
@@ -441,11 +408,10 @@ class ForcastFactory:
         :raises ValueError: raised if comparison is not possible
         """
         current_date = pd.Timestamp.now()
-        end_date = pd.bdate_range( # Getting a range of bussiness days
-            start = self._end_date,
-            periods = self._number_of_predictions).\
-                tolist()[-1]
-        
+        end_date = pd.bdate_range(  # Getting a range of bussiness days
+            start=self._end_date, periods=self._number_of_predictions
+        ).tolist()[-1]
+
         if end_date > current_date:
             raise ValueError(
                 "You can't perform a comparison as your"
@@ -453,5 +419,5 @@ class ForcastFactory:
                 "Your are predicting up until: "
                 f"{str(end_date).split(' ')[0]}"
                 "Try reducing the number of predictions, or change"
-                " the end date to an earlier date!")
-        
+                " the end date to an earlier date!"
+            )

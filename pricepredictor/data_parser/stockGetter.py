@@ -7,20 +7,16 @@ class Stock:
     """
     Serves as a way to get stock data from Yahoo's API.
     """
-    def __init__(
-            self,
-            name: str,
-            start_date: str,
-            end_date: str,
-            interval: str = "1d"):
+
+    def __init__(self, name: str, start_date: str, end_date: str, interval: str = "1d"):
         """
         A way to initializes a Stock object with a name,
         start date, end date, and optional interval.
-        
+
         :param name: The name of the stock or financial
         instrument for which you want to download data
         :type name: str
-        :param start_date: The start date for downloading stock data. 
+        :param start_date: The start date for downloading stock data.
         :type start_date: str
         :format start_date: "yyyy-dd-mm"
         :param end_date: The end date for the data you want to download.
@@ -30,7 +26,7 @@ class Stock:
         :type interval: str
         """
         self.name = name
-        self.start_date = start_date 
+        self.start_date = start_date
         self.end_date = end_date
 
         # Avoiding chosing interval of 1h
@@ -39,15 +35,7 @@ class Stock:
         else:
             self.interval = interval
 
-    def get_data(
-            self
-            ) -> tuple[
-                datetime,
-                Series,
-                Series,
-                Series,
-                Series
-                ]:
+    def get_data(self) -> tuple[datetime, Series, Series, Series, Series]:
         """
         The method returns the stock prices.
 
@@ -62,20 +50,16 @@ class Stock:
         """
         # Getting the dates of the stock data
         stock_data = yf.download(
-            self.name,
-            self.start_date,
-            self.end_date,
-            interval=self.interval
-            )
-        
-         # Getting the dates of the stock data
+            self.name, self.start_date, self.end_date, interval=self.interval
+        )
+
+        # Getting the dates of the stock data
         dates = stock_data.index
 
         return (
             dates,
-            stock_data['Open'],
-            stock_data['High'],
-            stock_data['Low'],
-            stock_data['Close']
-            )
-    
+            stock_data["Open"],
+            stock_data["High"],
+            stock_data["Low"],
+            stock_data["Close"],
+        )

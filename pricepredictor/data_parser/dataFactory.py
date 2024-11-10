@@ -4,21 +4,23 @@ import numpy as np
 from pricepredictor.data_parser.dataReader import DataReader
 from pricepredictor.data_parser.dataProcessor import DataProcessor
 
+
 class StockDataFactory:
     """
     In accordance with the design pattern "Factory Method" this
     class is used to generate stock data that is used for training
     a neural netowork.
     """
+
     def __init__(
-            self,
-            stock_name: str,
-            points_per_set: int,
-            num_of_sets: int,
-            labels_per_set: int,
-            testing_percentage: float,
-            validation_percentage: float
-            ) -> None:
+        self,
+        stock_name: str,
+        points_per_set: int,
+        num_of_sets: int,
+        labels_per_set: int,
+        testing_percentage: float,
+        validation_percentage: float,
+    ) -> None:
         """
         A way of initialising a StockDataFactory.
 
@@ -44,19 +46,12 @@ class StockDataFactory:
         self._testing_percentage = testing_percentage
         self._validation_percentage = validation_percentage
 
-        self._data_reader: DataReader|None = None
-        self._data_processor: DataProcessor|None = None
-        
+        self._data_reader: DataReader | None = None
+        self._data_processor: DataProcessor | None = None
+
     def get_stock_data(
-            self
-            ) -> tuple[
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray
-                ]:
+        self,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         This method is used to get the required data for the training
         of a Neural Network.
@@ -78,7 +73,7 @@ class StockDataFactory:
                 np.ndarray
                 ]
         """
-        # Generate the sets 
+        # Generate the sets
         sets = self._generate_sets()
 
         # Calculate the residuals
@@ -94,29 +89,23 @@ class StockDataFactory:
             testing_data,
             training_labels,
             validation_labels,
-            testing_labels
-            ) = self._data_processor.split_data(
-                data,
-                labels,
-                self._testing_percentage,
-                self._validation_percentage
-                )
-        
+            testing_labels,
+        ) = self._data_processor.split_data(
+            data, labels, self._testing_percentage, self._validation_percentage
+        )
+
         return (
             training_data,
             validation_data,
             testing_data,
             training_labels,
             validation_labels,
-            testing_labels
-            )
-    
+            testing_labels,
+        )
+
     def get_raw_data(
-            self,
-            number_of_points: int,
-            end_date: str = "2024-09-01",
-            interval: str = "1d"
-            ) -> list[tuple[str,float,float,float,float]]:
+        self, number_of_points: int, end_date: str = "2024-09-01", interval: str = "1d"
+    ) -> list[tuple[str, float, float, float, float]]:
         """
         A way of getting a number of raw datapoints.
 
@@ -127,16 +116,14 @@ class StockDataFactory:
         :rtype: list[tuple[str,float,float,float,float]]
         """
         return DataReader(
-            stock_name = self._stock_name,
-            end_date = end_date,
-            interval = interval
-            ).getData(number_of_points = number_of_points, number_of_sets = 1)
+            stock_name=self._stock_name, end_date=end_date, interval=interval
+        ).getData(number_of_points=number_of_points, number_of_sets=1)
 
     def get_sma(
-            self,
-            data: list[tuple[str,float,float,float,float]],
-            sma_lookback_period: int
-            ) -> list[float]:
+        self,
+        data: list[tuple[str, float, float, float, float]],
+        sma_lookback_period: int,
+    ) -> list[float]:
         """
         A way of getting the simple moving average of raw data.
 
@@ -153,15 +140,14 @@ class StockDataFactory:
         :rtype: list[float]
         """
         stock_data = DataProcessor(data).data
-        return DataProcessor(None).\
-            calculate_SMA(stock_data, length = sma_lookback_period)
-    
+        return DataProcessor(None).calculate_SMA(stock_data, length=sma_lookback_period)
+
     def get_extrapolated_sma(
-            self,
-            sma_values: list[float],
-            number_of_predictions: int,
-            regression_window: int|None = None
-            ) -> list[float]:
+        self,
+        sma_values: list[float],
+        number_of_predictions: int,
+        regression_window: int | None = None,
+    ) -> list[float]:
         """
         Makes an extrapolation of the SMA using linear regression,
         for a specified period of time.
@@ -183,18 +169,15 @@ class StockDataFactory:
                 start = 0
             else:
                 start = number_of_predictions
-        return DataProcessor(None).\
-            extrapolate_the_SMA(
-                SMA_values = sma_values,
-                future_periods = number_of_predictions,
-                start = -start,
-                )
-    
+        return DataProcessor(None).extrapolate_the_SMA(
+            SMA_values=sma_values,
+            future_periods=number_of_predictions,
+            start=-start,
+        )
+
     def get_residuals_data(
-            self,
-            raw_data: list[tuple[str, float, float, float, float]],
-            sma: list[float]
-            ) -> list[float]:
+        self, raw_data: list[tuple[str, float, float, float, float]], sma: list[float]
+    ) -> list[float]:
         """
         A way of getting the residuals of the SMA and the
         closing prices.
@@ -207,13 +190,11 @@ class StockDataFactory:
         :rtype: list[float]
         """
         stock_data = DataProcessor(raw_data).data
-        return DataProcessor(None).\
-            calculate_residuals(stock_data, sma)
-    
+        return DataProcessor(None).calculate_residuals(stock_data, sma)
+
     def get_closing_prices(
-            self,
-            raw_data: list[tuple[str, float, float, float, float]]
-            ) -> list[float]:
+        self, raw_data: list[tuple[str, float, float, float, float]]
+    ) -> list[float]:
         """
         Gets closing prices from raw data.
 
@@ -224,7 +205,7 @@ class StockDataFactory:
         """
         _, _, _, closing_prices = zip(*DataProcessor(raw_data).data)
         return closing_prices
-    
+
     def _generate_sets(self) -> list[list[float]]:
         """
         This method is used to generate sets from stock data.
@@ -235,20 +216,15 @@ class StockDataFactory:
         # Get data
         self._data_reader = DataReader(self._stock_name)
         stock_data = self._data_reader.getData(
-            self._points_per_set+2,
-            self._num_of_sets
-            )
-        
+            self._points_per_set + 2, self._num_of_sets
+        )
+
         # Generate sets
         self._data_processor = DataProcessor(stock_data)
-        sets = self._data_processor.generate_sets(
-            self._points_per_set+2)
+        sets = self._data_processor.generate_sets(self._points_per_set + 2)
         return sets
-    
-    def _calculate_residuals(
-            self,
-            sets: list[list[float]]
-            ) -> list[list[float]]:
+
+    def _calculate_residuals(self, sets: list[list[float]]) -> list[list[float]]:
         """
         This method is used to calculate the residuals
         of the different sets.
@@ -262,16 +238,14 @@ class StockDataFactory:
         for set_ in sets:
             simple_moving_average = self._data_processor.calculate_SMA(set_)
             residual = self._data_processor.calculate_residuals(
-                set_,
-                simple_moving_average
-                )
+                set_, simple_moving_average
+            )
             residuals.append(residual)
         return residuals
-    
+
     def _get_labeled_data(
-            self,
-            residuals: Any
-            ) -> tuple[list[list[float]], list[list[float]]]:
+        self, residuals: Any
+    ) -> tuple[list[list[float]], list[list[float]]]:
         """
         Labels the data to prepare it for train, test, validation split
 
@@ -281,8 +255,6 @@ class StockDataFactory:
         :rtype: tuple[list[list[float]], list[list[float]]]
         """
         data, labels = self._data_processor.generate_labels(
-            residuals,
-            self._labels_per_set
-            )
+            residuals, self._labels_per_set
+        )
         return data, labels
-    
