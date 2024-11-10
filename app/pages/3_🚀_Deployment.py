@@ -60,11 +60,11 @@ class UserInterfaceDeployment(GeneralUI):
 
         input_instructions = (
             "# In order to make a prediction you need to chose "
-            + str(req_num_features)
-            + " "
-            + type_
-            + " "
-            + "features!"
+            f"str(req_num_features)"
+            " "
+            f"{type_}"
+            " "
+            "features!"
         )
 
         # User input instructions

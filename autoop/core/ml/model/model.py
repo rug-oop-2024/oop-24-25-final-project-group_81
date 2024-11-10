@@ -51,6 +51,16 @@ class Model(ABC):
         return self._type
 
     def to_artifact(self, name: str, version: str) -> Artifact:
+        """
+        Converts the model to artifact.
+
+        :param name: the name of the artifact.
+        :type name: str
+        :param version: the version.
+        :type version: str
+        :return: an instance of artifact.
+        :rtype: Artifact
+        """
         model = name
         path = "assets\\objects" + name
         params = self._parameters
@@ -133,7 +143,7 @@ class Model(ABC):
         if num_samples < 1 or num_features < 1:
             raise ValueError(
                 "The input data must have at least"
-                + " one sample and one feature."
+                " one sample and one feature."
             )
 
         if num_features > num_samples:

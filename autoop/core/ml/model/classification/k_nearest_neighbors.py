@@ -86,11 +86,7 @@ class KNearestNeighbors(Model):
             ValueError: If model has not stored
                 'training_data' or 'training_labels'
         """
-        if (
-            "training_data" not in self._parameters
-            or
-            "training_labels" not in self._parameters
-        ):
+        if "training_data" or "training_labels" not in self._parameters:
             raise ValueError("The model has not been fitted!")
 
     def _L2_norm(self, observation: np.ndarray) -> np.ndarray:

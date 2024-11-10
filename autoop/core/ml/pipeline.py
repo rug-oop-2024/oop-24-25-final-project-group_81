@@ -11,7 +11,10 @@ import numpy as np
 
 
 class Pipeline:
-
+    """
+    The Pipeline of the autoop.
+    """
+    
     def __init__(
         self,
         metrics: List[Metric],
@@ -53,16 +56,17 @@ class Pipeline:
         self._split = split
         if (
             target_feature.type == "categorical"
-            and model.type != "classification"
+            and
+            model.type != "classification"
         ):
             raise ValueError(
                 "Model type must be classification"
-                + " for categorical target feature"
+                " for categorical target feature"
             )
         if target_feature.type == "continuous" and model.type != "regression":
             raise ValueError(
                 "Model type must be regression"
-                + " for continuous target feature"
+                " for continuous target feature"
             )
 
     def __str__(self) -> str:

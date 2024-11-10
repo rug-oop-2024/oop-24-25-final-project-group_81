@@ -90,8 +90,8 @@ class PlotStocks:
         fig.patch.set_facecolor(
             "lightgray"
         )  # Set a light background color for the entire figure
-        ax.set_facecolor("whitesmoke")  # Set a lighter background for the first axis
-        ax1.set_facecolor("whitesmoke")  # Set the same for the second axis
+        ax.set_facecolor("whitesmoke")
+        ax1.set_facecolor("whitesmoke")
 
         self.masterPlot_on = False
         return fig

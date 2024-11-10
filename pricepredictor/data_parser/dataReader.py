@@ -92,7 +92,7 @@ class DataReader:
             print(f"Retry {attempts}:")
             print(f"Extending the start date to {startdate}...")
             error = (
-                "Unable to retrieve sufficient data after" +
+                "Unable to retrieve sufficient data after"
                 f"{max_attempts} attempts."
             )
 

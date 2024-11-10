@@ -390,9 +390,7 @@ class ForcastFactory:
         self._observed_raw_data = observed_raw_data[start :]
 
         self._observed_closing_prices = self._data_factory.\
-            get_closing_prices(
-            self._observed_raw_data
-        )
+            get_closing_prices(self._observed_raw_data)
 
     def _get_observed_raw_data(self) -> RAW_DATA:
         """

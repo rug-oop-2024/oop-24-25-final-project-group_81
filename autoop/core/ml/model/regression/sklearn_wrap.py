@@ -52,9 +52,5 @@ class LassoWrapper(Model):
         Raises:
             ValueError: If model has not stored 'coefficients' or 'intercept'
         """
-        if (
-            "coefficients" not in self._parameters
-            or
-            "intercept" not in self._parameters
-        ):
+        if "coefficients" or "intercept" not in self._parameters:
             raise ValueError("The model has not been fitted!")

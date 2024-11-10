@@ -85,7 +85,7 @@ class UserInterfaceStockPredictions(GeneralUI):
 
     @title(
         "Chose number of neurons in the first "
-        + "and second hidden layer of the MLP"
+        "and second hidden layer of the MLP"
     )
     def avaliable_num_neurons(self) -> int:
         """

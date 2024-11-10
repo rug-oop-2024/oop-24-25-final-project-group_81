@@ -1,5 +1,3 @@
-import numpy as np
-
 from pricepredictor.data_parser.dataReader import DataReader
 from pricepredictor.data_parser.dataProcessor import DataProcessor
 
